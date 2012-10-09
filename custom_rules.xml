@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="imported">
+    
+    <copy file="libs/classes.jar" todir="./" />
+    <delete file="libs/classes.jar" />
+
+    <target name="-post-compile">
+	<copy file="./classes.jar" todir="libs/" />
+	<delete file="./classes.jar" />
+    </target>
+    
+</project>
