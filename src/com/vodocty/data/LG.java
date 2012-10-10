@@ -27,7 +27,7 @@ public class LG {
     
     public void setDate(String date) {
 	try {
-	    this.date = new SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.ENGLISH).parse(date);
+	    this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH).parse(date);
 	} catch (ParseException ex) {
 	    this.date = null;
 	}

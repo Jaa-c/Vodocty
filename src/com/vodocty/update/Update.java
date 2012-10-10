@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
 public class Update {
@@ -40,11 +42,14 @@ public class Update {
 	    try {
 		data = XMLParser.parse(xml);
 	    } catch (IOException ex) {
-		Log.e(Update.class.getName(), ex.getLocalizedMessage());
-	    } catch (XmlPullParserException ex) {
-		Log.e(Update.class.getName(), ex.getLocalizedMessage());
+		Log.e("io: " + Update.class.getName(), ex.getLocalizedMessage());
+	    } catch (ParserConfigurationException ex) {
+		Log.e("parser: "+Update.class.getName(), ex.getLocalizedMessage());
+	    } catch (SAXException ex) {
+		Log.e("sax: "+Update.class.getName(), ex.getLocalizedMessage());
 	    }
-	    Log.d(Update.class.getName(), data.size() + " " + data.get(0).getName());
+	    
+	    Log.d(Update.class.getName(), data.size() + " : " + data.get(0).getLgItem(0).getName());
 	}
     
     }

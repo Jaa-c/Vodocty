@@ -1,126 +1,68 @@
 package com.vodocty.update;
 
-import android.util.Log;
-import android.util.Xml;
 import com.vodocty.data.LG;
 import com.vodocty.data.River;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XMLParser {
     
-    private static final String ns = null;
+    public static List<River> parse(InputStream in) throws ParserConfigurationException, IOException, SAXException {
     
-    public static List<River> parse(InputStream in) throws IOException, XmlPullParserException {
-	XmlPullParser parser = getParser(in);
 	List<River> rivers = new ArrayList<River>();
-	River current;
-
-	parser.require(XmlPullParser.START_TAG, ns, "data");
-	while (parser.next() != XmlPullParser.END_TAG) {
-	    if (parser.getEventType() != XmlPullParser.START_TAG) {
-		continue;
-	    }
-	    String name = parser.getName();
-	    // Starts by looking for the entry tag
-	    if (name.equals("river")) {
-		current = new River(parser.getAttributeValue(0));
-		current.addAll(readLG(parser));
-	    } else {
-		skip(parser);
-	    }
-	}
-	return rivers;
-    }
-    
-    private static List<LG> readLG(XmlPullParser parser) throws XmlPullParserException, IOException {
-	List<LG> data = new ArrayList<LG>();
-	LG current;
-	while (parser.next() != XmlPullParser.END_TAG) {
-	    if (parser.getEventType() != XmlPullParser.START_TAG) {
-		continue;
-	    }
-	    String name = parser.getName();
-	    if(name.equals("lg")) {
-		current = new LG(parser.getAttributeValue(0));
-		Log.d("lg", parser.getAttributeValue(0));
-		while (parser.next() != XmlPullParser.END_TAG) {
-		    if (parser.getEventType() != XmlPullParser.START_TAG) {
-			continue;
-		    }
-		    name = parser.getName();
-		    if(name.equals("date")) {
-			current.setDate(readText(parser));
-		    }
-		    else if(name.equals("height")) {
-			current.setHeight(Integer.parseInt(readText(parser)));			
-		    }
-		    else if(name.equals("volume")) {
-			current.setVolume(Float.parseFloat(readText(parser)));
-		    }
-		    else if(name.equals("flood")) {
-			current.setFlood(Integer.parseInt(readText(parser)));
-		    }
-		    else {
-			skip(parser);
-		    }
+	River currentRiver;
+	LG currentLG;
+	
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	DocumentBuilder db = dbf.newDocumentBuilder();
+	Document doc = db.parse(in);
+	doc.getDocumentElement().normalize();
+	
+	NodeList riverList = doc.getElementsByTagName("river");
+	for(int i = 0; i < riverList.getLength(); i++) {
+	    Node river = riverList.item(i);
+	    currentRiver = new River(river.getAttributes().item(0).getTextContent());
+	    Element el = (Element) river;
+	    NodeList lgs = el.getElementsByTagName("lg");
+	    for(int j = 0; j < lgs.getLength(); j++) {
+		Node lg = lgs.item(j);
+		currentLG = new LG(lg.getAttributes().item(0).getTextContent());
+		NodeList data = lg.getChildNodes();
+		currentLG.setDate(data.item(0).getTextContent());
+		try {
+		    currentLG.setHeight(Integer.parseInt(data.item(1).getTextContent()));
 		}
+		catch(NumberFormatException e) {
+		    currentLG.setHeight(-1);
+		}
+		try {
+		    currentLG.setVolume(Float.parseFloat(data.item(2).getTextContent()));
+		}
+		catch(NumberFormatException e) {
+		    currentLG.setVolume(-1);
+		}
+		try {
+		    currentLG.setFlood(Integer.parseInt(data.item(3).getTextContent()));
+		}
+		catch(NumberFormatException e) {
+		    currentLG.setFlood(0);
+		}
+		currentRiver.add(currentLG);
 	    }
-	    else {
-		skip(parser);
-	    }
+	    rivers.add(currentRiver);
 	}
 	
-	return data;
+	return rivers;
     }
-    
-    private String readHeight(XmlPullParser parser) throws IOException, XmlPullParserException {
-	parser.require(XmlPullParser.START_TAG, ns, "height");
-	String height = readText(parser);
-	parser.require(XmlPullParser.END_TAG, ns, "height");
-	return height;
-    }
-    
-    private static XmlPullParser getParser(InputStream in) throws XmlPullParserException, IOException {
-        try {
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
-            parser.nextTag();
-	    return parser;
-        } finally {
-            in.close();
-        }
-    }
-    
-    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-	if (parser.getEventType() != XmlPullParser.START_TAG) {
-	    throw new IllegalStateException();
-	}
-	int depth = 1;
-	while (depth != 0) {
-	    switch (parser.next()) {
-	    case XmlPullParser.END_TAG:
-		depth--;
-		break;
-	    case XmlPullParser.START_TAG:
-		depth++;
-		break;
-	    }
-	}
-     }
-    
-    private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
-	String result = "";
-	if (parser.next() == XmlPullParser.TEXT) {
-	    result = parser.getText();
-	    parser.nextTag();
-	}
-	return result;
-    }
-    
+
 }
