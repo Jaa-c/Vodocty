@@ -1,11 +1,25 @@
 package com.vodocty.data;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import java.util.ArrayList;
 import java.util.List;
 
+@DatabaseTable(tableName = "river")
 public class River {
+    
+    @DatabaseField(generatedId = true)
+    private int id;
+    
+    @DatabaseField(index=true, canBeNull=false)
     private String name;
+    
+    @DatabaseField(foreign=true)
+    private Country country;
+    
     private List<LG> lg;
+    
+    River() {}
     
     public River(String name) {
 	this.name = name;    
