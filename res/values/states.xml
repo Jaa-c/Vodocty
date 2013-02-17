@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources> 
+    <string name="cze">cze</string>    
+    <array name="states">
+        <item>@string/cze</item>
+    </array>
+</resources>

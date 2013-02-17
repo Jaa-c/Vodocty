@@ -2,9 +2,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_ahoj"
-          android:title="A" 
-	  android:showAsAction="ifRoom|withText" />
+          android:title="A" />
     <item android:id="@+id/menu_svete"
-          android:title="S"
-	  android:showAsAction="ifRoom|withText"  />
+          android:title="S" />
 </menu>

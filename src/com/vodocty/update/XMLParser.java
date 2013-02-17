@@ -1,5 +1,7 @@
 package com.vodocty.update;
 
+import com.vodocty.data.Country;
+import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.data.River;
 import java.io.IOException;
@@ -15,13 +17,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Parser for the update data.
+ * 
+ * @author Dan Princ
+ * @since long time ago
+ */
 public class XMLParser {
     
-    public static List<River> parse(InputStream in) throws ParserConfigurationException, IOException, SAXException {
+    public static List<River> parse(InputStream in, Country c) throws ParserConfigurationException, IOException, SAXException {
     
 	List<River> rivers = new ArrayList<River>();
 	River currentRiver;
 	LG currentLG;
+	Data data;
 	
 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	DocumentBuilder db = dbf.newDocumentBuilder();
@@ -31,37 +40,49 @@ public class XMLParser {
 	NodeList riverList = doc.getElementsByTagName("river");
 	for(int i = 0; i < riverList.getLength(); i++) {
 	    Node river = riverList.item(i);
-	    currentRiver = new River(river.getAttributes().item(0).getTextContent());
+	    currentRiver = new River(river.getAttributes().item(0).getTextContent(), c);
 	    Element el = (Element) river;
 	    NodeList lgs = el.getElementsByTagName("lg");
+	    
+	    
 	    for(int j = 0; j < lgs.getLength(); j++) {
 		Node lg = lgs.item(j);
 		currentLG = new LG(lg.getAttributes().item(0).getTextContent());
-		NodeList data = lg.getChildNodes();
-		currentLG.setDate(data.item(0).getTextContent());
+		
+		
+		NodeList current = lg.getChildNodes();		
+		data = new Data(currentLG);
+		data.setDate(current.item(1).getTextContent());
+		
 		try {
-		    currentLG.setHeight(Integer.parseInt(data.item(1).getTextContent()));
+		    data.setHeight(Integer.parseInt(current.item(3).getTextContent()));
 		}
 		catch(NumberFormatException e) {
-		    currentLG.setHeight(-1);
+		    data.setHeight(-1);
 		}
+		
 		try {
-		    currentLG.setVolume(Float.parseFloat(data.item(2).getTextContent()));
+		    data.setVolume(Float.parseFloat(current.item(5).getTextContent()));
 		}
 		catch(NumberFormatException e) {
-		    currentLG.setVolume(-1);
+		    data.setVolume(-1);
 		}
+		
 		try {
-		    currentLG.setFlood(Integer.parseInt(data.item(3).getTextContent()));
+		    data.setFlood(Integer.parseInt(current.item(7).getTextContent()));
 		}
-		catch(NumberFormatException e) {
-		    currentLG.setFlood(0);
+		catch(Exception e) {
+		    data.setFlood(0);
 		}
+		
+		currentLG.addData(data);
+		currentLG.setRiver(currentRiver);
 		currentRiver.add(currentLG);
 	    }
 	    rivers.add(currentRiver);
 	}
 	
+	    
 	return rivers;
     }
 

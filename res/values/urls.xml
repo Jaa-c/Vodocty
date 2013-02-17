@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources> 
-    <string name="cze">http://10.0.2.2/vodocty/</string>    
+    <string name="czeu">http://princ.name/temp/data.xml</string>    
     <array name="urls">
-        <item>@string/cze</item>
+        <item>@string/czeu</item>
     </array>
 </resources>

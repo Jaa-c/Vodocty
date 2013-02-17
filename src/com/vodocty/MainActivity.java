@@ -1,61 +1,79 @@
 package com.vodocty;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
+import android.widget.Toast;
+import com.vodocty.controllers.MainListController;
+import com.vodocty.data.River;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.update.Update;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends SherlockActivity
-{
+public class MainActivity extends Activity {
+    
+    DBOpenHelper db; //save in sth like global context
+    MainListController controller;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+	super.onCreate(savedInstanceState);
 	
-	SQLiteOpenHelper soh = new DBOpenHelper(this);
-	SQLiteDatabase db = soh.getWritableDatabase();
+	db = new DBOpenHelper(this);
+	controller = new MainListController(this);
 	
-	Update u = new Update(db, this);
-	u.doUpdate();
+	Update u = new Update(db, this); //temp
+	try {
+	    u.doUpdate();
+	}
+	catch(SQLException e) {
+	    Log.e(MainActivity.class.getName(), e.getLocalizedMessage());
+	    e.printStackTrace(); //debug
+	    Toast.makeText(this, "Update error", Toast.LENGTH_LONG);
+	}
 	
-	db.close();
-	
-	
-	setTheme(R.style.Sherlock___Theme_DarkActionBar); //Used for theme switching in samples
-        super.onCreate(savedInstanceState);
+	       
         setContentView(R.layout.main);
 	
 	List<String> test = new ArrayList<String>(); 
-	test.add("hello");
-	test.add("world");
 	
-	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-        android.R.layout.simple_list_item_1, test);
+	List<River> rivers = null;
+	try {    
+	    rivers = db.getRiverDao().queryForAll();
+	} catch (SQLException ex) {}
+	
+	for(River r : rivers) {
+	    test.add(r.getName());
+	}
+	
+	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, test);
+	
 	
 	ListView listView = (ListView) findViewById(R.id.listview);
 	listView.setAdapter(adapter);
 	
-	ActionBar ab = getSupportActionBar();
-	ab.setDisplayShowHomeEnabled(false);
-	ab.setDisplayShowTitleEnabled(false);
+    }
 
+    @Override
+    protected void onResume() {
+	super.onResume();
 	
-        //((TextView)findViewById(R.id.text)).setText(R.string.simple_content);
+	db = new DBOpenHelper(this);
+    }
+
+    @Override
+    protected void onPause() {
+	super.onPause();
+	
+	db.close();
     }
     
-    @Override 
-    public boolean onCreateOptionsMenu(Menu menu) {
-	MenuInflater inflater = getSupportMenuInflater();
-	inflater.inflate(R.menu.main_ab, menu);
-	return true;
-    }
+    
+    
 }

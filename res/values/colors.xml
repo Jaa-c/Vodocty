@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="header_background">@color/black</color>
+    
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="grey_light">#cccccc</color>
+    
+    <color name="yellow_light">#ffd966</color>
+    <color name="yellow_light_darker">#cfa926</color>
+    <color name="blue_light">#6fa8dc</color>
+    <color name="blue_light_darker">#2f78ac</color>
+    <color name="green_light">#93c47d</color>
+    <color name="green_light_darker">#53943d</color>
+</resources>
+

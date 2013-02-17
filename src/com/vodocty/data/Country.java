@@ -1,31 +1,34 @@
 package com.vodocty.data;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import java.util.List;
 
-@DatabaseTable(tableName = "country")
+public enum Country {
+    cze
+};
+
+
+
+
+/*@DatabaseTable(tableName = "country")
 public class Country {
     
     @DatabaseField(generatedId = true)
     private int id;
     
-    @DatabaseField(index=true, canBeNull=false)
-    private String name;
-        
+    @DatabaseField(index=true, unique=true, canBeNull=false)
+    private String code;
     
     Country() {}
 
     public Country(String name) {
-	this.name = name;
+	this.code = name;
     }
 
-    public String getName() {
-	return name;
+    public String getCode() {
+	return code;
     }
 
-    public void setName(String name) {
-	this.name = name;
+    public void setCode(String name) {
+	this.code = name;
     }
 
     public int getId() {
@@ -35,3 +38,4 @@ public class Country {
     
 
 }
+*/

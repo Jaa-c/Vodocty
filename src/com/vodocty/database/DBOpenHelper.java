@@ -14,14 +14,23 @@ import com.vodocty.data.LG;
 import com.vodocty.data.River;
 import java.sql.SQLException;
 
+
+/**
+ * Handles database conection, hanles DAO instances.
+ * 
+ * 
+ * @author Dan Princ
+ * @since long time ago
+ */
 public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     
     private static final String DATABASE_NAME = "vodocty.db";
     private static final int DATABASE_VERSION = 1;
     
-    private Dao<Country, Integer> countryDao = null;
+    private static Dao<River, Integer> riverDao = null;
+    private static Dao<LG, Integer> lgDao = null;
+    private static Dao<Data, Integer> dataDao = null;
     
-  
     
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,7 +39,6 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqld, ConnectionSource cs) {
 	try {
-	    TableUtils.createTable(connectionSource, Country.class);
 	    TableUtils.createTable(connectionSource, River.class);
 	    TableUtils.createTable(connectionSource, LG.class);
 	    TableUtils.createTable(connectionSource, Data.class);
@@ -47,16 +55,34 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public Dao<Country, Integer> getCountryDao() throws SQLException {
-	if (countryDao == null) {
-	    countryDao = getDao(Country.class);
+
+    public synchronized Dao<River, Integer> getRiverDao() throws SQLException {
+	if(riverDao == null) {
+	    riverDao = getDao(River.class);
 	}
-	return countryDao;
+	return riverDao;
     }
+
+    public synchronized Dao<LG, Integer> getLgDao() throws SQLException {
+	if(lgDao == null) {
+	    lgDao = getDao(LG.class);
+	}
+	return lgDao;
+    }
+
+    public synchronized Dao<Data, Integer> getDataDao() throws SQLException {
+	if(dataDao == null) {
+	    dataDao = getDao(Data.class);
+	}
+	return dataDao;
+    }
+    
     
     @Override
     public void close() {
 	super.close();
-	countryDao = null;
+	riverDao = null;
+	lgDao = null;
+	dataDao = null;
     }
 }

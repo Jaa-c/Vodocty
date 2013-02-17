@@ -22,19 +22,20 @@ public class Data {
     @DatabaseField(canBeNull = false)
     private int height;
     
-    @DatabaseField
+    @DatabaseField(defaultValue="-1")
     private float volume;
     
-    @DatabaseField
+    @DatabaseField(defaultValue="0")
     private int flood;
     
     Data() {}
 
-    public Data(Date date, int height, float volume, int flood) {
-	this.date = date;
-	this.height = height;
-	this.volume = volume;
-	this.flood = flood;
+    public Data(LG lg) {
+	this.lg = lg;
+    }
+    
+    public int getID() {
+	return id;
     }
 
     public LG getLg() {
@@ -80,8 +81,11 @@ public class Data {
     public void setFlood(int flood) {
 	this.flood = flood;
     }
-    
-    
+
+    @Override
+    public String toString() {
+	return "Data{" + "id=" + id + ", date=" + date + ", height=" + height + ", volume=" + volume + ", flood=" + flood + '}';
+    }
     
     
 

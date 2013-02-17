@@ -11,23 +11,41 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+/**
+ * Reads feeds via http.
+ * 
+ * @author Dan Princ
+ * @since long time ago
+ */
 public class HttpReader {
    
-    public static InputStream load(String url) throws IOException {
+    public static InputStream load(String url) {
 	HttpGet uri = new HttpGet(url);    
 
 	DefaultHttpClient client = new DefaultHttpClient();
-	HttpResponse resp = client.execute(uri);
-
-	StatusLine status = resp.getStatusLine();
-	if (status.getStatusCode() != 200) {
-	    Log.e("vodocty HttpReader status", status.getStatusCode() + "");
-	    throw new HttpResponseException(status.getStatusCode(), "Nepodarilo se stahnout aktualizace");
+	HttpResponse resp = null;
+	
+	try {
+	    resp = client.execute(uri);
+	}
+	catch(IOException e) {
+	    return null;
 	}
 	
+	StatusLine status = resp.getStatusLine();
+	if (status.getStatusCode() != 200) {
+	    Log.e(HttpReader.class.getName(), status.getStatusCode() + "");
+	    return null;
+	}
 	
-	return resp.getEntity().getContent();
-	//return EntityUtils.toString(resp.getEntity());
+	try {
+	    return resp.getEntity().getContent();
+	    //return EntityUtils.toString(resp.getEntity());
+	}
+	catch(IOException e){
+	    return null;
+	}
+	
     }
     
     @Deprecated

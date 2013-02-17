@@ -11,18 +11,19 @@ public class River {
     @DatabaseField(generatedId = true)
     private int id;
     
-    @DatabaseField(index=true, canBeNull=false)
+    @DatabaseField(index=true, uniqueCombo=true, canBeNull=false)
     private String name;
     
-    @DatabaseField(foreign=true)
+    @DatabaseField(uniqueCombo=true, canBeNull=false)
     private Country country;
     
     private List<LG> lg;
     
     River() {}
     
-    public River(String name) {
+    public River(String name, Country country) {
 	this.name = name;    
+	this.country = country;
 	lg = new ArrayList<LG>();
     }
     
@@ -45,6 +46,21 @@ public class River {
     public LG getLgItem(int i) {
 	return lg.get(i);
     }
+
+    public int getId() {
+	return id;
+    }
+
+
+    public Country getCountry() {
+	return country;
+    }
+
+    public void setCountry(Country country) {
+	this.country = country;
+    }
+    
+    
     
 
 }
