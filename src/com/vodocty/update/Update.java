@@ -65,7 +65,6 @@ public class Update {
 	    }
 	    
 	    //update the database:
-	    
 	    Dao<Data, Integer> dataDao = db.getDataDao();
 	    Dao<River, Integer> riverDao = db.getRiverDao();
 	    Dao<LG, Integer> lgDao = db.getLgDao();

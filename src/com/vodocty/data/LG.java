@@ -31,6 +31,7 @@ public class LG {
     private float notifyVolume;
     
     private List<Data> data = new ArrayList<Data>();
+    //private Data data; //tbh do I really need List??
     
     LG() {}
     

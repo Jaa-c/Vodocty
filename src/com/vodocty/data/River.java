@@ -60,7 +60,5 @@ public class River {
 	this.country = country;
     }
     
-    
-    
 
 }

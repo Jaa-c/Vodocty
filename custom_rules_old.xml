@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--?xml version="1.0" encoding="UTF-8"?>
 <project name="imported">
     
     <copy file="libs/classes.jar" todir="./" />
@@ -9,4 +9,4 @@
 	<delete file="./classes.jar" />
     </target>
     
-</project>
+</project-->

@@ -3,30 +3,29 @@ package com.vodocty;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-import com.vodocty.controllers.MainListController;
-import com.vodocty.data.River;
+import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
+import com.vodocty.model.RiversModel;
 import com.vodocty.update.Update;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends Activity {
     
-    DBOpenHelper db; //save in sth like global context
-    MainListController controller;
+    private DBOpenHelper db; //save in sth like global context
+    private RiversController controller;
+    private RiversModel model;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	setContentView(R.layout.main);
 	
 	db = new DBOpenHelper(this);
-	controller = new MainListController(this);
+	model = new RiversModel(db);
+	controller = new RiversController(this, model);
 	
 	Update u = new Update(db, this); //temp
 	try {
@@ -39,25 +38,6 @@ public class MainActivity extends Activity {
 	}
 	
 	       
-        setContentView(R.layout.main);
-	
-	List<String> test = new ArrayList<String>(); 
-	
-	List<River> rivers = null;
-	try {    
-	    rivers = db.getRiverDao().queryForAll();
-	} catch (SQLException ex) {}
-	
-	for(River r : rivers) {
-	    test.add(r.getName());
-	}
-	
-	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, test);
-	
-	
-	ListView listView = (ListView) findViewById(R.id.listview);
-	listView.setAdapter(adapter);
-	
     }
 
     @Override
