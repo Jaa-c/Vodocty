@@ -76,7 +76,7 @@ public class XMLParser {
 		}
 		
 		currentLG.addData(data);
-		currentLG.setRiver(currentRiver);
+		//currentLG.setRiver(currentRiver);
 		currentRiver.add(currentLG);
 	    }
 	    rivers.add(currentRiver);

@@ -30,13 +30,6 @@ public class LGsController {
 	this.activity = activity;
 	this.model = model;
 	
-	List<LG> data = model.getLGs();
-	for(LG lg : data) {
-	    Log.d(LGsController.class.getName(), lg.getName());
-	
-	}
-	
-	
         ListView list = (ListView) activity.findViewById(R.id.listview);
 	adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getLGs());
 	list.setAdapter(adapter);

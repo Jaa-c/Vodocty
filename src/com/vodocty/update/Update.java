@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.vodocty.R;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
@@ -70,9 +71,26 @@ public class Update {
 	    Dao<LG, Integer> lgDao = db.getLgDao();
 	    
 	    for(River r : data) {
-		riverDao.createIfNotExists(r);
+		QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
+		riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
+		if (riverQuery.queryForFirst() == null) {
+		    riverDao.create(r);
+		}
+		else {
+		    River river = riverQuery.queryForFirst();
+		    r.setId(river.getId());
+		}
+		
 		for(LG lg : r.getLg()) {
-		    lgDao.createIfNotExists(lg);
+		    lg.setRiver(r);
+		    
+		    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
+		    query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
+		    if (query.queryForFirst() == null) {
+			lgDao.create(lg);
+			Log.i("Update, added LG: ", lg.getName());
+		    }
+		    
 		    for(Data d : lg.getData()) {
 			dataDao.create(d);
 		    }
