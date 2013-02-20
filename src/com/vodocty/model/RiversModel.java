@@ -17,7 +17,6 @@ public class RiversModel {
     
     public RiversModel(DBOpenHelper db) {
 	this.db = db;
-	
 	rivers = null;
 	
     }

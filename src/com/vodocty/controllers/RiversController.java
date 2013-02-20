@@ -11,6 +11,7 @@ import com.vodocty.R;
 import com.vodocty.data.River;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.RiversModel;
+import com.vodocty.view.adapters.RiversAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class RiversController {
     
     private Activity activity;
     RiversModel model;
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter adapter;
     
     public RiversController(Activity activity, RiversModel model) {
 	
@@ -32,16 +33,11 @@ public class RiversController {
 	//adapter = new MyListAdapter(context, R.layout.list_item_row, this.data.getData());
         ListView list = (ListView) activity.findViewById(R.id.listview);
 	
-	List<String> test = new ArrayList<String>();
-	adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, test);
+	adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
 	
 	list.setAdapter(adapter);
         list.setOnItemClickListener(listClickHandler);
-		
 	
-	for(River r : model.getRivers()) {
-	    test.add(r.getName());
-	}
     
     }
     
@@ -53,10 +49,10 @@ public class RiversController {
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             //Intent intent = new Intent(context, DetailListActivity.class);
             //predame seznam, ktery chceme zobrazit
-            String river = (String) adapter.getItem(position);
+            River river = (River) adapter.getItem(position);
 
 	    
-	    Log.d(RiversController.class.getName(), river + "");
+	    Log.d(RiversController.class.getName(), river.getName() + "");
 
         }
     };
