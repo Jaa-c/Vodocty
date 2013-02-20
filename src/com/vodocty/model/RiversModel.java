@@ -24,6 +24,10 @@ public class RiversModel {
     
     
     public List<River> getRivers() {
+	if(rivers != null) {
+	    return rivers;
+	}
+	
 	try {    
 	    rivers = this.db.getRiverDao().queryForAll();
 	} catch (SQLException ex) {}

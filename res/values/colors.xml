@@ -10,6 +10,7 @@
     <color name="yellow_light">#ffd966</color>
     <color name="yellow_light_darker">#cfa926</color>
     <color name="blue_light">#6fa8dc</color>
+    <color name="blue_light_lighter">#8fc8fc</color>
     <color name="blue_light_darker">#2f78ac</color>
     <color name="green_light">#93c47d</color>
     <color name="green_light_darker">#53943d</color>

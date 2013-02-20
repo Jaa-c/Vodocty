@@ -7,7 +7,7 @@
     android:padding="18dp"
     android:background="@layout/selector_blue">
     
-<TextView android:id="@+id/river_row"
+<TextView android:id="@+id/lg_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

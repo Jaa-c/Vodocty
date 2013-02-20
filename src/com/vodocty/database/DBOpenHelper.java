@@ -31,9 +31,17 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     private static Dao<LG, Integer> lgDao = null;
     private static Dao<Data, Integer> dataDao = null;
     
+    private static DBOpenHelper instance = null;
     
-    public DBOpenHelper(Context context) {
+    private DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+    
+    public static synchronized DBOpenHelper getInstance(Context context) {
+	if(instance == null) {
+	    instance = new DBOpenHelper(context);
+	}
+	return instance;
     }
 
     @Override
@@ -84,5 +92,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	riverDao = null;
 	lgDao = null;
 	dataDao = null;
+	
+	instance = null;
     }
 }

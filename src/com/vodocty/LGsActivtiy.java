@@ -2,19 +2,21 @@ package com.vodocty;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import com.vodocty.controllers.LGsController;
 import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
-import com.vodocty.model.RiversModel;
-import com.vodocty.update.Update;
-import java.sql.SQLException;
+import com.vodocty.model.LGsModel;
 
-public class MainActivity extends Activity {
+/**
+ *
+ * @author Dan Princ
+ * @since 20.2.2013
+ */
+public class LGsActivtiy extends Activity {
     
     private DBOpenHelper db; //save in sth like global context
-    private RiversController controller;
-    private RiversModel model;
+    private LGsController controller;
+    private LGsModel model;
     
     /** Called when the activity is first created. */
     @Override
@@ -24,18 +26,12 @@ public class MainActivity extends Activity {
 	setContentView(R.layout.main);
 	
 	db = DBOpenHelper.getInstance(this);
-	model = new RiversModel(db);
-	controller = new RiversController(this, model);
+	model = new LGsModel(db);
 	
-	Update u = new Update(db, this); //temp
-	try {
-	    u.doUpdate();
-	}
-	catch(SQLException e) {
-	    Log.e(MainActivity.class.getName(), e.getLocalizedMessage());
-	    e.printStackTrace(); //debug
-	    Toast.makeText(this, "Update error", Toast.LENGTH_LONG);
-	}
+	int riverId = getIntent().getIntExtra(RiversController.RIVER_ID, -1);
+	model.setRiverId(riverId);
+	
+	controller = new LGsController(this, model);
 	
 	       
     }
@@ -57,3 +53,4 @@ public class MainActivity extends Activity {
     
     
 }
+
