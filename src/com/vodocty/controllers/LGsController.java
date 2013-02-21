@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import com.vodocty.DataActivity;
 import com.vodocty.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.data.LG;
@@ -25,6 +26,8 @@ public class LGsController {
     private LGsModel model;
     private LGsAdapter adapter;
     
+    public static final String LG_ID = "lgId";
+    
     public LGsController(Activity activity, LGsModel model) {
 	
 	this.activity = activity;
@@ -41,13 +44,13 @@ public class LGsController {
         @Override
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             
-	    //Intent intent = new Intent(activity, LGsActivtiy.class);
+	    Intent intent = new Intent(activity, DataActivity.class);
             //predame seznam, ktery chceme zobrazit
             LG lg = (LG) adapter.getItem(position);
 	    Log.d(LGsController.class.getName(), "click: " + lg.getName());
 	    
-	    //intent.putExtra(RIVER_ID, lg.getId());
-	    //activity.startActivity(intent);
+	    intent.putExtra(LG_ID, lg.getId());
+	    activity.startActivity(intent);
 
         }
     };

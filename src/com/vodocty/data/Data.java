@@ -13,7 +13,7 @@ public class Data {
     @DatabaseField(generatedId = true)
     private int id;
     
-    @DatabaseField(foreign = true, canBeNull = false)
+    @DatabaseField(foreign = true, foreignAutoRefresh=true, maxForeignAutoRefreshLevel=2, canBeNull = false)
     private LG lg;
     
     @DatabaseField(index = true, canBeNull = false)
