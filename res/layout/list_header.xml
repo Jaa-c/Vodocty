@@ -7,7 +7,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="18dp"
-    android:background="@layout/selector_header_blue" >
+    android:background="@drawable/selector_header_blue" >
     
     <TextView android:id="@+id/header_row"
 	android:layout_width="wrap_content"
@@ -16,6 +16,6 @@
 	android:layout_centerVertical="true"
 	android:textSize="14dp"
 	android:textStyle="bold"
-	android:textColor="@layout/selector_header_blue" />
+	android:textColor="@drawable/selector_header_blue" />
 
 </LinearLayout>
