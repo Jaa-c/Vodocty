@@ -6,14 +6,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.vodocty.DataActivity;
-import com.vodocty.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.data.LG;
-import com.vodocty.data.River;
 import com.vodocty.model.LGsModel;
 import com.vodocty.view.adapters.LGsAdapter;
-import java.util.List;
 
 /**
  *
@@ -35,6 +33,12 @@ public class LGsController {
 	
         ListView list = (ListView) activity.findViewById(R.id.listview);
 	adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getLGs());
+	
+	View header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
+	TextView head = (TextView) header.findViewById(R.id.header_row);
+	head.setText(model.getRiver().getName() + ":");
+	list.addHeaderView(header, null, false);
+	
 	list.setAdapter(adapter);
         list.setOnItemClickListener(listClickHandler);
 	

@@ -15,7 +15,12 @@ public class LG {
     @DatabaseField(index=true, uniqueCombo=true, canBeNull=false)
     private String name;
     
-    @DatabaseField(foreign=true, uniqueCombo=true, canBeNull=false)
+    @DatabaseField(
+	    foreign=true,
+	    foreignAutoRefresh=true,
+	    maxForeignAutoRefreshLevel=2,
+	    uniqueCombo=true,
+	    canBeNull=false)
     private River river;
     
     @DatabaseField(defaultValue="0")

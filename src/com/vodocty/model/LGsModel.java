@@ -30,6 +30,22 @@ public class LGsModel {
 	this.riverId = id;
     }
     
+    public River getRiver() {
+	if(data != null) {
+	    return data.get(0).getRiver();
+	}
+	else {
+	    try {
+		QueryBuilder<River,Integer> riv = this.db.getRiverDao().queryBuilder();
+		riv.where().in("id", riverId);
+		return riv.queryForFirst();
+	    }
+	    catch(SQLException e) {
+		return null;
+	    }
+	}
+    }
+    
     public List<LG> getLGs() {	
 	if(riverId == -1) {
 	    return null;

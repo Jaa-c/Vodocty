@@ -1,6 +1,7 @@
 package com.vodocty.view.adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.vodocty.R;
 import com.vodocty.data.LG;
-import com.vodocty.data.River;
 import java.util.List;
 
 /**
@@ -50,12 +50,13 @@ public class LGsAdapter extends ArrayAdapter {
 	    content = (LGData) row.getTag();
 	}
 	row.setTag(content);
-	
 	LG lg = data.get(position);
 	content.name.setText(lg.getName());
 	
 	return row;
     }
+    
+    
     
     
     static class LGData {
