@@ -75,7 +75,13 @@ public class XMLParser {
 		    data.setFlood(0);
 		}
 		
-		currentLG.addData(data);
+		currentLG.setData(data);
+		if(data.getHeight() > 0) {
+		    currentLG.setCurrentHeight(data.getHeight());
+		}
+		if(data.getVolume() > 0) {
+		    currentLG.setCurrentVolume(data.getVolume());
+		}
 		//currentLG.setRiver(currentRiver);
 		currentRiver.add(currentLG);
 	    }

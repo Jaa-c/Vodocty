@@ -91,9 +91,8 @@ public class Update {
 			Log.i("Update, added LG: ", lg.getName());
 		    }
 		    
-		    for(Data d : lg.getData()) {
-			dataDao.create(d);
-		    }
+		    dataDao.create(lg.getData());
+		    
 		}
 	    }
 	}

@@ -35,8 +35,14 @@ public class LG {
     @DatabaseField(defaultValue="0")
     private float notifyVolume;
     
-    private List<Data> data = new ArrayList<Data>();
-    //private Data data; //tbh do I really need List??
+    @DatabaseField(defaultValue="0")
+    private float currentHeight;
+    
+    @DatabaseField(defaultValue="0")
+    private float currentVolume;
+    
+    //private List<Data> data = new ArrayList<Data>();
+    private Data data; //tbh do I really need List??
     
     LG() {}
     
@@ -97,20 +103,33 @@ public class LG {
 	this.notifyVolume = notifyVolume;
     }
     
-    public void addData(Data d) {
-	data.add(d);
+    public void setData(Data d) {
+	data = d;
     }
     
-    public List<Data> getData() {
+    public Data getData() {
 	return data;
+    }
+
+    public float getCurrentHeight() {
+	return currentHeight;
+    }
+
+    public void setCurrentHeight(float currentHeight) {
+	this.currentHeight = currentHeight;
+    }
+
+    public float getCurrentVolume() {
+	return currentVolume;
+    }
+
+    public void setCurrentVolume(float currentVolume) {
+	this.currentVolume = currentVolume;
     }
 
     @Override
     public String toString() {
-	return "LG{" + "id=" + id + ", name=" + name + ", favourite=" + favourite + ", notify=" + notify + ", notifyHeight=" + notifyHeight + ", notifyVolume=" + notifyVolume + ", data=" + data + '}';
+	return "LG{" + "id=" + id + ", name=" + name + ", river=" + river + ", favourite=" + favourite + ", notify=" + notify + ", notifyHeight=" + notifyHeight + ", notifyVolume=" + notifyVolume + ", currentHeight=" + currentHeight + ", currentVolume=" + currentVolume + '}';
     }
-
-    
-    
-    
+        
 }
