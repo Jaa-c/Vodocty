@@ -41,6 +41,9 @@ public class LG {
     @DatabaseField(defaultValue="0")
     private float currentVolume;
     
+    @DatabaseField(defaultValue="0")
+    private int currentFlood;
+    
     //private List<Data> data = new ArrayList<Data>();
     private Data data; //tbh do I really need List??
     
@@ -126,6 +129,16 @@ public class LG {
     public void setCurrentVolume(float currentVolume) {
 	this.currentVolume = currentVolume;
     }
+
+    public int getCurrentFlood() {
+	return currentFlood;
+    }
+
+    public void setCurrentFlood(int currentFlood) {
+	this.currentFlood = currentFlood;
+    }
+    
+    
 
     @Override
     public String toString() {
