@@ -5,7 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @DatabaseTable(tableName = "lg")
 public class LG {
     
@@ -30,7 +29,7 @@ public class LG {
     private boolean notify;
     
     @DatabaseField(defaultValue="0")
-    private int notifyHeight;
+    private float notifyHeight;
     
     @DatabaseField(defaultValue="0")
     private float notifyVolume;
@@ -57,6 +56,9 @@ public class LG {
 	return id;
     }
 
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public String getName() {
 	return name;
@@ -90,11 +92,11 @@ public class LG {
 	this.notify = notify;
     }
 
-    public int getNotifyHeight() {
+    public float getNotifyHeight() {
 	return notifyHeight;
     }
 
-    public void setNotifyHeight(int notifyHeight) {
+    public void setNotifyHeight(float notifyHeight) {
 	this.notifyHeight = notifyHeight;
     }
 
@@ -137,7 +139,6 @@ public class LG {
     public void setCurrentFlood(int currentFlood) {
 	this.currentFlood = currentFlood;
     }
-    
     
 
     @Override

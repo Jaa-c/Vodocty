@@ -86,9 +86,15 @@ public class Update {
 		    
 		    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
 		    query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
-		    if (query.queryForFirst() == null) {
+		    LG l = query.queryForFirst();
+		    
+		    if (l == null) {
 			lgDao.create(lg);
-			Log.i("Update, added LG: ", lg.getName());
+			Log.i("Added LG: ", lg.getName());
+		    }
+		    else {
+			lg.setId(l.getId());
+			lgDao.update(lg);
 		    }
 		    
 		    dataDao.create(lg.getData());

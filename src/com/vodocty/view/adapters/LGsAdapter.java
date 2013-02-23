@@ -1,6 +1,7 @@
 package com.vodocty.view.adapters;
 
 import android.app.Activity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,13 +46,35 @@ public class LGsAdapter extends ArrayAdapter {
 	    
 	    content = new LGData();
 	    content.name = (TextView) row.findViewById(R.id.lg_row);
+	    content.data = (TextView) row.findViewById(R.id.lg_row_right);
         }
 	else {
 	    content = (LGData) row.getTag();
 	}
-	row.setTag(content);
+	row.setTag(content);	
 	LG lg = data.get(position);
 	content.name.setText(lg.getName());
+	content.data.setText(Html.fromHtml(lg.getCurrentHeight() + " cm<br>" 
+		+ lg.getCurrentVolume() + " m<small><sup>3</sup></small>/s"));
+		
+	switch(lg.getCurrentFlood()) {
+	    case 0:
+		row.setBackgroundResource(R.drawable.selector_grey);
+		break;
+	    case 1:
+		row.setBackgroundResource(R.drawable.selector_flood_yellow);
+		break;
+	    case 2:
+		row.setBackgroundResource(R.drawable.selector_flood_orange);
+		break;
+	    case 3:
+		row.setBackgroundResource(R.drawable.selector_flood_red);
+		break;
+	    default:
+		row.setBackgroundResource(R.drawable.selector_grey);
+		break;
+	    }
+	
 	
 	return row;
     }
@@ -61,6 +84,7 @@ public class LGsAdapter extends ArrayAdapter {
     
     static class LGData {
 	protected TextView name;
+	protected TextView data;
 	
     }
 
