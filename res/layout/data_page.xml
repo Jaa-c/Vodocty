@@ -2,8 +2,7 @@
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:background="@color/white">
+    android:layout_width="fill_parent">
     
     <include 
 	layout="@layout/header_inc"
@@ -22,6 +21,10 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:textSize="25dp"
+	    android:background="@color/black"
+	    android:textColor="@color/white"
+	    android:paddingLeft="18dp"
+	    android:paddingRight="18dp"
 	/>
 	<TextView
 	    android:id="@+id/data_page_date"
@@ -29,25 +32,35 @@
 	    android:layout_height="wrap_content"
 	    android:textSize="12dp"
 	    android:layout_below="@id/data_page_heading"
+	    android:background="@color/yellow_light"
+	    android:textColor="@color/black"
+	    android:paddingLeft="18dp"
+	    android:paddingRight="18dp"
 	/>
 
 	    <RelativeLayout
 		android:id="@+id/data_page_flow"
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
-		android:layout_below="@id/data_page_date" >
+		android:layout_below="@id/data_page_date"
+		android:background="@color/yellow_light"
+		android:paddingLeft="18dp"
+		android:paddingRight="18dp" >
+
 		<TextView
 		    android:id="@+id/data_page_height"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:textSize="30dp"
+		    android:textColor="@color/black"
 		/>
 		<TextView
 		    android:id="@+id/data_page_volume"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:textSize="30dp"
-		    android:layout_alignParentRight="true" 
+		    android:layout_alignParentRight="true"
+		    android:textColor="@color/black"
 		/>
 	    </RelativeLayout>
 

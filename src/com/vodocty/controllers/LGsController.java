@@ -50,8 +50,7 @@ public class LGsController {
             
 	    Intent intent = new Intent(activity, DataActivity.class);
             //predame seznam, ktery chceme zobrazit
-            LG lg = (LG) adapter.getItem(position);
-	    Log.d(LGsController.class.getName(), "click: " + lg.getName());
+            LG lg = (LG) adapter.getItem(position-1);
 	    
 	    intent.putExtra(LG_ID, lg.getId());
 	    activity.startActivity(intent);
