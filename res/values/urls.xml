@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources> 
-    <string name="czeu">http://princ.name/temp/data.xml</string>    
+    <!--string name="czeu">http://princ.name/temp/data.xml</string-->
+    <string name="czeu">http://10.0.2.2/vodocty/data/last</string>
+    <string name="path">http://10.0.2.2/vodocty/data/</string>
     <array name="urls">
         <item>@string/czeu</item>
     </array>

@@ -3,6 +3,9 @@ package com.vodocty.update;
 import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
@@ -26,7 +29,8 @@ public class HttpReader {
 	try {
 	    resp = client.execute(uri);
 	}
-	catch(IOException e) {
+	catch(IOException ex) {
+	    Log.e(HttpReader.class.getName(), ex.getLocalizedMessage());
 	    return null;
 	}
 	
@@ -39,10 +43,20 @@ public class HttpReader {
 	try {
 	    return resp.getEntity().getContent();
 	}
-	catch(IOException e){
+	catch(IOException ex){
+	    Log.e(HttpReader.class.getName(), ex.getLocalizedMessage());
 	    return null;
 	}
 	
+    }
+    
+    public static InputStream loadGz(String url) {
+	try {
+	    return new GZIPInputStream(load(url));
+	} catch (IOException ex) {
+	    Log.e(HttpReader.class.getName(), ex.getLocalizedMessage());
+	    return null;
+	}
     }
     
 }

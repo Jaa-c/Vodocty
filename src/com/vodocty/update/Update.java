@@ -11,10 +11,15 @@ import com.vodocty.data.Country;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.data.River;
+import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -26,12 +31,32 @@ import org.xml.sax.SAXException;
  * @since long time ago
  */
 public class Update {
-    DBOpenHelper db;
-    Context c;
+    private DBOpenHelper db;
+    private Context c;
+    private int lastUpdate;
+    
+    private static final String GZ = ".xml.gz";
     
     public Update(DBOpenHelper db, Context c) {
 	this.db = db;
 	this.c = c;
+	try {
+	    Dao<Settings, Integer> sdao = db.getSettingsDao();
+	    QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
+	    query.where().eq(Settings.KEY, Settings.LAST_UPDATE);
+	    Settings s = query.queryForFirst();
+	    if(s == null) {
+		lastUpdate = 0;
+	    }
+	    else {
+		lastUpdate = Integer.parseInt(s.getValue());
+	    }
+	}
+	catch(SQLException e) {
+	    //better do nothing
+	    lastUpdate = (int) (Calendar.getInstance().getTimeInMillis() / 1000);
+	}
+	
     }
     
     
@@ -40,69 +65,112 @@ public class Update {
 	Resources res = c.getResources();
 	
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
+	String path = res.getString(R.string.path);
 	
-	InputStream xml;
+	List<InputStream> xmlList = new ArrayList<InputStream>();
 	List<River> data = null;
+	//foreach feeds for all countries
 	for(int i = 0; i < urls.length(); i++) {
-	    
-	    xml = HttpReader.load(urls.getString(i));
-	    if(xml == null) {
-		Log.e(Update.class.getName(), "feed offline: " + urls.getString(i));
+	    List<String> files;
+	    try {
+		files = this.loadInfo(urls.getString(i));
+	    }
+	    catch(NullPointerException e) {
+		Log.e(Update.class.getName(), "download error: " + e.getLocalizedMessage());
 		continue;
 	    }
-	    try {
-		data = XMLParser.parse(xml, Country.cze);
-	    } catch (IOException ex) {
-		Log.e("io: " + Update.class.getName(), ex.getLocalizedMessage());
-	    } catch (ParserConfigurationException ex) {
-		Log.e("parser: "+Update.class.getName(), ex.getLocalizedMessage());
-	    } catch (SAXException ex) {
-		Log.e("sax: "+Update.class.getName(), ex.getLocalizedMessage());
+	    
+	    //get all new files
+	    for(int j = files.size()-1; j >= 0; j--) {
+		String file = files.get(i);
+		xmlList.add(HttpReader.loadGz(path + file + GZ));
 	    }
-	    finally {
-		if(data == null) {
+	    
+	    //parse and save all new files
+	    for (int k = 0; k < xmlList.size(); k++) {
+		InputStream xml = xmlList.get(k);
+		if(xml == null) {
+		    Log.e(Update.class.getName(), "feed offline: " + urls.getString(i));
 		    continue;
 		}
-	    }
-	    
-	    //update the database:
-	    Dao<Data, Integer> dataDao = db.getDataDao();
-	    Dao<River, Integer> riverDao = db.getRiverDao();
-	    Dao<LG, Integer> lgDao = db.getLgDao();
-	    
-	    for(River r : data) {
-		QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
-		riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
-		if (riverQuery.queryForFirst() == null) {
-		    riverDao.create(r);
+		try {
+		    data = XMLParser.parse(xml, Country.cze);
+		} catch (Exception ex) {
+		    Log.e(Update.class.getName(), ex.getLocalizedMessage());
 		}
-		else {
-		    River river = riverQuery.queryForFirst();
-		    r.setId(river.getId());
-		}
-		
-		for(LG lg : r.getLg()) {
-		    lg.setRiver(r);
-		    
-		    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
-		    query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
-		    LG l = query.queryForFirst();
-		    
-		    if (l == null) {
-			lgDao.create(lg);
-			Log.i("Added LG: ", lg.getName());
+		finally {
+		    if(data == null) {
+			continue;
 		    }
-		    else {
-			lg.setId(l.getId());
-			lgDao.update(lg);
-		    }
-		    
-		    dataDao.create(lg.getData());
-		    
 		}
+		//finally update the data in database
+		this.updateDatabase(data, files.get(files.size() - 1 - k));
 	    }
 	}
     
-    }    
+    }
+    
+    private void updateDatabase(List<River> data, String time) throws SQLException {
+	//update the database:
+	Dao<Data, Integer> dataDao = db.getDataDao();
+	Dao<River, Integer> riverDao = db.getRiverDao();
+	Dao<LG, Integer> lgDao = db.getLgDao();
+
+	for(River r : data) {
+	    QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
+	    riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
+	    if (riverQuery.queryForFirst() == null) {
+		riverDao.create(r);
+	    }
+	    else {
+		River river = riverQuery.queryForFirst();
+		r.setId(river.getId());
+	    }
+
+	    for(LG lg : r.getLg()) {
+		lg.setRiver(r);
+
+		QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
+		query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
+		LG l = query.queryForFirst();
+
+		if (l == null) {
+		    lgDao.create(lg);
+		    Log.i("Added LG: ", lg.getName());
+		}
+		else {
+		    lg.setId(l.getId());
+		    lgDao.update(lg);
+		}
+
+		dataDao.create(lg.getData());
+	    }
+	}
+	Settings s = new Settings(Settings.LAST_UPDATE, time);
+	db.getSettingsDao().createOrUpdate(s);
+    }
+    
+    
+    private List<String> loadInfo(String url) {
+	BufferedReader raw = new BufferedReader(new InputStreamReader(HttpReader.load(url)));
+	
+	String[] s;
+	try {
+	    s = raw.readLine().split(" ");
+	} catch (IOException ex) {
+	    return null;
+	}
+	
+	List<String> data = new ArrayList<String>();
+	for(int i = 0; i < s.length; i++) {
+	    if(Integer.parseInt(s[i]) > lastUpdate) {
+		data.add(s[i]);
+	    }
+	    else {
+		break;
+	    }
+	}
+	return data;
+    }
 
 }

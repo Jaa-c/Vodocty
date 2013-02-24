@@ -2,16 +2,15 @@ package com.vodocty.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.vodocty.data.Country;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.data.River;
+import com.vodocty.data.Settings;
 import java.sql.SQLException;
 
 
@@ -30,6 +29,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     private static Dao<River, Integer> riverDao = null;
     private static Dao<LG, Integer> lgDao = null;
     private static Dao<Data, Integer> dataDao = null;
+    private static Dao<Settings, Integer> settDao = null;
     
     private static DBOpenHelper instance = null;
     
@@ -50,6 +50,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	    TableUtils.createTable(connectionSource, River.class);
 	    TableUtils.createTable(connectionSource, LG.class);
 	    TableUtils.createTable(connectionSource, Data.class);
+	    TableUtils.createTable(connectionSource, Settings.class);
 	}
 	catch(SQLException e) {
 	    Log.e(DBOpenHelper.class.getName(), "Can't create database", e);
@@ -85,6 +86,13 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	return dataDao;
     }
     
+    public synchronized Dao<Settings, Integer> getSettingsDao() throws SQLException {
+	if(settDao == null) {
+	    settDao = getDao(Settings.class);
+	}
+	return settDao;
+    }
+    
     
     @Override
     public void close() {
@@ -92,6 +100,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	riverDao = null;
 	lgDao = null;
 	dataDao = null;
+	settDao = null;
 	
 	instance = null;
     }
