@@ -1,20 +1,23 @@
 package com.vodocty;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.os.SystemClock;
 import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.RiversModel;
-import com.vodocty.update.Update;
-import java.sql.SQLException;
+import com.vodocty.update.UpdateReciever;
 
 public class MainActivity extends Activity {
     
     private DBOpenHelper db; //save in sth like global context
     private RiversController controller;
     private RiversModel model;
+    
+    private static  final long ALARM_TIME = 1000 * 60 * 30;//30 min
     
     /** Called when the activity is first created. */
     @Override
@@ -27,17 +30,11 @@ public class MainActivity extends Activity {
 	model = new RiversModel(db);
 	controller = new RiversController(this, model);
 	
-	Update u = new Update(db, this); //temp
-	try {
-	    u.doUpdate();
-	}
-	catch(SQLException e) {
-	    Log.e(MainActivity.class.getName(), e.getLocalizedMessage());
-	    e.printStackTrace(); //debug
-	    Toast.makeText(this, "Update error", Toast.LENGTH_LONG);
-	}
+	AlarmManager mgr = (AlarmManager) getSystemService(ALARM_SERVICE);
+	Intent intent = new Intent(this, UpdateReciever.class);
+	PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_TIME,  pi);
 	
-	       
     }
 
     @Override

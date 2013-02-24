@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * @author Dan Princ
  * @since long time ago
  */
-public class Update {
+public class Update implements Runnable {
     private DBOpenHelper db;
     private Context c;
     private Settings lastUpdate;
@@ -60,7 +60,21 @@ public class Update {
     }
     
     
-    public void doUpdate() throws SQLException {
+    public void run() {
+	try {
+	    doUpdate();
+	}
+	catch(SQLException e) {
+	    Log.e(Update.class.getName(), e.getLocalizedMessage());
+	    e.printStackTrace(); //debug
+	}
+	finally {
+	    db.close();
+	}
+    }
+    
+    
+    private void doUpdate() throws SQLException {
 	
 	Resources res = c.getResources();
 	
@@ -179,5 +193,6 @@ public class Update {
 	}
 	return data;
     }
+
 
 }

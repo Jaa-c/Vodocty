@@ -54,7 +54,8 @@ public class LGsAdapter extends ArrayAdapter {
 	row.setTag(content);	
 	LG lg = data.get(position);
 	content.name.setText(lg.getName());
-	content.data.setText(Html.fromHtml(lg.getCurrentHeight() + " cm<br>" 
+	String height = lg.getCurrentHeight() == 0 ? "" : lg.getCurrentHeight() + " cm";
+	content.data.setText(Html.fromHtml(height + "<br>" 
 		+ lg.getCurrentVolume() + " m<small><sup>3</sup></small>/s"));
 		
 	switch(lg.getCurrentFlood()) {

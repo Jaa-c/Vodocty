@@ -57,7 +57,7 @@ public class LGsModel {
 	try {
 	    QueryBuilder<LG,Integer> lgQb = this.db.getLgDao().queryBuilder();
 	    lgQb.where().in("river_id", riverId);
-	    lgQb.orderBy("currentVolume", false);
+	    lgQb.orderBy("currentVolume", false); //which way?? or optional?
 	    data = lgQb.query();
 	} catch (SQLException ex) {
 	    Log.e(LGsModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());

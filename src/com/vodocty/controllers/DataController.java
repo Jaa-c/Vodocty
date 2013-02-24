@@ -45,7 +45,8 @@ public class DataController {
 	text.setText(date);
 	
 	text = (TextView) activity.findViewById(R.id.data_page_height);
-	text.setText(data.getHeight() + "cm");
+	String height = (data.getHeight()) ==-1 ? "?? " : data.getHeight() + "";
+	text.setText(height + "cm");
 	
 	text = (TextView) activity.findViewById(R.id.data_page_volume);
 	text.setText(Html.fromHtml(data.getVolume() + "m<small><sup>3</sup></small>/s"));
