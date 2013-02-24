@@ -156,14 +156,21 @@ public class Update implements Runnable {
 
 		if (l == null) {
 		    lgDao.create(lg);
-		    //Log.i("Added LG: ", lg.getName());
+		    Log.i("Added LG: ", lg.getName());
 		}
 		else {
 		    lg.setId(l.getId());
 		    lgDao.update(lg);
 		}
-
-		dataDao.create(lg.getData());
+		
+		try {
+		    dataDao.create(lg.getData());
+		}
+		catch(SQLException ex) {
+		    Log.d(Update.class.getName(), ex.getLocalizedMessage());
+		    Log.d(Update.class.getName(), lg.toString());
+		    Log.d(Update.class.getName(), data.toString());
+		}
 	    }
 	}
 	

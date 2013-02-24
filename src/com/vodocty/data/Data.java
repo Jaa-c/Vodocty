@@ -22,7 +22,7 @@ public class Data {
     @DatabaseField(index = true, canBeNull = false)
     private Date date;
     
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(defaultValue="-1")
     private int height;
     
     @DatabaseField(defaultValue="-1")
