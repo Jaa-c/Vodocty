@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 public class Update {
     private DBOpenHelper db;
     private Context c;
-    private int lastUpdate;
+    private Settings lastUpdate;
     
     private static final String GZ = ".xml.gz";
     
@@ -46,15 +46,15 @@ public class Update {
 	    query.where().eq(Settings.KEY, Settings.LAST_UPDATE);
 	    Settings s = query.queryForFirst();
 	    if(s == null) {
-		lastUpdate = 0;
+		lastUpdate = new Settings(Settings.LAST_UPDATE, "0");
 	    }
 	    else {
-		lastUpdate = Integer.parseInt(s.getValue());
+		lastUpdate = s;
 	    }
 	}
 	catch(SQLException e) {
 	    //better do nothing
-	    lastUpdate = (int) (Calendar.getInstance().getTimeInMillis() / 1000);
+	    lastUpdate = new Settings(Settings.LAST_UPDATE, "" + (int) (Calendar.getInstance().getTimeInMillis() / 1000));
 	}
 	
     }
@@ -146,8 +146,15 @@ public class Update {
 		dataDao.create(lg.getData());
 	    }
 	}
+	
 	Settings s = new Settings(Settings.LAST_UPDATE, time);
-	db.getSettingsDao().createOrUpdate(s);
+	if(lastUpdate.getId() == 0) {
+	    db.getSettingsDao().create(s);
+	}
+	else {
+	    s.setId(lastUpdate.getId());
+	    db.getSettingsDao().update(s);
+	}
     }
     
     
@@ -163,7 +170,7 @@ public class Update {
 	
 	List<String> data = new ArrayList<String>();
 	for(int i = 0; i < s.length; i++) {
-	    if(Integer.parseInt(s[i]) > lastUpdate) {
+	    if(Integer.parseInt(s[i]) > lastUpdate.getId()) {
 		data.add(s[i]);
 	    }
 	    else {
