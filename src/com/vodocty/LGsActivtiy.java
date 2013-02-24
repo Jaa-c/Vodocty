@@ -47,7 +47,7 @@ public class LGsActivtiy extends Activity {
     protected void onPause() {
 	super.onPause();
 	
-	db.close();
+	//db.close();
     }
     
     

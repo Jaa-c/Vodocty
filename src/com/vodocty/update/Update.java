@@ -40,6 +40,7 @@ public class Update implements Runnable {
     public Update(DBOpenHelper db, Context c) {
 	this.db = db;
 	this.c = c;
+		
 	try {
 	    Dao<Settings, Integer> sdao = db.getSettingsDao();
 	    QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
@@ -55,7 +56,10 @@ public class Update implements Runnable {
 	catch(SQLException e) {
 	    //better do nothing
 	    lastUpdate = new Settings(Settings.LAST_UPDATE, "" + (int) (Calendar.getInstance().getTimeInMillis() / 1000));
+	    Log.e(Update.class.getName(), e.getLocalizedMessage());
 	}
+	
+	Log.i(Update.class.getName(),"lastUpdate="+  lastUpdate.getValue());
 	
     }
     
@@ -118,6 +122,8 @@ public class Update implements Runnable {
 		    }
 		}
 		//finally update the data in database
+		
+		Log.i(Update.class.getName(), "used file: " + files.get(files.size() - 1 - k));
 		this.updateDatabase(data, files.get(files.size() - 1 - k));
 	    }
 	}
@@ -150,7 +156,7 @@ public class Update implements Runnable {
 
 		if (l == null) {
 		    lgDao.create(lg);
-		    Log.i("Added LG: ", lg.getName());
+		    //Log.i("Added LG: ", lg.getName());
 		}
 		else {
 		    lg.setId(l.getId());
@@ -184,7 +190,7 @@ public class Update implements Runnable {
 	
 	List<String> data = new ArrayList<String>();
 	for(int i = 0; i < s.length; i++) {
-	    if(Integer.parseInt(s[i]) > lastUpdate.getId()) {
+	    if(Integer.parseInt(s[i]) > Integer.parseInt(lastUpdate.getValue())) {
 		data.add(s[i]);
 	    }
 	    else {
