@@ -70,7 +70,6 @@ public class Update implements Runnable {
 	}
 	catch(SQLException e) {
 	    Log.e(Update.class.getName(), e.getLocalizedMessage());
-	    e.printStackTrace(); //debug
 	}
 	finally {
 	    db.close();
@@ -98,6 +97,11 @@ public class Update implements Runnable {
 		continue;
 	    }
 	    
+	    if(files == null || files.isEmpty()) {
+		Log.i(Update.class.getName(), "Nothing to do.");
+		return;
+	    }
+	    
 	    //get all new files
 	    for(int j = files.size()-1; j >= 0; j--) {
 		String file = files.get(i);
@@ -121,8 +125,8 @@ public class Update implements Runnable {
 			continue;
 		    }
 		}
-		//finally update the data in database
 		
+		//finally update the data in database
 		Log.i(Update.class.getName(), "used file: " + files.get(files.size() - 1 - k));
 		this.updateDatabase(data, files.get(files.size() - 1 - k));
 	    }
@@ -167,9 +171,9 @@ public class Update implements Runnable {
 		    dataDao.create(lg.getData());
 		}
 		catch(SQLException ex) {
-		    Log.d(Update.class.getName(), ex.getLocalizedMessage());
+		    Log.e(Update.class.getName(), ex.getLocalizedMessage());
 		    Log.d(Update.class.getName(), lg.toString());
-		    Log.d(Update.class.getName(), data.toString());
+		    Log.d(Update.class.getName(), lg.getData().toString());
 		}
 	    }
 	}
