@@ -7,6 +7,7 @@ import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
 import com.vodocty.R;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
@@ -150,13 +151,18 @@ public class Update implements Runnable {
 		r.setId(river.getId());
 	    }
 
+	    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
+	    SelectArg nameArg = new SelectArg();
+	    SelectArg riverArg = new SelectArg();
+	    query.where().eq("name", nameArg).and().eq("river_id", riverArg);
+	    PreparedQuery<LG> preparedQ = query.prepare();
+	    
 	    for(LG lg : r.getLg()) {
 		lg.setRiver(r);
 
-		QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
-		query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
-		PreparedQuery<LG> pq = query.prepare();
-		LG l = lgDao.queryForFirst(pq);
+		nameArg.setValue(lg.getName());
+		nameArg.setValue(lg.getRiver());
+		LG l = lgDao.queryForFirst(preparedQ);
 
 		if (l == null) {
 		    lgDao.create(lg);
