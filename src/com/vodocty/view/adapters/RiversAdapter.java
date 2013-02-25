@@ -26,7 +26,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     
     private Activity activity;
     private int layoutResourceId;
-    private List<River> data;
+    //private List<River> data;
     
     private Map<String, List<River>> groups;
     private List<String> indicies;
@@ -36,7 +36,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
    
 	this.activity = activity;
 	this.layoutResourceId = layoutResourceId;
-	this.data = data;
+	//this.data = data;
 	
 	groups = new HashMap<String, List<River>>();
 	indicies = new ArrayList<String>();
@@ -55,8 +55,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     
     }
     
-    
-    public View getGroupView (int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getView(String text, View convertView, ViewGroup parent) {
 	View row = convertView;
 	RiverData content;
 	if(row == null) {
@@ -70,30 +69,18 @@ public class RiversAdapter extends BaseExpandableListAdapter {
 	}
 	row.setTag(content);
 	
-	content.name.setText("     " + indicies.get(groupPosition));
+	content.name.setText(text);
 	return row;
+    }
+    
+    
+    public View getGroupView (int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+	return getView("     " + indicies.get(groupPosition), convertView, parent);
     }
 
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-	View row = convertView;
-	RiverData content;
-	
-	if(row == null) {
-            LayoutInflater inflater = activity.getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-	    
-	    content = new RiverData();
-	    content.name = (TextView) row.findViewById(R.id.river_row);
-        }
-	else {
-	    content = (RiverData) row.getTag();
-	}
-	row.setTag(content);
-	
 	River river = groups.get(indicies.get(groupPosition)).get(childPosition);
-	content.name.setText(river.getName());
-	
-	return row;
+	return getView(river.getName(), convertView, parent);
     }
 
     public int getGroupCount() {
