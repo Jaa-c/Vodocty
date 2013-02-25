@@ -33,9 +33,10 @@ public class DataModel {
 	if(lgId == -1) {
 	    return null;
 	}
-	if(data != null) {
-	    return data;
-	}
+	
+	//if(data != null) {
+	//    return data;
+	//}
 	
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();

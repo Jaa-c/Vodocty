@@ -40,6 +40,7 @@ public class RiversController {
         //list.setOnItemClickListener(listClickHandler);
 	list.setOnChildClickListener(childListClickHandler);
 	
+	
     
     }
     

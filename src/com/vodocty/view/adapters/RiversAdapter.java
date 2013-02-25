@@ -26,20 +26,18 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     
     private Activity activity;
     private int layoutResourceId;
-    //private List<River> data;
     
     private Map<String, List<River>> groups;
-    private List<String> indicies;
+    private List<String> indices;
     
     public RiversAdapter(Activity activity, int layoutResourceId, List<River> data) {
         super();
    
 	this.activity = activity;
 	this.layoutResourceId = layoutResourceId;
-	//this.data = data;
 	
 	groups = new HashMap<String, List<River>>();
-	indicies = new ArrayList<String>();
+	indices = new ArrayList<String>();
 	char letter = '.';
 	List<River> current = null;
 	for(River river : data) {
@@ -48,7 +46,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
 		letter = first;
 		current = new ArrayList<River>();
 		groups.put(letter + "", current);
-		indicies.add(letter + "");
+		indices.add(letter + "");
 	    }
 	    current.add(river);
 	}
@@ -75,11 +73,11 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     
     
     public View getGroupView (int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-	return getView("     " + indicies.get(groupPosition), convertView, parent);
+	return getView("     " + indices.get(groupPosition), convertView, parent);
     }
 
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-	River river = groups.get(indicies.get(groupPosition)).get(childPosition);
+	River river = groups.get(indices.get(groupPosition)).get(childPosition);
 	return getView(river.getName(), convertView, parent);
     }
 
@@ -88,15 +86,15 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     }
 
     public int getChildrenCount(int i) {
-	return groups.get(indicies.get(i)).size();
+	return groups.get(indices.get(i)).size();
     }
 
     public Object getGroup(int i) {
-	return groups.get(indicies.get(i));
+	return groups.get(indices.get(i));
     }
 
     public Object getChild(int i, int j) {
-	return groups.get(indicies.get(i)).get(j);
+	return groups.get(indices.get(i)).get(j);
     }
     
     public long getGroupId(int i) {
@@ -108,7 +106,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     }
 
     public boolean hasStableIds() {
-	return true;
+	return true;//not rly for groups
     }
 
     public boolean isChildSelectable(int arg0, int arg1) {
