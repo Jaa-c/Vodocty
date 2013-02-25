@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.vodocty.R;
 import com.vodocty.data.Country;
@@ -21,8 +22,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  * Handles the regular data update.
@@ -156,7 +155,8 @@ public class Update implements Runnable {
 
 		QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
 		query.where().eq("name", lg.getName()).and().eq("river_id", lg.getRiver());
-		LG l = query.queryForFirst();
+		PreparedQuery<LG> pq = query.prepare();
+		LG l = lgDao.queryForFirst(pq);
 
 		if (l == null) {
 		    lgDao.create(lg);
