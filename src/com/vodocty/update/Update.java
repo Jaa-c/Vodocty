@@ -151,9 +151,9 @@ public class Update implements Runnable {
 		r.setId(river.getId());
 	    }
 
-	    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
 	    SelectArg nameArg = new SelectArg();
 	    SelectArg riverArg = new SelectArg();
+	    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
 	    query.where().eq("name", nameArg).and().eq("river_id", riverArg);
 	    PreparedQuery<LG> preparedQ = query.prepare();
 	    
@@ -161,7 +161,7 @@ public class Update implements Runnable {
 		lg.setRiver(r);
 
 		nameArg.setValue(lg.getName());
-		nameArg.setValue(lg.getRiver());
+		riverArg.setValue(lg.getRiver());
 		LG l = lgDao.queryForFirst(preparedQ);
 
 		if (l == null) {
