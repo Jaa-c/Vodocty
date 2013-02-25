@@ -1,5 +1,7 @@
 package com.vodocty.model;
 
+import android.util.Log;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.vodocty.data.River;
 import com.vodocty.database.DBOpenHelper;
 import java.sql.SQLException;
@@ -26,9 +28,15 @@ public class RiversModel {
 	    return rivers;
 	}
 	
-	try {    
-	    rivers = this.db.getRiverDao().queryForAll();
-	} catch (SQLException ex) {}
+	try {
+	    QueryBuilder<River,Integer> lgQb = this.db.getRiverDao().queryBuilder();
+	    //lgQb.where().in("country", "cze");
+	    lgQb.orderBy("name", true); //which way?? or optional?
+	    rivers = lgQb.query();
+	} catch (SQLException ex) {
+	    Log.e(RiversModel.class.getName(), ex.getLocalizedMessage());
+	    return null;
+	}
 	
 	return rivers;
     }

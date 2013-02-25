@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.main);
+	setContentView(R.layout.rivers);
 	
 	db = DBOpenHelper.getInstance(this);
 	model = new RiversModel(db);

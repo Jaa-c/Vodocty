@@ -18,11 +18,11 @@
 	android:orientation="vertical"
 	android:layout_below="@id/header_inc" >
 	
-	<ListView
-	android:id="@+id/listview"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-        android:background="@color/black" 
+	<ExpandableListView
+	    android:id="@+id/listview"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/black" 
 	/>
 
     </LinearLayout>

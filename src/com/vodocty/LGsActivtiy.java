@@ -23,7 +23,7 @@ public class LGsActivtiy extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.main);
+	setContentView(R.layout.lgs);
 	
 	db = DBOpenHelper.getInstance(this);
 	model = new LGsModel(db);

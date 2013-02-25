@@ -60,7 +60,7 @@ public class LGsModel {
 	    lgQb.orderBy("currentVolume", false); //which way?? or optional?
 	    data = lgQb.query();
 	} catch (SQLException ex) {
-	    Log.e(LGsModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
+	    Log.e(LGsModel.class.getName(), ex.getLocalizedMessage());
 	    return null;
 	}
 	
