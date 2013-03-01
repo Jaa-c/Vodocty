@@ -206,8 +206,9 @@ public class Update implements Runnable {
 	}
 	
 	List<String> data = new ArrayList<String>();
+	int l = Integer.parseInt(lastUpdate.getValue());
 	for(int i = 0; i < s.length; i++) {
-	    if(Integer.parseInt(s[i]) > Integer.parseInt(lastUpdate.getValue())) {
+	    if(Integer.parseInt(s[i]) > l) {
 		data.add(s[i]);
 	    }
 	    else {

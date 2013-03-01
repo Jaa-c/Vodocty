@@ -41,7 +41,7 @@
 	    <RelativeLayout
 		android:id="@+id/data_page_flow"
 		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
 		android:layout_below="@id/data_page_date"
 		android:background="@color/yellow_light"
 		android:paddingLeft="18dp"
@@ -64,7 +64,16 @@
 		/>
 	    </RelativeLayout>
 
+	    <RelativeLayout
+		android:id="@+id/data_chart"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:layout_below="@id/data_page_flow" >
+	    </RelativeLayout>
+
 
     </RelativeLayout>
+    
+    
     
 </RelativeLayout>

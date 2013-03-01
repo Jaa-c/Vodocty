@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
     private RiversController controller;
     private RiversModel model;
     
-    private static  final long ALARM_TIME = 1000 * 60 * 30;//30 min
+    private static final long ALARM_TIME = 1000 * 60 * 30;//30 min
     
     /** Called when the activity is first created. */
     @Override
