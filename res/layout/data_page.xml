@@ -69,6 +69,15 @@
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"
 		android:layout_below="@id/data_page_flow" >
+		
+		<TextView
+		    android:id="@+id/data_page_loading"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:textSize="30dp"
+		    android:textColor="@color/white"
+		    />
+		    
 	    </RelativeLayout>
 
 

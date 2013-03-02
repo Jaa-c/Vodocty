@@ -10,6 +10,8 @@ import java.util.Date;
  */
 public class Tools {
     
+    public static final int DAY_SECONDS = 81300000;
+    
     public static boolean isToday(Calendar date) {
 	Calendar c = Calendar.getInstance();
 	c.set(Calendar.HOUR, 0);
@@ -17,4 +19,5 @@ public class Tools {
 	c.set(Calendar.SECOND, 0);
 	return date.after(c.getTime());
     }
+    
 }

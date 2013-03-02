@@ -31,7 +31,7 @@ public class DataActivity extends Activity {
 	model.setLGId(lgId);
 	
 	controller = new DataController(this, model);
-	
+	controller.execute(null);
 	       
     }
 
