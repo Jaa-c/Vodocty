@@ -1,8 +1,10 @@
 package com.vodocty.update;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.PowerManager;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -72,7 +74,10 @@ public class Update implements Runnable {
 	    Log.e(Update.class.getName(), e.getLocalizedMessage());
 	}
 	finally {
-	    db.close();
+	    PowerManager powerManager = (PowerManager) c.getSystemService(Activity.POWER_SERVICE);
+	    if(!powerManager.isScreenOn()) {
+		db.close(); //TODO
+	    }
 	}
     }
     
