@@ -76,9 +76,7 @@ public class DataModel {
 	}
 	
 	TimeSeries series = new TimeSeries(title);
-	for(Data curr : d) {
-	    Date date = curr.getDate();
-	    
+	for(Data curr : d) {	    
 	    if(volume) {
 		series.add(curr.getDate(), curr.getVolume());
 	    }
