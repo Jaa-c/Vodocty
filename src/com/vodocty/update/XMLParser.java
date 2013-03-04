@@ -1,6 +1,5 @@
 package com.vodocty.update;
 
-import android.util.Log;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;

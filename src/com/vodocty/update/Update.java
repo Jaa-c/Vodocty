@@ -67,29 +67,25 @@ public class Update implements Runnable {
     
     
     public void run() {
-	try {
-	    doUpdate();
+	doUpdate();
+
+	PowerManager powerManager = (PowerManager) c.getSystemService(Activity.POWER_SERVICE);
+	if(!powerManager.isScreenOn()) {
+	    db.close(); //TODO
 	}
-	catch(SQLException e) {
-	    Log.e(Update.class.getName(), e.getLocalizedMessage());
-	}
-	finally {
-	    PowerManager powerManager = (PowerManager) c.getSystemService(Activity.POWER_SERVICE);
-	    if(!powerManager.isScreenOn()) {
-		db.close(); //TODO
-	    }
-	}
+	
+	Log.i(Update.class.getName(), "Update thread finished!");
     }
     
     
-    private void doUpdate() throws SQLException {
+    private void doUpdate()  {
 	
 	Resources res = c.getResources();
 	
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path = res.getString(R.string.path);
 	
-	List<InputStream> xmlList = new ArrayList<InputStream>();
+	//List<InputStream> xmlList = new ArrayList<InputStream>();
 	List<River> data = null;
 	//foreach feeds for all countries
 	for(int i = 0; i < urls.length(); i++) {
@@ -107,15 +103,18 @@ public class Update implements Runnable {
 		return;
 	    }
 	    
+	    
 	    //get all new files
 	    for(int j = files.size()-1; j >= 0; j--) {
-		String file = files.get(j);
-		xmlList.add(HttpReader.loadGz(path + file + GZ));
-	    }
-	    
-	    //parse and save all new files
-	    for (int k = 0; k < xmlList.size(); k++) {
-		InputStream xml = xmlList.get(k);
+//		String file = files.get(j);
+//		xmlList.add(HttpReader.loadGz(path + file + GZ));
+//	    }
+//	    
+//	    //parse and save all new files
+//	    for (int j = 0; j < xmlList.size(); j++) {
+//		InputStream xml = xmlList.get(j);
+		InputStream xml = HttpReader.loadGz(path + files.get(j) + GZ);
+		
 		if(xml == null) {
 		    Log.e(Update.class.getName(), "feed offline: " + urls.getString(i));
 		    continue;
@@ -132,10 +131,17 @@ public class Update implements Runnable {
 		}
 		
 		//finally update the data in database
-		Log.i(Update.class.getName(), "used file: " + files.get(files.size() - 1 - k));
-		this.updateDatabase(data, files.get(files.size() - 1 - k));
+		Log.i(Update.class.getName(), "used file: " + files.get(j) + ", files remaining: " + j);
+		try {
+		    this.updateDatabase(data, files.get(files.size() - 1 - j));
+		}
+		catch(SQLException e) {
+		    Log.e(Update.class.getName(), e.getLocalizedMessage());
+		}
 	    }
 	}
+	
+	Log.i(Update.class.getName(), "Update DONE!");
     
     }
     
@@ -192,6 +198,7 @@ public class Update implements Runnable {
 	Settings s = new Settings(Settings.LAST_UPDATE, time);
 	if(lastUpdate.getId() == 0) {
 	    db.getSettingsDao().create(s);
+	    lastUpdate.setId(db.getSettingsDao().extractId(s));
 	}
 	else {
 	    s.setId(lastUpdate.getId());
