@@ -22,7 +22,7 @@ public class BasicChart {
     private XYSeries series;
     private Activity activity;
     
-    protected static final int[] MARGINS = { 5, 5, 15, 5 }; //top lef bot rig
+    protected static final int[] MARGINS = { 5, 5, 16, 5 }; //top lef bot rig
     protected static final int TEXT_LEGEND = 18;
     protected static final int TEXT_LABELS = 13;
     protected static final float POINT_SIZE = 1.0f;
@@ -71,6 +71,7 @@ public class BasicChart {
 	renderer.setYLabels(LABEL_COUNT_Y);
 	
 	renderer.setZoomButtonsVisible(true);
+	renderer.setZoomEnabled(true, false);
 	
 	
 	double diff = (series.getMaxY() - series.getMinY()) * 0.1f;

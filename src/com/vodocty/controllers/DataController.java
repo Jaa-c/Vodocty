@@ -23,7 +23,7 @@ import tools.Tools;
  * @author Dan Princ
  * @since 21.2.2013
  */
-public class DataController extends AsyncTask<Object, Object, Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer>> {
+public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer>> {
     
     private Activity activity;
     private DataModel model;
@@ -70,8 +70,15 @@ public class DataController extends AsyncTask<Object, Object, Pair<XYMultipleSer
 	view.setText("Loading graph...");
     }
     
+    /**
+     * This loads all the necessary data to chart.
+     * It is done in a new thread in background, so the whole activity 
+     * does not have to wait unitl it is finished
+     * @param arg0 void
+     * @return chart data
+     */
     @Override
-    protected Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer> doInBackground(Object... arg0) {
+    protected Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer> doInBackground(Void... arg0) {
 	chart = new BasicChart(activity);
 	chart.setXYSeries(model.getVolumeSeries("průtok, m3/s"));
 	return chart.getChartData();
@@ -87,8 +94,4 @@ public class DataController extends AsyncTask<Object, Object, Pair<XYMultipleSer
 	chartLayout.addView(mChartView);
     }
     
-        
-    
-   
-
 }
