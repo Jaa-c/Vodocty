@@ -109,7 +109,7 @@ public class Update implements Runnable {
 	    
 	    //get all new files
 	    for(int j = files.size()-1; j >= 0; j--) {
-		String file = files.get(i);
+		String file = files.get(j);
 		xmlList.add(HttpReader.loadGz(path + file + GZ));
 	    }
 	    
