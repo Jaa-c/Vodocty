@@ -103,16 +103,8 @@ public class Update implements Runnable {
 		return;
 	    }
 	    
-	    
-	    //get all new files
+	    //get all new files and parse them
 	    for(int j = files.size()-1; j >= 0; j--) {
-//		String file = files.get(j);
-//		xmlList.add(HttpReader.loadGz(path + file + GZ));
-//	    }
-//	    
-//	    //parse and save all new files
-//	    for (int j = 0; j < xmlList.size(); j++) {
-//		InputStream xml = xmlList.get(j);
 		InputStream xml = HttpReader.loadGz(path + files.get(j) + GZ);
 		
 		if(xml == null) {
@@ -140,8 +132,6 @@ public class Update implements Runnable {
 		}
 	    }
 	}
-	
-	Log.i(Update.class.getName(), "Update DONE!");
     
     }
     
@@ -203,6 +193,7 @@ public class Update implements Runnable {
 	else {
 	    s.setId(lastUpdate.getId());
 	    db.getSettingsDao().update(s);
+	    lastUpdate = s;
 	}
     }
     
