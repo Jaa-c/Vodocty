@@ -43,6 +43,8 @@ public class Update implements Runnable {
     
     private static final String GZ = ".xml.gz";
     
+    public static boolean running = false;
+    
     public Update(DBOpenHelper db, Context c, NotificationManager mNotificationManager) {
 	this.db = db;
 	this.context = c;
@@ -72,19 +74,19 @@ public class Update implements Runnable {
     
     
     public void run() {
-	
-	if(!isOnline()) {
-	    Log.i(Update.class.getName(), "Not connected to the internet. Update cancelled.");
-	    return;
-	}
-	
-	doUpdate();
+	if(isOnline() && !running) {
+	    running = true;
+	    doUpdate();
 
-	PowerManager powerManager = (PowerManager) context.getSystemService(Activity.POWER_SERVICE);
-	if(!powerManager.isScreenOn()) {
-	    db.close(); //TODO
+	    PowerManager powerManager = (PowerManager) context.getSystemService(Activity.POWER_SERVICE);
+	    if(!powerManager.isScreenOn()) {
+		db.close(); //TODO
+	    }
 	}
-	
+	else {
+	    Log.i(Update.class.getName(), "Not connected to the internet or update already running. Update cancelled.");
+	}
+	running = false;
 	this.notifM.cancel(UpdateReciever.NOTI_ID);
 	Log.i(Update.class.getName(), "Update thread finished!");
     }
@@ -97,7 +99,6 @@ public class Update implements Runnable {
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path = res.getString(R.string.path);
 	
-	//List<InputStream> xmlList = new ArrayList<InputStream>();
 	List<River> data = null;
 	//foreach feeds for all countries
 	for(int i = 0; i < urls.length(); i++) {
@@ -137,7 +138,7 @@ public class Update implements Runnable {
 		//finally update the data in database
 		Log.i(Update.class.getName(), "used file: " + files.get(j) + ", files remaining: " + j);
 		try {
-		    this.updateDatabase(data, files.get(files.size() - 1 - j));
+		    this.updateDatabase(data, files.get(j));
 		}
 		catch(SQLException e) {
 		    Log.e(Update.class.getName(), e.getLocalizedMessage());
