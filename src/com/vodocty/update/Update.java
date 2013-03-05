@@ -1,9 +1,12 @@
 package com.vodocty.update;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.PowerManager;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
@@ -34,14 +37,16 @@ import java.util.List;
  */
 public class Update implements Runnable {
     private DBOpenHelper db;
-    private Context c;
+    private Context context;
+    private NotificationManager notifM;
     private Settings lastUpdate;
     
     private static final String GZ = ".xml.gz";
     
-    public Update(DBOpenHelper db, Context c) {
+    public Update(DBOpenHelper db, Context c, NotificationManager mNotificationManager) {
 	this.db = db;
-	this.c = c;
+	this.context = c;
+	this.notifM = mNotificationManager;
 		
 	try {
 	    Dao<Settings, Integer> sdao = db.getSettingsDao();
@@ -67,20 +72,27 @@ public class Update implements Runnable {
     
     
     public void run() {
+	
+	if(!isOnline()) {
+	    Log.i(Update.class.getName(), "Not connected to the internet. Update cancelled.");
+	    return;
+	}
+	
 	doUpdate();
 
-	PowerManager powerManager = (PowerManager) c.getSystemService(Activity.POWER_SERVICE);
+	PowerManager powerManager = (PowerManager) context.getSystemService(Activity.POWER_SERVICE);
 	if(!powerManager.isScreenOn()) {
 	    db.close(); //TODO
 	}
 	
+	this.notifM.cancel(UpdateReciever.NOTI_ID);
 	Log.i(Update.class.getName(), "Update thread finished!");
     }
     
     
     private void doUpdate()  {
 	
-	Resources res = c.getResources();
+	Resources res = context.getResources();
 	
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path = res.getString(R.string.path);
@@ -130,6 +142,7 @@ public class Update implements Runnable {
 		catch(SQLException e) {
 		    Log.e(Update.class.getName(), e.getLocalizedMessage());
 		}
+		
 	    }
 	}
     
@@ -220,6 +233,11 @@ public class Update implements Runnable {
 	}
 	return data;
     }
-
+    
+    public boolean isOnline() {
+	ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	return (netInfo != null && netInfo.isConnectedOrConnecting());
+    }
 
 }
