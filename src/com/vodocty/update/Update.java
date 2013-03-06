@@ -159,23 +159,30 @@ public class Update implements Runnable {
 	int updateTime = Integer.parseInt(time);
 	
 	SelectArg nameArg = new SelectArg();
-	SelectArg riverArg = new SelectArg();
+	SelectArg riverIdArg = new SelectArg();
 	QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
-	query.where().eq("name", nameArg).and().eq("river_id", riverArg);
-	PreparedQuery<LG> preparedQ = query.prepare();
+	query.where().eq("name", nameArg).and().eq("river_id", riverIdArg);
+	PreparedQuery<LG> preparedQLG = query.prepare();
+	
+	SelectArg riverArg = new SelectArg();
+	SelectArg countryArg = new SelectArg();
+	QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
+	riverQuery.where().eq("name", riverArg).and().eq("country", countryArg);
+	PreparedQuery<River> preparedQRiver = riverQuery.prepare();
 	
 	for(River r : data.values()) {
 	    if(r.getLastUpdate() != updateTime) { //some old entry
 		continue;
 	    }
-	    if(r.getId() == -1) {//only if river is not reaused
-		QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
-		riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
-		if (riverQuery.queryForFirst() == null) {
+	    
+	    if(r.getId() == -1) {//only if river is not reused
+		riverArg.setValue(r.getName());
+		countryArg.setValue(r.getCountry());
+		River river = riverDao.queryForFirst(preparedQRiver);
+		if (river == null) {
 		    riverDao.create(r);
 		}
 		else {
-		    River river = riverQuery.queryForFirst();
 		    r.setId(river.getId());
 		}
 	    }
@@ -185,8 +192,8 @@ public class Update implements Runnable {
 		try {
 		    if(lg.getId() == -1) {
 			nameArg.setValue(lg.getName());
-			riverArg.setValue(r);
-			LG l = lgDao.queryForFirst(preparedQ);
+			riverIdArg.setValue(r);
+			LG l = lgDao.queryForFirst(preparedQLG);
 			if(l != null) {
 			    lg.setId(l.getId());
 			}
@@ -211,15 +218,14 @@ public class Update implements Runnable {
 	    }
 	}
 	
-	Settings s = new Settings(Settings.LAST_UPDATE, time);
+	
+	lastUpdate.setValue(time);
 	if(lastUpdate.getId() == 0) {
-	    db.getSettingsDao().create(s);
-	    lastUpdate.setId(db.getSettingsDao().extractId(s));
+	    db.getSettingsDao().create(lastUpdate);
+	    lastUpdate.setId(db.getSettingsDao().extractId(lastUpdate));
 	}
 	else {
-	    s.setId(lastUpdate.getId());
-	    db.getSettingsDao().update(s);
-	    lastUpdate = s;
+	    db.getSettingsDao().update(lastUpdate);
 	}
     }
     

@@ -60,6 +60,7 @@ public class XMLParser {
 	    for(int j = 0; j < lgs.getLength(); j++) {
 		Node lg = lgs.item(j);
 		String lgName = lg.getAttributes().item(0).getTextContent();
+		//check date here TODO - get rid of db errors
 		
 		if(currentRiver.getLg().containsKey(lgName)) {
 		    currentLG = currentRiver.getLg().get(lgName);
