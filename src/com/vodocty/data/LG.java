@@ -50,6 +50,7 @@ public class LG {
     
     public LG(String name) {
 	this.name = name;
+	id = -1;
     }
 
     public int getId() {

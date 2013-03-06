@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles the regular data update.
@@ -99,7 +100,7 @@ public class Update implements Runnable {
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path = res.getString(R.string.path);
 	
-	List<River> data = null;
+	Map<String, River> data = null;
 	//foreach feeds for all countries
 	for(int i = 0; i < urls.length(); i++) {
 	    List<String> files;
@@ -125,7 +126,7 @@ public class Update implements Runnable {
 		    continue;
 		}
 		try {
-		    data = XMLParser.parse(xml, Country.cze);
+		    data = XMLParser.parse(xml, Country.cze, data, Integer.parseInt(files.get(j)));
 		} catch (Exception ex) {
 		    Log.e(Update.class.getName(), ex.getLocalizedMessage());
 		}
@@ -149,46 +150,57 @@ public class Update implements Runnable {
     
     }
     
-    private void updateDatabase(List<River> data, String time) throws SQLException {
+    private void updateDatabase(Map<String, River> data, String time) throws SQLException {
 	//update the database:
 	Dao<Data, Integer> dataDao = db.getDataDao();
 	Dao<River, Integer> riverDao = db.getRiverDao();
 	Dao<LG, Integer> lgDao = db.getLgDao();
 
-	for(River r : data) {
-	    QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
-	    riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
-	    if (riverQuery.queryForFirst() == null) {
-		riverDao.create(r);
+	int updateTime = Integer.parseInt(time);
+	
+	SelectArg nameArg = new SelectArg();
+	SelectArg riverArg = new SelectArg();
+	QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
+	query.where().eq("name", nameArg).and().eq("river_id", riverArg);
+	PreparedQuery<LG> preparedQ = query.prepare();
+	
+	for(River r : data.values()) {
+	    if(r.getLastUpdate() != updateTime) { //some old entry
+		continue;
 	    }
-	    else {
-		River river = riverQuery.queryForFirst();
-		r.setId(river.getId());
-	    }
-
-	    SelectArg nameArg = new SelectArg();
-	    SelectArg riverArg = new SelectArg();
-	    QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
-	    query.where().eq("name", nameArg).and().eq("river_id", riverArg);
-	    PreparedQuery<LG> preparedQ = query.prepare();
-	    
-	    for(LG lg : r.getLg()) {
-		lg.setRiver(r);
-
-		nameArg.setValue(lg.getName());
-		riverArg.setValue(lg.getRiver());
-		LG l = lgDao.queryForFirst(preparedQ);
-
-		if (l == null) {
-		    lgDao.create(lg);
-		    Log.i("Added LG: ", lg.getName());
+	    if(r.getId() == -1) {//only if river is not reaused
+		QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
+		riverQuery.where().eq("name", r.getName()).and().eq("country", r.getCountry());
+		if (riverQuery.queryForFirst() == null) {
+		    riverDao.create(r);
 		}
 		else {
-		    lg.setId(l.getId());
-		    lgDao.update(lg);
+		    River river = riverQuery.queryForFirst();
+		    r.setId(river.getId());
 		}
-		
+	    }
+
+	    
+	    for(LG lg : r.getLg().values()) {
 		try {
+		    if(lg.getId() == -1) {
+			nameArg.setValue(lg.getName());
+			riverArg.setValue(r);
+			LG l = lgDao.queryForFirst(preparedQ);
+			if(l != null) {
+			    lg.setId(l.getId());
+			}
+			lg.setRiver(r);
+		    }
+		    
+		    if(lg.getId() == -1) { //non existent LG
+			lgDao.create(lg);
+			Log.i("Added LG: ", lg.getName());
+		    }
+		    else {
+			lgDao.update(lg);
+		    }
+		    
 		    dataDao.create(lg.getData());
 		}
 		catch(SQLException ex) {

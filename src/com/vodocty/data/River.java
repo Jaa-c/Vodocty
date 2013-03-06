@@ -3,7 +3,9 @@ package com.vodocty.data;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @DatabaseTable(tableName = "river")
 public class River {
@@ -17,34 +19,38 @@ public class River {
     @DatabaseField(uniqueCombo=true, canBeNull=false)
     private Country country;
     
-    private List<LG> lg;
+    private Map<String, LG> lg;
+    
+    private long lastUpdate;
     
     River() {}
     
     public River(String name, Country country) {
+	this.id = -1;
 	this.name = name;    
 	this.country = country;
-	lg = new ArrayList<LG>();
+	lg = new HashMap<String, LG>();
     }
     
     public void add(LG lg) {
-	this.lg.add(lg);
+	this.lg.put(lg.getName(), lg);
     }
     
-    public void addAll(List<LG> lg) {
-	this.lg.addAll(lg);
-    }
 
     public String getName() {
 	return name;
     }
 
-    public List<LG> getLg() {
+    public Map<String, LG> getLg() {
 	return lg;
     }
     
-    public LG getLgItem(int i) {
-	return lg.get(i);
+    public LG getLgItem(String s) {
+	return lg.get(s);
+    }
+    
+    public void emptyLGs()  {
+	lg = new HashMap<String, LG>();
     }
 
     public int getId() {
@@ -63,14 +69,19 @@ public class River {
 	this.country = country;
     }
 
+    public long getLastUpdate() {
+	return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+	this.lastUpdate = lastUpdate;
+    }
+    
+    
     @Override
     public String toString() {
 	return "River{" + "id=" + id + ", name=" + name + ", country=" + country + '}';
     }
 
-    
-    
-    
-    
 
 }

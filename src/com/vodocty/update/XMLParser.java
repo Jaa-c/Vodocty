@@ -6,8 +6,9 @@ import com.vodocty.data.LG;
 import com.vodocty.data.River;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,9 +26,12 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
     
-    public static List<River> parse(InputStream in, Country c) throws ParserConfigurationException, IOException, SAXException {
+    public static Map<String, River> parse(InputStream in, Country c, Map<String, River> rivers, int updateTime) throws ParserConfigurationException, IOException, SAXException {
     
-	List<River> rivers = new ArrayList<River>();
+	//List<River> rivers = new ArrayList<River>();
+	if(rivers == null) {
+	    rivers = new HashMap<String, River>();
+	}
 	River currentRiver;
 	LG currentLG;
 	Data data;
@@ -37,18 +41,34 @@ public class XMLParser {
 	Document doc = db.parse(in);
 	doc.getDocumentElement().normalize();
 	
+	
 	NodeList riverList = doc.getElementsByTagName("river");
 	for(int i = 0; i < riverList.getLength(); i++) {
 	    Node river = riverList.item(i);
-	    currentRiver = new River(river.getAttributes().item(0).getTextContent(), c);
+	    String name = river.getAttributes().item(0).getTextContent();
+	    
+	    if(rivers.containsKey(name)) {
+		currentRiver = rivers.get(name);
+	    }
+	    else {
+		currentRiver = new River(name, c);
+	    }
+	    
 	    Element el = (Element) river;
 	    NodeList lgs = el.getElementsByTagName("lg");
 	    
-	    
 	    for(int j = 0; j < lgs.getLength(); j++) {
 		Node lg = lgs.item(j);
-		currentLG = new LG(lg.getAttributes().item(0).getTextContent());
+		String lgName = lg.getAttributes().item(0).getTextContent();
 		
+		if(currentRiver.getLg().containsKey(lgName)) {
+		    currentLG = currentRiver.getLg().get(lgName);
+		    currentLG.setData(null);
+		}
+		else {
+		    currentLG = new LG(lgName);
+		    currentRiver.add(currentLG);
+		}
 		
 		NodeList current = lg.getChildNodes();		
 		data = new Data(currentLG);
@@ -84,10 +104,13 @@ public class XMLParser {
 		}
 		
 		currentLG.setCurrentFlood(data.getFlood());
-		//currentLG.setRiver(currentRiver);
-		currentRiver.add(currentLG);
 	    }
-	    rivers.add(currentRiver);
+	    
+	    currentRiver.setLastUpdate(updateTime);
+	    
+	    if(currentRiver.getId() == -1) {//put new into map
+		rivers.put(currentRiver.getName(), currentRiver);
+	    }
 	}
 	
 	    
