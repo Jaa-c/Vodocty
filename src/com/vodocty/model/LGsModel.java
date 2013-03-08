@@ -66,5 +66,9 @@ public class LGsModel {
 	
 	return data;
     }
+    
+    public void invalidate() {
+	data = null;
+    }
 
 }

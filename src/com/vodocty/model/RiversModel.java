@@ -40,5 +40,9 @@ public class RiversModel {
 	
 	return rivers;
     }
+    
+    public void invalidateData() {
+	rivers = null;
+    }
 
 }

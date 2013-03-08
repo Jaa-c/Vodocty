@@ -32,6 +32,10 @@ public class LGsAdapter extends ArrayAdapter {
     
     }
     
+    public void setData(List<LG> data) {
+	this.data = data;
+    }
+    
     /**
      * Called for each row
      */

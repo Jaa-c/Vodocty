@@ -1,11 +1,14 @@
 package com.vodocty;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import com.vodocty.controllers.LGsController;
 import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.LGsModel;
+import com.vodocty.update.Update;
 
 /**
  *
@@ -33,6 +36,7 @@ public class LGsActivtiy extends Activity {
 	
 	controller = new LGsController(this, model);
 	
+	bindService();
 	       
     }
 
@@ -50,6 +54,10 @@ public class LGsActivtiy extends Activity {
 	//db.close();
     }
     
+    private void bindService() {
+	Intent i = new Intent(this, Update.class);
+	bindService(i, controller.getServiceConnection(), Context.BIND_AUTO_CREATE);
+    }
     
     
 }

@@ -19,11 +19,11 @@ import com.vodocty.view.adapters.RiversAdapter;
  * @author Dan Princ
  * @since 17.2.2013
  */
-public class RiversController {
+public class RiversController extends AbstractMessageReceiver {
     
     private Activity activity;
-    RiversModel model;
-    private BaseExpandableListAdapter adapter; 
+    private RiversModel model;
+    private RiversAdapter adapter; 
     
     public static String RIVER_ID = "riverId";
     
@@ -59,6 +59,13 @@ public class RiversController {
 	    return true;
 	}
     };
+
+    @Override
+    public void updateData() {
+	model.invalidateData();
+	adapter.setData(model.getRivers());
+	adapter.notifyDataSetChanged();
+    }
     
     /**
      * anonymní listener na všechny položky v seznamu

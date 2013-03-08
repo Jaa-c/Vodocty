@@ -36,6 +36,10 @@ public class RiversAdapter extends BaseExpandableListAdapter {
 	this.activity = activity;
 	this.layoutResourceId = layoutResourceId;
 	
+	setData(data);
+    }
+    
+    public final  void setData(List<River> data) {
 	groups = new HashMap<String, List<River>>();
 	indices = new ArrayList<String>();
 	char letter = '.';
@@ -50,10 +54,9 @@ public class RiversAdapter extends BaseExpandableListAdapter {
 	    }
 	    current.add(river);
 	}
-    
     }
     
-    public View getView(String text, View convertView, ViewGroup parent) {
+    public final View getView(String text, View convertView, ViewGroup parent) {
 	View row = convertView;
 	RiverData content;
 	if(row == null) {

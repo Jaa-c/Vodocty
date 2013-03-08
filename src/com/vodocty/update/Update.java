@@ -1,18 +1,28 @@
 package com.vodocty.update;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
+import com.vodocty.MainActivity;
 import com.vodocty.R;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
@@ -33,23 +43,42 @@ import java.util.Map;
 /**
  * Handles the regular data update.
  * 
+ * It's too big and does too many thinks. I don't like that.
+ * 
  * @author Dan Princ
  * @since long time ago
  */
-public class Update implements Runnable {
+public class Update extends Service implements Runnable {
+    
+    private static final String GZ = ".xml.gz";
+    private static final int NOTI_ID = 1;
+    
+    public static final int MSG_REGISTER = 1;
+    public static final int MSG_UNREGISTER = -1;
+    public static final int MSG_UPDATE = 2;
+    
+    private static boolean RUNNING = false;
+    
     private DBOpenHelper db;
-    private Context context;
     private NotificationManager notifM;
     private Settings lastUpdate;
     
-    private static final String GZ = ".xml.gz";
+    /** Target we publish for clients to send messages to IncomingHandler. */
+    private final Messenger mMessenger = new Messenger(new IncomingHandler());
     
-    public static boolean running = false;
-    
-    public Update(DBOpenHelper db, Context c, NotificationManager mNotificationManager) {
-	this.db = db;
-	this.context = c;
-	this.notifM = mNotificationManager;
+    private ArrayList<Messenger> mClients = new ArrayList<Messenger>();
+
+
+    @Override
+    public void onCreate() {
+	super.onCreate();
+	
+	this.db = DBOpenHelper.getInstance(this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+	this.createNotification();
 		
 	try {
 	    Dao<Settings, Integer> sdao = db.getSettingsDao();
@@ -71,15 +100,31 @@ public class Update implements Runnable {
 	
 	Log.i(Update.class.getName(),"lastUpdate="+  lastUpdate.getValue());
 	
+	
+	Thread updateThread = new Thread(this);
+	if(!RUNNING) {
+	    updateThread.start();
+	}
+	return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+	super.onDestroy();
+    }
+    
+    @Override
+    public IBinder onBind(Intent i) {
+	return mMessenger.getBinder();
     }
     
     
     public void run() {
-	if(isOnline() && !running) {
-	    running = true;
+	if(isOnline() && !RUNNING) {
+	    RUNNING = true;
 	    doUpdate();
 
-	    PowerManager powerManager = (PowerManager) context.getSystemService(Activity.POWER_SERVICE);
+	    PowerManager powerManager = (PowerManager) this.getSystemService(Activity.POWER_SERVICE);
 	    if(!powerManager.isScreenOn()) {
 		db.close(); //TODO
 	    }
@@ -87,15 +132,26 @@ public class Update implements Runnable {
 	else {
 	    Log.i(Update.class.getName(), "Not connected to the internet or update already running. Update cancelled.");
 	}
-	running = false;
-	this.notifM.cancel(UpdateReciever.NOTI_ID);
+	RUNNING = false;
+	this.notifM.cancel(NOTI_ID);
+	
 	Log.i(Update.class.getName(), "Update thread finished!");
+    }
+    
+    public void notifyReceivers() {
+	for(Messenger m : mClients) {
+	    try {
+		m.send(Message.obtain(null, MSG_UPDATE, 0, 0));
+	    } catch (RemoteException ex) {
+		Log.e(Update.class.getName(), ex.getLocalizedMessage());
+	    }
+	}
     }
     
     
     private void doUpdate()  {
 	
-	Resources res = context.getResources();
+	Resources res = getResources();
 	
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path = res.getString(R.string.path);
@@ -144,6 +200,8 @@ public class Update implements Runnable {
 		catch(SQLException e) {
 		    Log.e(Update.class.getName(), e.getLocalizedMessage());
 		}
+		
+		notifyReceivers(); //notify controllers that the data changed
 		
 	    }
 	}
@@ -253,10 +311,49 @@ public class Update implements Runnable {
 	return data;
     }
     
-    public boolean isOnline() {
-	ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    
+    private boolean isOnline() {
+	ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	return (netInfo != null && netInfo.isConnectedOrConnecting());
+    }
+    
+    
+    private void createNotification() {
+	this.notifM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    
+	Intent notificationIntent = new Intent(this, MainActivity.class);
+	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+	Notification notify = new Notification(R.drawable.ic_launcher,
+						    "Vodocty: updating data",
+						    System.currentTimeMillis());
+	notify.setLatestEventInfo(this, "Vodocty", "Update in progress", contentIntent);
+	
+	//Set default vibration
+	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
+	notify.defaults |= Notification.FLAG_ONGOING_EVENT;
+	notify.defaults |= Notification.DEFAULT_LIGHTS;
+	
+	this.notifM.notify(NOTI_ID, notify);
+    }
+    
+    /**
+     * Handler of incoming messages from clients.
+     */
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+		case MSG_REGISTER:
+                    mClients.add(msg.replyTo);
+                    break;
+                case MSG_UNREGISTER:
+                    mClients.remove(msg.replyTo);
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 
 }

@@ -18,7 +18,7 @@ import com.vodocty.view.adapters.LGsAdapter;
  * @author Dan Princ
  * @since 20.2.2013
  */
-public class LGsController {
+public class LGsController extends AbstractMessageReceiver {
     
     private Activity activity;
     private LGsModel model;
@@ -57,5 +57,12 @@ public class LGsController {
 
         }
     };
+
+    @Override
+    public void updateData() {
+	model.invalidate();
+	adapter.setData(model.getLGs());
+	adapter.notifyDataSetChanged();
+    }
 
 }
