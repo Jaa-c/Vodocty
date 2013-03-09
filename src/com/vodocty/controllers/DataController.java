@@ -61,9 +61,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	
 	text = (TextView) activity.findViewById(R.id.data_page_volume);
 	text.setText(Html.fromHtml(data.getVolume() + "m<small><sup>3</sup></small>/s"));
-	
-	Log.d("xxx", data.toString());
-	
+		
     }
 
     @Override

@@ -31,6 +31,7 @@ public class RiversModel {
 	try {
 	    QueryBuilder<River,Integer> lgQb = this.db.getRiverDao().queryBuilder();
 	    //lgQb.where().in("country", "cze");
+	    //lgQb.orderByRaw("name COLLATE UNICODE"); //which way?? or optional?
 	    lgQb.orderBy("name", true); //which way?? or optional?
 	    rivers = lgQb.query();
 	} catch (SQLException ex) {

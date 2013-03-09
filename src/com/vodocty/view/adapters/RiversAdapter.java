@@ -109,7 +109,7 @@ public class RiversAdapter extends BaseExpandableListAdapter {
     }
 
     public boolean hasStableIds() {
-	return true;//not rly for groups
+	return false;//not rly for groups
     }
 
     public boolean isChildSelectable(int arg0, int arg1) {

@@ -49,7 +49,7 @@ public class DataModel {
 	    Log.e(DataModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
 	    return null;
 	}
-	Log.d(this.getClass().getName(), data.toString());
+	
 	return data;
     }
 

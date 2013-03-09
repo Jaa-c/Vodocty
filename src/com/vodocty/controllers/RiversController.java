@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.TextView;
 import com.vodocty.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.data.River;
@@ -33,6 +34,11 @@ public class RiversController extends AbstractMessageReceiver {
 	this.model = model;
 	
         ExpandableListView list = (ExpandableListView) activity.findViewById(R.id.listview);
+	
+	View header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
+	TextView head = (TextView) header.findViewById(R.id.header_row);
+	head.setText("Všechny řeky:");
+	list.addHeaderView(header, null, false);
 	
 	adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
 	
