@@ -1,7 +1,9 @@
 package com.vodocty;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.WindowManager;
 import com.vodocty.controllers.DataController;
 import com.vodocty.controllers.LGsController;
 import com.vodocty.database.DBOpenHelper;
@@ -22,6 +24,9 @@ public class DataActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
+	getWindow().setFormat(PixelFormat.RGBA_8888);
+	getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
+	
 	setContentView(R.layout.data_page);
 	
 	db = DBOpenHelper.getInstance(this);
@@ -31,7 +36,7 @@ public class DataActivity extends Activity {
 	model.setLGId(lgId);
 	
 	controller = new DataController(this, model);
-	controller.execute(null);
+	controller.execute();
 	       
     }
 

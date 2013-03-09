@@ -43,7 +43,7 @@ public class LGsAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 	View row = convertView;
 	LGData content;
-	
+		
 	if(row == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
@@ -65,6 +65,7 @@ public class LGsAdapter extends ArrayAdapter {
 	switch(lg.getCurrentFlood()) {
 	    case 0:
 		row.setBackgroundResource(R.drawable.selector_grey);
+		content.data.setBackgroundResource(R.drawable.selector_grey);
 		break;
 	    case 1:
 		row.setBackgroundResource(R.drawable.selector_flood_yellow);

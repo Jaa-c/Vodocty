@@ -31,12 +31,19 @@ public class BasicChart {
     protected static final int LABEL_COUNT_Y = 7;
     
     protected static final float LINE_WIDTH = 2.5f;
+    
     protected static int LINE_COLOR;
+    protected static int AXE_COLOR;
+    protected static int BACKGROUND_COLOR;
+    protected static int FONT_WHITE_COLOR;
     
     public BasicChart(Activity activity) {
 	this.activity = activity;
 	
-	LINE_COLOR = activity.getResources().getColor(R.color.blue_light);
+	LINE_COLOR = activity.getResources().getColor(R.color.blue_2);
+	AXE_COLOR = activity.getResources().getColor(R.color.grey_line);
+	BACKGROUND_COLOR = activity.getResources().getColor(R.color.transparent);
+	FONT_WHITE_COLOR = activity.getResources().getColor(R.color.red);
     }
     
     public void setXYSeries(XYSeries series) {
@@ -61,14 +68,19 @@ public class BasicChart {
 	renderer.setPointSize(POINT_SIZE);
 	renderer.setMargins(MARGINS);
 	
-	renderer.setAxesColor(Color.LTGRAY);
-	renderer.setLabelsColor(Color.LTGRAY);
+	renderer.setApplyBackgroundColor(true);
+	renderer.setBackgroundColor(BACKGROUND_COLOR);
+	renderer.setMarginsColor(BACKGROUND_COLOR);
+	
 	
 	renderer.setShowGrid(true);
 	renderer.setXLabelsAlign(Paint.Align.CENTER);
 	renderer.setYLabelsAlign(Paint.Align.LEFT);
 	renderer.setXLabels(LABEL_COUNT_X);
 	renderer.setYLabels(LABEL_COUNT_Y);
+	
+	renderer.setAxesColor(AXE_COLOR);
+	renderer.setLabelsColor(FONT_WHITE_COLOR);
 	
 	renderer.setZoomButtonsVisible(true);
 	renderer.setZoomEnabled(true, false);

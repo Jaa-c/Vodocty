@@ -39,7 +39,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	Data data = model.getLastData();
 	
         TextView text = (TextView) activity.findViewById(R.id.data_page_heading);
-	text.setText(data.getLg().getRiver().getName() + "\n" + 
+	text.setText(data.getLg().getRiver().getName() + " - " + 
 		data.getLg().getName() );
 	
 	text = (TextView) activity.findViewById(R.id.data_page_date);
@@ -47,7 +47,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	Calendar c = Calendar.getInstance();
 	c.setTime(data.getDate());
 	
-	Log.d("today", Tools.isToday(c) + "");
+	
 	String date = Tools.isToday(c) ? "dnes" : 
 		c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
 	date += " v " + (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY) + ":" + 
@@ -61,6 +61,8 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	
 	text = (TextView) activity.findViewById(R.id.data_page_volume);
 	text.setText(Html.fromHtml(data.getVolume() + "m<small><sup>3</sup></small>/s"));
+	
+	Log.d("xxx", data.toString());
 	
     }
 

@@ -4,15 +4,8 @@
     <color name="header_background">@color/black</color>
     
     <color name="white">#ffffff</color>
+    <color name="white_2">#f4f4f4</color>
     <color name="black">#000000</color>
-    <color name="grey_light">#cccccc</color>
-    <color name="grey_dark">#444444</color>
-    
-    <!--color name="blue_light">#6fa8dc</color>
-    <color name="blue_light_lighter">#8fc8fc</color-->
-    <color name="blue_light_darker">#2f78ac</color>
-    <color name="green_light">#93c47d</color>
-    <color name="green_light_darker">#53943d</color>
     
     
     <color name="blue">#133CAC</color>
@@ -31,6 +24,29 @@
     <color name="red">#FF0700</color>
     <color name="red_light">#FE3F44</color>
     <color name="red_dark">#A40004</color>
+    
+    
+    <color name="blue_2">#2ea3cf</color>
+    
+    <color name="grey_2">#555657</color>
+    <color name="grey_3">#282828</color>
+    <color name="grey_4">#080808</color>
+    <color name="grey_line">#a69494</color>
+    
+    
+    
+    
+    <color name="grey_light">#dddddd</color>
+    <color name="grey_dark">@color/grey_3</color>
+    
+    <color name="blue_highlight">@color/blue_2</color>
+    <color name="background_data">@color/grey_3</color>
+    <color name="background_data_darker">@color/grey_4</color>
+    
+    <color name="font_color_highlight">@color/blue_2</color>
+    <color name="font_color_standard">@color/white_2</color>
+    <color name="transparent">#00ffffff</color>
+    
     
 </resources>
 

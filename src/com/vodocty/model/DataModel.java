@@ -43,13 +43,13 @@ public class DataModel {
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
 	    dataQb.where().in("lg_id", lgId);
-	    dataQb.orderBy("id", false);
+	    dataQb.orderBy("date", false);
 	    data = dataQb.queryForFirst();
 	} catch (SQLException ex) {
 	    Log.e(DataModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
 	    return null;
 	}
-	
+	Log.d(this.getClass().getName(), data.toString());
 	return data;
     }
 
