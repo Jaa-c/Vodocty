@@ -83,11 +83,15 @@ public class LGsAdapter extends ArrayAdapter {
 	
 	return row;
     }
+
+    @Override
+    public Object getItem(int position) {
+	return data.get(position);
+    }
+
     
     
-    
-    
-    static class LGData {
+    static final class LGData {
 	protected TextView name;
 	protected TextView data;
 	

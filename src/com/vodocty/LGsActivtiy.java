@@ -3,6 +3,7 @@ package com.vodocty;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import com.vodocty.controllers.LGsController;
 import com.vodocty.controllers.RiversController;
@@ -43,20 +44,27 @@ public class LGsActivtiy extends Activity {
     @Override
     protected void onResume() {
 	super.onResume();
-	
+	bindService();
 	db = DBOpenHelper.getInstance(this);
     }
 
     @Override
     protected void onPause() {
 	super.onPause();
-	
+	unbindService(sConn);
 	//db.close();
     }
     
+    
+    private ServiceConnection sConn;
+    
     private void bindService() {
+	if(sConn == null) {
+	    sConn = controller.getServiceConnection();
+	}
+	
 	Intent i = new Intent(this, Update.class);
-	bindService(i, controller.getServiceConnection(), Context.BIND_AUTO_CREATE);
+	bindService(i, sConn, Context.BIND_AUTO_CREATE);
     }
     
     

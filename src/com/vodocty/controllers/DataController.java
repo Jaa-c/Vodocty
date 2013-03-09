@@ -3,6 +3,7 @@ package com.vodocty.controllers;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -46,10 +47,10 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	Calendar c = Calendar.getInstance();
 	c.setTime(data.getDate());
 	
-	
+	Log.d("today", Tools.isToday(c) + "");
 	String date = Tools.isToday(c) ? "dnes" : 
 		c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
-	date += " " + (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY) + ":" + 
+	date += " v " + (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY) + ":" + 
 		(c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
 	
 	text.setText(date);
@@ -60,7 +61,6 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	
 	text = (TextView) activity.findViewById(R.id.data_page_volume);
 	text.setText(Html.fromHtml(data.getVolume() + "m<small><sup>3</sup></small>/s"));
-	
 	
     }
 

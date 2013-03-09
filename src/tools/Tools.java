@@ -1,5 +1,6 @@
 package tools;
 
+import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,10 +15,10 @@ public class Tools {
     
     public static boolean isToday(Calendar date) {
 	Calendar c = Calendar.getInstance();
-	c.set(Calendar.HOUR, 0);
+	c.set(Calendar.HOUR_OF_DAY, 0);
 	c.set(Calendar.MINUTE, 0);
-	c.set(Calendar.SECOND, 0);
-	return date.after(c.getTime());
+	c.set(Calendar.SECOND, 1);
+	return date.after(c);
     }
     
 }
