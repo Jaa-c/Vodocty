@@ -55,6 +55,23 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	
 	text.setText(date);
 	
+	
+	if(data.getFlood() > 0) {
+	    text = (TextView) activity.findViewById(R.id.data_page_flood);
+	    text.setText("pozor: " + data.getFlood() + ". SPA");
+	    switch(data.getFlood()) {
+		case 1:
+		    text.setTextColor(activity.getResources().getColor(R.color.yellow_light));
+		    break;
+		case 2:
+		    text.setTextColor(activity.getResources().getColor(R.color.orange_light));
+		    break;
+		case 3:
+		    text.setTextColor(activity.getResources().getColor(R.color.red_light));
+		    break;
+	    }
+	}
+	
 	text = (TextView) activity.findViewById(R.id.data_page_height);
 	String height = (data.getHeight()) ==-1 ? "?? " : data.getHeight() + "";
 	text.setText(height + "cm");

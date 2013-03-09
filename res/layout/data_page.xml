@@ -16,9 +16,7 @@
 	android:layout_height="fill_parent"
 	android:layout_below="@id/header_inc"
 	android:background="@drawable/main_background" >
-	
-	<!-- android:background="@color/background_data" -->
-	
+		
 	<TextView
 	    android:id="@+id/data_page_heading"
 	    android:layout_width="fill_parent"
@@ -30,22 +28,38 @@
 	    android:paddingTop="10dp"
 	    android:paddingBottom="10dp"
 	/>
-	<TextView
-	    android:id="@+id/data_page_date"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:textSize="14dp"
-	    android:layout_below="@id/data_page_heading"
-	    android:textColor="@color/font_color_highlight"
-	    android:paddingLeft="18dp"
-	    android:paddingRight="18dp"
-	/>
+
+	    <RelativeLayout
+		android:id="@+id/data_page_date_flood"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:layout_below="@id/data_page_heading"
+		android:paddingLeft="18dp"
+		android:paddingRight="18dp" >
+		
+		<TextView
+		    android:id="@+id/data_page_date"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="@color/font_color_highlight"
+		    android:textSize="14dp"
+		    />
+		<TextView
+		    android:id="@+id/data_page_flood"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:textColor="@color/font_color_highlight"
+		    android:textSize="14dp"
+		    android:textStyle="bold"
+		    />
+	    </RelativeLayout>
 
 	    <RelativeLayout
 		android:id="@+id/data_page_flow"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
-		android:layout_below="@id/data_page_date"
+		android:layout_below="@id/data_page_date_flood"
 		android:paddingLeft="18dp"
 		android:paddingRight="18dp" >
 
@@ -53,16 +67,16 @@
 		    android:id="@+id/data_page_height"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:textSize="30dp"
 		    android:textColor="@color/font_color_highlight"
+		    android:textSize="30dp"
 		/>
 		<TextView
 		    android:id="@+id/data_page_volume"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:textSize="30dp"
 		    android:layout_alignParentRight="true"
 		    android:textColor="@color/font_color_highlight"
+		    android:textSize="30dp"
 		/>
 	    </RelativeLayout>
 
