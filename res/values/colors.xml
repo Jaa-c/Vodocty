@@ -28,25 +28,20 @@
     
     <color name="blue_2">#2ea3cf</color>
     
-    <color name="grey_2">#555657</color>
-    <color name="grey_3">#282828</color>
-    <color name="grey_4">#080808</color>
+    <color name="grey_2">#282828</color>
+    <color name="grey_3">#080808</color>
     <color name="grey_line">#a69494</color>
-    
-    
-    
+        
     
     <color name="grey_light">#dddddd</color>
-    <color name="grey_dark">@color/grey_3</color>
+    <color name="grey_dark">@color/grey_2</color>
     
     <color name="blue_highlight">@color/blue_2</color>
     <color name="background_data">@color/grey_3</color>
-    <color name="background_data_darker">@color/grey_4</color>
+    <color name="background_data_darker">@color/grey_3</color>
     
     <color name="font_color_highlight">@color/blue_2</color>
     <color name="font_color_standard">@color/white_2</color>
     <color name="transparent">#00ffffff</color>
     
-    
 </resources>
-

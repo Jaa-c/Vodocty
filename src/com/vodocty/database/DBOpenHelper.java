@@ -24,7 +24,7 @@ import java.sql.SQLException;
 public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     
     private static final String DATABASE_NAME = "vodocty.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     
     private static Dao<River, Integer> riverDao = null;
     private static Dao<LG, Integer> lgDao = null;
@@ -60,8 +60,18 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqld, ConnectionSource cs, int i, int i1) {
-	throw new UnsupportedOperationException("Not supported yet.");
+    public void onUpgrade(SQLiteDatabase sqld, ConnectionSource cs, int oldVersion, int newVersion) {
+	if(oldVersion == 2) {
+	    try {
+		Dao<LG, Integer> dao = getLgDao();
+		dao.executeRaw("ALTER TABLE `lg` ADD COLUMN " + LG.LAST_NOTIFICATION + " DATE;");
+		Log.d(this.getClass().getName(), "Table updated!");
+	    }
+	    catch(SQLException e) {
+		Log.e(this.getClass().getName(), e.getMessage());
+		Log.d(this.getClass().getName(), "failed to update database. That would be BAD I guess.");
+	    }
+	}
     }
     
 

@@ -2,11 +2,12 @@ package com.vodocty.data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @DatabaseTable(tableName = "lg")
 public class LG {
+    
+    public static final String LAST_NOTIFICATION = "lastNotification";
     
     @DatabaseField(generatedId = true)
     private int id;
@@ -27,6 +28,9 @@ public class LG {
     
     @DatabaseField(defaultValue="0")
     private boolean notify;
+    
+    @DatabaseField(columnName=LAST_NOTIFICATION)
+    private Date lastNotification;
     
     @DatabaseField(defaultValue="0")
     private float notifyHeight;
@@ -140,6 +144,16 @@ public class LG {
     public void setCurrentFlood(int currentFlood) {
 	this.currentFlood = currentFlood;
     }
+
+    public Date getLastNotification() {
+	return lastNotification;
+    }
+
+    public void setLastNotification(Date lastNotification) {
+	this.lastNotification = lastNotification;
+    }
+    
+    
     
 
     @Override

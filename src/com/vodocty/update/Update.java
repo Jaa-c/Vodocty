@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Handles the regular data update.
@@ -265,8 +266,9 @@ public class Update extends Service implements Runnable {
 		    else {
 			lgDao.update(lg);
 		    }
-		    
-		    dataDao.create(lg.getData());
+		    if(lg.getData().getDate() != null) {
+			dataDao.create(lg.getData());
+		    }
 		}
 		catch(SQLException ex) {
 		    Log.e(Update.class.getName(), ex.getLocalizedMessage());

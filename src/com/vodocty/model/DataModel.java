@@ -1,11 +1,12 @@
 package com.vodocty.model;
 
 import android.util.Log;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.vodocty.data.Data;
+import com.vodocty.data.LG;
 import com.vodocty.database.DBOpenHelper;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import org.achartengine.model.TimeSeries;
 
@@ -86,6 +87,18 @@ public class DataModel {
 	}	
 	
 	return series;
+    }
+    
+    
+    public boolean updateLG(LG lg) {
+	try {
+	    Dao<LG, Integer> lgDao = db.getLgDao();
+	    return lgDao.update(lg) == 1;
+	}
+	catch(SQLException e) {
+	    Log.e(this.getClass().getName(), e.getMessage());
+	    return false;
+	}
     }
     
 }

@@ -3,13 +3,16 @@ package com.vodocty.controllers;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.data.Data;
+import com.vodocty.data.LG;
 import com.vodocty.model.DataModel;
 import com.vodocty.view.charts.BasicChart;
 import java.util.Calendar;
@@ -30,13 +33,25 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
     private DataModel model;
     private BasicChart chart;
     
+    private Button favButton;
+    private Data data;
+    
     public DataController(Activity activity, DataModel model) {
 	
 	this.activity = activity;
 	this.model = model;
 	chart = null;
+
+	data = model.getLastData();
 	
-	Data data = model.getLastData();
+	favButton = (Button) activity.findViewById(R.id.button_fav);
+	if(data.getLg().isFavourite()) {
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+	}
+	else {
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+	}
+	favButton.setOnClickListener(favButtonListener);
 	
         TextView text = (TextView) activity.findViewById(R.id.data_page_heading);
 	text.setText(data.getLg().getRiver().getName() + " - " + 
@@ -110,5 +125,35 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	RelativeLayout chartLayout = (RelativeLayout) activity.findViewById(R.id.data_chart);
 	chartLayout.addView(mChartView);
     }
+    
+    
+    private OnClickListener favButtonListener = new OnClickListener() {
+	public void onClick(View arg0) {
+	    LG lg = data.getLg();
+	    if(lg.isFavourite()) {
+		//dialog
+		lg.setFavourite(false);
+		if(model.updateLG(lg)) {
+		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+		}
+		else {
+		    Toast.makeText(activity, "Chyba, nepodarilo se odebrat z oblibenych", Toast.LENGTH_LONG);
+		}
+	    }
+	    else {
+		lg.setFavourite(true);
+		if(model.updateLG(lg)) {
+		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+		}
+		else {
+		    Toast.makeText(activity, "Chyba, nepodarilo se prodat do oblibenych", Toast.LENGTH_LONG);
+		}
+	    }
+	    
+	    
+	}
+    };
+    
+    
     
 }

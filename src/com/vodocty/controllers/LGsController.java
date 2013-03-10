@@ -51,6 +51,8 @@ public class LGsController extends AbstractMessageReceiver {
 	    Intent intent = new Intent(activity, DataActivity.class);
             //predame seznam, ktery chceme zobrazit
             LG lg = (LG) adapter.getItem(position-1);
+	    Log.d("lgcontroller", "position: " + position);
+	    Log.d("lgcontroller", lg.toString());
 	    
 	    intent.putExtra(LG_ID, lg.getId());
 	    activity.startActivity(intent);
