@@ -22,6 +22,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.support.DatabaseConnection;
 import com.vodocty.MainActivity;
 import com.vodocty.R;
 import com.vodocty.data.Country;
@@ -35,11 +36,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Handles the regular data update.
@@ -174,6 +175,17 @@ public class Update extends Service implements Runnable {
 		return;
 	    }
 	    
+	    DatabaseConnection conn = null; // start transaction:
+	    Savepoint savePoint = null; 
+	    try {
+		conn = db.getDataDao().startThreadConnection();
+		savePoint = conn.setSavePoint(null);
+	    }
+	    catch(SQLException e) {
+		Log.e(this.getClass().getName(), e.getLocalizedMessage());
+	    }
+	    
+	    
 	    //get all new files and parse them
 	    for(int j = files.size()-1; j >= 0; j--) {
 		InputStream xml = HttpReader.loadGz(path + files.get(j) + GZ);
@@ -204,6 +216,14 @@ public class Update extends Service implements Runnable {
 		
 		notifyReceivers(); //notify controllers that the data changed
 		
+	    }
+	    
+	    try {
+		conn.commit(savePoint); //commit transaction
+		db.getDataDao().endThreadConnection(conn);
+	    }
+	    catch(SQLException e) {
+		Log.e(Update.class.getName(), e.getLocalizedMessage());
 	    }
 	}
     
