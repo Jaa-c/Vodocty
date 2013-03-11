@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
-import com.vodocty.LGsActivtiy;
+import com.vodocty.activities.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.data.River;
 import com.vodocty.model.RiversModel;

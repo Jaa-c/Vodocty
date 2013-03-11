@@ -23,8 +23,9 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.DatabaseConnection;
-import com.vodocty.MainActivity;
 import com.vodocty.R;
+import com.vodocty.Vodocty;
+import com.vodocty.activities.MainActivity;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
@@ -75,7 +76,7 @@ public class Update extends Service implements Runnable {
     public void onCreate() {
 	super.onCreate();
 	
-	this.db = DBOpenHelper.getInstance(this);
+	this.db = ((Vodocty) getApplicationContext()).getDatabase();
     }
 
     @Override
@@ -85,10 +86,10 @@ public class Update extends Service implements Runnable {
 	try {
 	    Dao<Settings, Integer> sdao = db.getSettingsDao();
 	    QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
-	    query.where().eq(Settings.KEY, Settings.LAST_UPDATE);
+	    query.where().eq(Settings.KEY, Settings.SETTINGS_LAST_UPDATE);
 	    Settings s = query.queryForFirst();
 	    if(s == null) {
-		lastUpdate = new Settings(Settings.LAST_UPDATE, "0");
+		lastUpdate = new Settings(Settings.SETTINGS_LAST_UPDATE, "0");
 	    }
 	    else {
 		lastUpdate = s;
@@ -96,7 +97,7 @@ public class Update extends Service implements Runnable {
 	}
 	catch(SQLException e) {
 	    //better do nothing
-	    lastUpdate = new Settings(Settings.LAST_UPDATE, "" + (int) (Calendar.getInstance().getTimeInMillis() / 1000));
+	    lastUpdate = new Settings(Settings.SETTINGS_LAST_UPDATE, "" + (int) (Calendar.getInstance().getTimeInMillis() / 1000));
 	    Log.e(Update.class.getName(), e.getLocalizedMessage());
 	}
 	
@@ -274,7 +275,12 @@ public class Update extends Service implements Runnable {
 			riverIdArg.setValue(r);
 			LG l = lgDao.queryForFirst(preparedQLG);
 			if(l != null) {
-			    lg.setId(l.getId());
+			    lg.setId(l.getId());//TODO : do it better
+			    lg.setFavorite(l.isFavorite());
+			    lg.setLastNotification(l.getLastNotification());
+			    lg.setNotifyHeight(l.getNotifyHeight());
+			    lg.setNotifyVolume(l.getNotifyVolume());
+			    lg.setNotify(l.isNotify());
 			}
 			lg.setRiver(r);
 		    }
@@ -301,7 +307,6 @@ public class Update extends Service implements Runnable {
 	
 	lastUpdate.setValue(time);
 	if(lastUpdate.getId() == 0) {
-	    db.getSettingsDao().create(lastUpdate);
 	    lastUpdate.setId(db.getSettingsDao().extractId(lastUpdate));
 	}
 	else {

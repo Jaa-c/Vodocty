@@ -1,10 +1,12 @@
-package com.vodocty;
+package com.vodocty.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import com.vodocty.R;
+import com.vodocty.Vodocty;
 import com.vodocty.controllers.LGsController;
 import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
@@ -29,7 +31,7 @@ public class LGsActivtiy extends Activity {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.lgs);
 	
-	db = DBOpenHelper.getInstance(this);
+	db = ((Vodocty) getApplicationContext()).getDatabase();
 	model = new LGsModel(db);
 	
 	int riverId = getIntent().getIntExtra(RiversController.RIVER_ID, -1);
@@ -45,7 +47,7 @@ public class LGsActivtiy extends Activity {
     protected void onResume() {
 	super.onResume();
 	bindService();
-	db = DBOpenHelper.getInstance(this);
+	
     }
 
     @Override

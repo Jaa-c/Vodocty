@@ -8,15 +8,17 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author Dan Princ
  * @since 24.2.2013
  */
-@DatabaseTable(tableName = "settings")
+@DatabaseTable(tableName = Settings.TABLE_NAME)
 public class Settings {
     
+    public static final String TABLE_NAME = "settings";
     
     public static final String KEY = "key";
     public static final String VALUE = "value";
     
     
-    public static final String LAST_UPDATE = "lastUpdate";
+    public static final String SETTINGS_LAST_UPDATE = "lastUpdate";
+    public static final String SETTINGS_FAVORITES = "favorites";
     
     @DatabaseField(generatedId = true)
     private int id;

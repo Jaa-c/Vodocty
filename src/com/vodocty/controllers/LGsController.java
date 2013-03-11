@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.vodocty.DataActivity;
+import com.vodocty.activities.DataActivity;
 import com.vodocty.R;
 import com.vodocty.data.LG;
 import com.vodocty.model.LGsModel;

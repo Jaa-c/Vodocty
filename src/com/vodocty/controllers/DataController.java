@@ -45,7 +45,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	data = model.getLastData();
 	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
-	if(data.getLg().isFavourite()) {
+	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
 	}
 	else {
@@ -130,10 +130,9 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
     private OnClickListener favButtonListener = new OnClickListener() {
 	public void onClick(View arg0) {
 	    LG lg = data.getLg();
-	    if(lg.isFavourite()) {
+	    if(lg.isFavorite()) {
 		//dialog
-		lg.setFavourite(false);
-		if(model.updateLG(lg)) {
+		if(model.unsetFavorite(lg)) {
 		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
 		}
 		else {
@@ -141,8 +140,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 		}
 	    }
 	    else {
-		lg.setFavourite(true);
-		if(model.updateLG(lg)) {
+		if(model.setFavorite(lg)) {
 		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
 		}
 		else {

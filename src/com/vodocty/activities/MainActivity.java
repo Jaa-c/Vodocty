@@ -1,4 +1,4 @@
-package com.vodocty;
+package com.vodocty.activities;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -14,7 +14,11 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.util.Log;
+import com.vodocty.R;
+import com.vodocty.Vodocty;
 import com.vodocty.controllers.RiversController;
+import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.RiversModel;
 import com.vodocty.update.Update;
@@ -35,7 +39,9 @@ public class MainActivity extends Activity {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.rivers);
 	
-	db = DBOpenHelper.getInstance(this);
+	db = ((Vodocty) getApplicationContext()).getDatabase();
+	//if(there are favorites)
+	//launch new favoritesActivity
 	model = new RiversModel(db);
 	controller = new RiversController(this, model);
 	
@@ -51,8 +57,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
 	super.onResume();
+	//if there are favorites display
+	    //this.onBackPressed();
 	bindService();
-	db = DBOpenHelper.getInstance(this);
     }
 
     @Override

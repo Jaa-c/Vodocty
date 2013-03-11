@@ -81,12 +81,12 @@ public class LG {
 	this.river = river;
     }
 
-    public boolean isFavourite() {
+    public boolean isFavorite() {
 	return favourite;
     }
 
-    public void setFavourite(boolean favourite) {
-	this.favourite = favourite;
+    public void setFavorite(boolean favorite) {
+	this.favourite = favorite;
     }
 
     public boolean isNotify() {

@@ -3,10 +3,13 @@ package com.vodocty.model;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.support.DatabaseConnection;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
+import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.List;
 import org.achartengine.model.TimeSeries;
 
@@ -90,7 +93,69 @@ public class DataModel {
     }
     
     
-    public boolean updateLG(LG lg) {
+    public boolean setFavorite(LG lg) {
+	Dao<Settings, Integer> settDao;
+	DatabaseConnection conn;
+	Savepoint savePoint;
+	try {
+	    settDao = db.getSettingsDao();
+	    conn = settDao.startThreadConnection();
+	    savePoint = conn.setSavePoint(null);
+	    settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
+		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + 1" +
+		    " WHERE " + Settings.KEY + " = " + Settings.SETTINGS_FAVORITES);
+	}
+	catch(SQLException e) {
+	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
+	    return false;
+	} 
+	lg.setFavorite(true);
+	if(updateLG(lg)) {
+	    try {
+		conn.commit(savePoint);
+		settDao.endThreadConnection(conn);
+	    }
+	    catch(SQLException e) {
+		Log.e(this.getClass().getName(), e.getLocalizedMessage());
+	    }
+	    return true;
+	}
+	return false;    
+    }
+    
+    
+    public boolean unsetFavorite(LG lg) {
+	Dao<Settings, Integer> settDao;
+	DatabaseConnection conn;
+	Savepoint savePoint;
+	try {
+	    settDao = db.getSettingsDao();
+	    conn = settDao.startThreadConnection();
+	    savePoint = conn.setSavePoint(null);
+	    settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
+		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " - 1" +
+		    " WHERE " + Settings.KEY + " = " + Settings.SETTINGS_FAVORITES);
+	}
+	catch(SQLException e) {
+	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
+	    return false;
+	} 
+	lg.setFavorite(false);
+	if(updateLG(lg)) {
+	    try {
+		conn.commit(savePoint);
+		settDao.endThreadConnection(conn);
+	    }
+	    catch(SQLException e) {
+		Log.e(this.getClass().getName(), e.getLocalizedMessage());
+	    }
+	    return true;
+	}
+	return false;
+    
+    }
+    
+    private boolean updateLG(LG lg) {
 	try {
 	    Dao<LG, Integer> lgDao = db.getLgDao();
 	    return lgDao.update(lg) == 1;

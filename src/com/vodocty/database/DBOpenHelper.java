@@ -7,6 +7,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.vodocty.Vodocty;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.data.River;
@@ -24,25 +25,25 @@ import java.sql.SQLException;
 public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     
     private static final String DATABASE_NAME = "vodocty.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     
     private static Dao<River, Integer> riverDao = null;
     private static Dao<LG, Integer> lgDao = null;
     private static Dao<Data, Integer> dataDao = null;
     private static Dao<Settings, Integer> settDao = null;
     
-    private static DBOpenHelper instance = null;
+    //private static DBOpenHelper instance = null;
     
-    private DBOpenHelper(Context context) {
+    public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     
-    public static synchronized DBOpenHelper getInstance(Context context) {
-	if(instance == null) {
-	    instance = new DBOpenHelper(context);
-	}
-	return instance;
-    }
+//    public static synchronized DBOpenHelper getInstance(Context context) {
+//	if(instance == null) {
+//	    instance = new DBOpenHelper(context);
+//	}
+//	return instance;
+//    }
 
     @Override
     public void onCreate(SQLiteDatabase sqld, ConnectionSource cs) {
@@ -51,6 +52,8 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	    TableUtils.createTable(connectionSource, LG.class);
 	    TableUtils.createTable(connectionSource, Data.class);
 	    TableUtils.createTable(connectionSource, Settings.class);
+	    
+	    initDatabase();
 	}
 	catch(SQLException e) {
 	    Log.e(DBOpenHelper.class.getName(), "Can't create database", e);
@@ -61,7 +64,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqld, ConnectionSource cs, int oldVersion, int newVersion) {
-	if(oldVersion == 2) {
+	if(oldVersion < DATABASE_VERSION) {
 	    try {
 		Dao<LG, Integer> dao = getLgDao();
 		dao.executeRaw("ALTER TABLE `lg` ADD COLUMN " + LG.LAST_NOTIFICATION + " DATE;");
@@ -112,6 +115,11 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	dataDao = null;
 	settDao = null;
 	
-	instance = null;
+	//instance = null;
+    }
+    
+    private void initDatabase() throws SQLException {
+	settDao.create(new Settings(Settings.SETTINGS_FAVORITES, "0")); 
+	settDao.create(new Settings(Settings.SETTINGS_LAST_UPDATE, "0"));    
     }
 }
