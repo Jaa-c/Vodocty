@@ -7,40 +7,41 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.vodocty.activities.DataActivity;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.activities.DataActivity;
 import com.vodocty.data.LG;
-import com.vodocty.model.LGsModel;
+import com.vodocty.model.FavoritesModel;
 import com.vodocty.view.adapters.LGsAdapter;
 
 /**
  *
  * @author Dan Princ
- * @since 20.2.2013
+ * @since 11.3.2013
  */
-public class LGsController extends AbstractMessageReceiver {
+public class FavoritesController extends AbstractMessageReceiver {
     
     private Activity activity;
-    private LGsModel model;
-    private LGsAdapter adapter;
+    private FavoritesModel model;
+    private LGsAdapter adapter; 
     
-    public LGsController(Activity activity, LGsModel model) {
+    public FavoritesController(Activity activity, FavoritesModel model) {
 	
 	this.activity = activity;
 	this.model = model;
 	
         ListView list = (ListView) activity.findViewById(R.id.lg_listview);
-	adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getLGs());
+	adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getFavoriteLGs());
+	adapter.setDisplayFavorites(true);
 	
 	View header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
 	TextView head = (TextView) header.findViewById(R.id.header_row);
-	head.setText(model.getRiver().getName() + ":");
+	head.setText("Oblíbené vodočty:");
 	list.addHeaderView(header, null, false);
 	
 	list.setAdapter(adapter);
         list.setOnItemClickListener(listClickHandler);
-	
+    
     }
     
     private AdapterView.OnItemClickListener listClickHandler = new AdapterView.OnItemClickListener() {
@@ -58,12 +59,11 @@ public class LGsController extends AbstractMessageReceiver {
 
         }
     };
+    
 
     @Override
     public void updateData() {
 	model.invalidate();
-	adapter.setData(model.getLGs());
-	adapter.notifyDataSetChanged();
     }
 
 }

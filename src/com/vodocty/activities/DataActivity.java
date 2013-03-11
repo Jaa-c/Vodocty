@@ -32,9 +32,9 @@ public class DataActivity extends Activity {
 	setContentView(R.layout.data_page);
 	
 	db = ((Vodocty) getApplicationContext()).getDatabase();
-	model = new DataModel(db);
+	model = new DataModel((Vodocty) getApplicationContext());
 	
-	int lgId = getIntent().getIntExtra(LGsController.LG_ID, -1);
+	int lgId = getIntent().getIntExtra(Vodocty.EXTRA_LG_ID, -1);
 	model.setLGId(lgId);
 	
 	controller = new DataController(this, model);

@@ -34,7 +34,7 @@ public class LGsActivtiy extends Activity {
 	db = ((Vodocty) getApplicationContext()).getDatabase();
 	model = new LGsModel(db);
 	
-	int riverId = getIntent().getIntExtra(RiversController.RIVER_ID, -1);
+	int riverId = getIntent().getIntExtra(Vodocty.EXTRA_RIVER_ID, -1);
 	model.setRiverId(riverId);
 	
 	controller = new LGsController(this, model);

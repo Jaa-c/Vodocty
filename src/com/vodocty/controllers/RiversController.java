@@ -11,6 +11,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import com.vodocty.activities.LGsActivtiy;
 import com.vodocty.R;
+import com.vodocty.Vodocty;
 import com.vodocty.data.River;
 import com.vodocty.model.RiversModel;
 import com.vodocty.view.adapters.RiversAdapter;
@@ -26,14 +27,12 @@ public class RiversController extends AbstractMessageReceiver {
     private RiversModel model;
     private RiversAdapter adapter; 
     
-    public static String RIVER_ID = "riverId";
-    
     public RiversController(Activity activity, RiversModel model) {
 	
 	this.activity = activity;
 	this.model = model;
 	
-        ExpandableListView list = (ExpandableListView) activity.findViewById(R.id.listview);
+        ExpandableListView list = (ExpandableListView) activity.findViewById(R.id.river_listview);
 	
 	View header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
 	TextView head = (TextView) header.findViewById(R.id.header_row);
@@ -60,7 +59,7 @@ public class RiversController extends AbstractMessageReceiver {
             //predame seznam, ktery chceme zobrazit
             River river = (River) adapter.getChild(groupPosition, childPosition);
 	    
-	    intent.putExtra(RIVER_ID, river.getId());
+	    intent.putExtra(Vodocty.EXTRA_RIVER_ID, river.getId());
 	    activity.startActivity(intent);
 	    return true;
 	}
@@ -73,21 +72,5 @@ public class RiversController extends AbstractMessageReceiver {
 	adapter.notifyDataSetChanged();
     }
     
-    /**
-     * anonymní listener na všechny položky v seznamu
-     *
-    private OnItemClickListener listClickHandler = new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView parent, View v, int position, long id) {
-            
-	    Intent intent = new Intent(activity, LGsActivtiy.class);
-            //predame seznam, ktery chceme zobrazit
-            River river = (River) adapter.getItem(position);
-	    
-	    intent.putExtra(RIVER_ID, river.getId());
-	    activity.startActivity(intent);
-
-        }
-    };*/
 
 }

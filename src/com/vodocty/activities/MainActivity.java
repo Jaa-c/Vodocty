@@ -17,9 +17,12 @@ import android.os.SystemClock;
 import android.util.Log;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.controllers.AbstractMessageReceiver;
+import com.vodocty.controllers.FavoritesController;
 import com.vodocty.controllers.RiversController;
 import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
+import com.vodocty.model.FavoritesModel;
 import com.vodocty.model.RiversModel;
 import com.vodocty.update.Update;
 import com.vodocty.update.UpdateReciever;
@@ -27,8 +30,8 @@ import com.vodocty.update.UpdateReciever;
 public class MainActivity extends Activity {
     
     private DBOpenHelper db; //save in sth like global context
-    private RiversController controller;
-    private RiversModel model;
+    private AbstractMessageReceiver controller;
+    //private RiversModel model;
     
     private static final long ALARM_TIME = 1000 * 60 * 30;//30 min
     
@@ -37,13 +40,20 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.rivers);
 	
-	db = ((Vodocty) getApplicationContext()).getDatabase();
-	//if(there are favorites)
-	//launch new favoritesActivity
-	model = new RiversModel(db);
-	controller = new RiversController(this, model);
+	Vodocty context = (Vodocty) getApplicationContext();
+	db = (context).getDatabase();
+	
+	if(context.getFavorites() > 0) {
+	    setContentView(R.layout.lgs);
+	    FavoritesModel model = new FavoritesModel(db);
+	    controller = new FavoritesController(this, model);
+	}
+	else {
+	    setContentView(R.layout.rivers);
+	    RiversModel model = new RiversModel(db);
+	    controller = new RiversController(this, model);
+	}
 	
 	bindService();
 	

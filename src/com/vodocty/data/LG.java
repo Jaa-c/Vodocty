@@ -9,10 +9,17 @@ public class LG {
     
     public static final String LAST_NOTIFICATION = "lastNotification";
     
+    public static final String COLUMN_FAVORITE = "favourite";
+    public static final String COLUMN_NAME = "name";
+    
     @DatabaseField(generatedId = true)
     private int id;
     
-    @DatabaseField(index=true, uniqueCombo=true, canBeNull=false)
+    @DatabaseField(
+	    index=true,
+	    uniqueCombo=true,
+	    canBeNull=false,
+	    columnName=COLUMN_NAME)
     private String name;
     
     @DatabaseField(
@@ -23,7 +30,7 @@ public class LG {
 	    canBeNull=false)
     private River river;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_FAVORITE)
     private boolean favourite;
     
     @DatabaseField(defaultValue="0")

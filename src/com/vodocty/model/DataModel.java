@@ -2,8 +2,10 @@ package com.vodocty.model;
 
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.DatabaseConnection;
+import com.vodocty.Vodocty;
 import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.data.Settings;
@@ -21,12 +23,14 @@ import org.achartengine.model.TimeSeries;
 public class DataModel {
     
     private DBOpenHelper db;
+    private Vodocty context;
     private Data data;
     
     private int lgId;
     
-    public DataModel(DBOpenHelper db) {
-	this.db = db;
+    public DataModel(Vodocty c) {
+	this.context = c;
+	this.db = c.getDatabase();
 	data = null;
 	lgId = -1;
     }
@@ -101,15 +105,17 @@ public class DataModel {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
 	    savePoint = conn.setSavePoint(null);
-	    settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
+	    GenericRawResults<String[]> cursor =settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
 		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + 1" +
-		    " WHERE " + Settings.KEY + " = " + Settings.SETTINGS_FAVORITES);
+		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
+	    cursor.close();
 	}
 	catch(SQLException e) {
 	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
 	    return false;
 	} 
 	lg.setFavorite(true);
+	context.adToFavorites(1);
 	if(updateLG(lg)) {
 	    try {
 		conn.commit(savePoint);
@@ -132,15 +138,17 @@ public class DataModel {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
 	    savePoint = conn.setSavePoint(null);
-	    settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
+	    GenericRawResults<String[]> cursor = settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
 		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " - 1" +
-		    " WHERE " + Settings.KEY + " = " + Settings.SETTINGS_FAVORITES);
+		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
+	    cursor.close();
 	}
 	catch(SQLException e) {
 	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
 	    return false;
 	} 
 	lg.setFavorite(false);
+	context.adToFavorites(-1);
 	if(updateLG(lg)) {
 	    try {
 		conn.commit(savePoint);

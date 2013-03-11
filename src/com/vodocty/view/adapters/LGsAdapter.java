@@ -22,6 +22,7 @@ public class LGsAdapter extends ArrayAdapter {
     private Activity activity;
     private int layoutResourceId;
     private List<LG> data;
+    private boolean displayFavorites;
     
     public LGsAdapter(Activity activity, int layoutResourceId, List<LG> data) {
         super(activity, layoutResourceId, data);
@@ -29,6 +30,7 @@ public class LGsAdapter extends ArrayAdapter {
 	this.activity = activity;
 	this.layoutResourceId = layoutResourceId;
 	this.data = data;
+	this.displayFavorites = false;
     
     }
     
@@ -55,9 +57,15 @@ public class LGsAdapter extends ArrayAdapter {
 	else {
 	    content = (LGData) row.getTag();
 	}
-	row.setTag(content);	
+	row.setTag(content);
+	
 	LG lg = data.get(position);
-	content.name.setText(lg.getName());
+	if(displayFavorites) {
+	    content.name.setText(lg.getRiver().getName() + " - " + lg.getName());
+	}
+	else {
+	    content.name.setText(lg.getName());
+	}
 	String height = lg.getCurrentHeight() == 0 ? "" : lg.getCurrentHeight() + " cm";
 	content.data.setText(Html.fromHtml(height + "<br>" 
 		+ lg.getCurrentVolume() + " m<small><sup>3</sup></small>/s"));
@@ -88,6 +96,12 @@ public class LGsAdapter extends ArrayAdapter {
     @Override
     public Object getItem(int position) {
 	return data.get(position);
+    }
+    
+    
+    
+    public void setDisplayFavorites(boolean fav) {
+	this.displayFavorites = fav;
     }
 
     

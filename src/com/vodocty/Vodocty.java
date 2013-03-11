@@ -16,6 +16,9 @@ import java.sql.SQLException;
  */
 public class Vodocty extends Application {
     
+    public static final String EXTRA_LG_ID = "lgId";
+    public static final String EXTRA_RIVER_ID = "riverId";
+    
     private DBOpenHelper database;
     
     private int favorites;
@@ -40,6 +43,8 @@ public class Vodocty extends Application {
 	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
 	}
 	
+	Log.d("fav", "favorites: " + favorites);
+	
     }
 
     @Override
@@ -60,6 +65,11 @@ public class Vodocty extends Application {
     public void setFavorites(int favorites) {
 	this.favorites = favorites;
     }
+    
+    public void adToFavorites(int i) {
+	this.favorites += i;
+    }
+    
     
     
     
