@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.controllers.AbstractMessageReceiver;
@@ -31,7 +32,9 @@ public class MainActivity extends Activity {
     
     private DBOpenHelper db; //save in sth like global context
     private AbstractMessageReceiver controller;
-    //private RiversModel model;
+    private Vodocty context;
+    
+    private int oldFavorites;    
     
     private static final long ALARM_TIME = 1000 * 60 * 30;//30 min
     
@@ -41,8 +44,15 @@ public class MainActivity extends Activity {
     {
 	super.onCreate(savedInstanceState);
 	
-	Vodocty context = (Vodocty) getApplicationContext();
-	db = (context).getDatabase();
+	context = (Vodocty) getApplicationContext();
+	db = context.getDatabase();
+	
+	oldFavorites = context.getFavorites();
+	
+	AlarmManager mgr = (AlarmManager) getSystemService(ALARM_SERVICE);
+	Intent intent = new Intent(this, UpdateReciever.class);
+	PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_TIME,  pi);
 	
 	if(context.getFavorites() > 0) {
 	    setContentView(R.layout.lgs);
@@ -57,19 +67,28 @@ public class MainActivity extends Activity {
 	
 	bindService();
 	
-	AlarmManager mgr = (AlarmManager) getSystemService(ALARM_SERVICE);
-	Intent intent = new Intent(this, UpdateReciever.class);
-	PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-	mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_TIME,  pi);
-	
     }
 
     @Override
     protected void onResume() {
 	super.onResume();
-	//if there are favorites display
-	    //this.onBackPressed();
-	bindService();
+	
+	if(oldFavorites == 0 && context.getFavorites() > 0) {
+	    setContentView(R.layout.lgs);
+	    FavoritesModel model = new FavoritesModel(db);
+	    controller = new FavoritesController(this, model);
+	    bindService();
+	}
+	
+	if(oldFavorites > 0 && context.getFavorites() == 0) {
+	    setContentView(R.layout.rivers);
+	    RiversModel model = new RiversModel(db);
+	    controller = new RiversController(this, model);
+	    bindService();
+	}
+	
+	oldFavorites = context.getFavorites();	
+	
     }
 
     @Override

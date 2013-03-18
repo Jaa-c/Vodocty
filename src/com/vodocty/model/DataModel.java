@@ -44,10 +44,6 @@ public class DataModel {
 	    return null;
 	}
 	
-	//if(data != null) {
-	//    return data;
-	//}
-	
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
 	    dataQb.where().in("lg_id", lgId);
@@ -95,7 +91,6 @@ public class DataModel {
 	
 	return series;
     }
-    
     
     public boolean setFavorite(LG lg) {
 	Dao<Settings, Integer> settDao;
