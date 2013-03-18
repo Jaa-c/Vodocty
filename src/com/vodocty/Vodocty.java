@@ -22,6 +22,8 @@ public class Vodocty extends Application {
     private DBOpenHelper database;
     
     private int favorites;
+    private boolean displayFavorites;
+    private boolean changeDispFavorites;
 
     @Override
     public void onCreate() {
@@ -50,7 +52,7 @@ public class Vodocty extends Application {
     @Override
     public void onTerminate() {
 	super.onTerminate();
-	
+	database.close();
 	database = null;
     }
     
@@ -63,15 +65,36 @@ public class Vodocty extends Application {
     }
 
     public void setFavorites(int favorites) {
+	if(this.favorites == 0 && favorites > 0) {
+	    this.displayFavorites = true;
+	    this.changeDispFavorites = true;
+	}
+	if(this.favorites > 0 && favorites == 0 ) {
+	    this.displayFavorites = false;
+	    this.changeDispFavorites = true;
+	}
 	this.favorites = favorites;
     }
     
     public void adToFavorites(int i) {
-	this.favorites += i;
+	this.setFavorites(favorites + i);
+    }
+
+    public boolean isDisplayFavorites() {
+	return displayFavorites;
+    }
+
+    public void setDisplayFavorites(boolean displayFavorites) {
+	this.displayFavorites = displayFavorites;
+    }
+
+    public boolean isChangeDispFavorites() {
+	return changeDispFavorites;
+    }
+
+    public void setChangeDispFavorites(boolean changeDispFavorites) {
+	this.changeDispFavorites = changeDispFavorites;
     }
     
     
-    
-    
-
 }

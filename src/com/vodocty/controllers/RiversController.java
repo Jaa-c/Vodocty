@@ -3,15 +3,14 @@ package com.vodocty.controllers;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import com.vodocty.activities.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.activities.MainActivity;
 import com.vodocty.data.River;
 import com.vodocty.model.RiversModel;
 import com.vodocty.view.adapters.RiversAdapter;
@@ -26,6 +25,8 @@ public class RiversController extends AbstractMessageReceiver {
     private Activity activity;
     private RiversModel model;
     private RiversAdapter adapter; 
+    
+    private Button favButton;
     
     public RiversController(Activity activity, RiversModel model) {
 	
@@ -45,6 +46,9 @@ public class RiversController extends AbstractMessageReceiver {
         //list.setOnItemClickListener(listClickHandler);
 	list.setOnChildClickListener(childListClickHandler);
 	
+	favButton = (Button) activity.findViewById(R.id.button_fav);
+	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+	favButton.setOnClickListener(favButtonListener);
 	
     
     }
@@ -71,6 +75,15 @@ public class RiversController extends AbstractMessageReceiver {
 	adapter.setData(model.getRivers());
 	adapter.notifyDataSetChanged();
     }
+    
+    private View.OnClickListener favButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
+	    vodocty.setDisplayFavorites(true);
+	    vodocty.setChangeDispFavorites(true);
+	    ((MainActivity) activity).checkFavoritesView();
+	}
+    };
     
 
 }

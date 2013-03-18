@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.activities.DataActivity;
+import com.vodocty.activities.MainActivity;
 import com.vodocty.data.LG;
 import com.vodocty.model.FavoritesModel;
 import com.vodocty.view.adapters.LGsAdapter;
@@ -24,6 +27,8 @@ public class FavoritesController extends AbstractMessageReceiver {
     private Activity activity;
     private FavoritesModel model;
     private LGsAdapter adapter; 
+    
+    private Button favButton;
     
     public FavoritesController(Activity activity, FavoritesModel model) {
 	
@@ -41,6 +46,10 @@ public class FavoritesController extends AbstractMessageReceiver {
 	
 	list.setAdapter(adapter);
         list.setOnItemClickListener(listClickHandler);
+	
+	favButton = (Button) activity.findViewById(R.id.button_fav);
+	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+	favButton.setOnClickListener(favButtonListener);
     
     }
     
@@ -65,5 +74,14 @@ public class FavoritesController extends AbstractMessageReceiver {
     public void updateData() {
 	model.invalidate();
     }
+    
+    private View.OnClickListener favButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
+	    vodocty.setDisplayFavorites(false);
+	    vodocty.setChangeDispFavorites(true);
+	    ((MainActivity) activity).checkFavoritesView();
+	}
+    };
 
 }
