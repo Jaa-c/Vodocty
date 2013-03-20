@@ -88,13 +88,13 @@ public class MainActivity extends Activity {
     public void checkFavoritesView() {
 	if(context.isChangeDispFavorites()) {
 	
-	    if(context.isDisplayFavorites()) {	    //oldFavorites == 0 && context.getFavorites() > 0) {
+	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);
 		FavoritesModel model = new FavoritesModel(db);
 		controller = new FavoritesController(this, model);
 		bindService();
 	    }
-	    else {				    //oldFavorites > 0 && context.getFavorites() == 0) {
+	    else {
 		setContentView(R.layout.rivers);
 		RiversModel model = new RiversModel(db);
 		controller = new RiversController(this, model);

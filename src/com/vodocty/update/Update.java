@@ -180,7 +180,7 @@ public class Update extends Service implements Runnable {
 	    Savepoint savePoint = null; 
 	    try {
 		conn = db.getDataDao().startThreadConnection();
-		savePoint = conn.setSavePoint(null);
+		//savePoint = conn.setSavePoint(null);
 	    }
 	    catch(SQLException e) {
 		Log.e(this.getClass().getName(), e.getLocalizedMessage());
@@ -209,6 +209,8 @@ public class Update extends Service implements Runnable {
 		//finally update the data in database
 		Log.i(Update.class.getName(), "used file: " + files.get(j) + ", files remaining: " + j);
 		try {
+		    conn = db.getDataDao().startThreadConnection();
+		    savePoint = conn.setSavePoint(null);
 		    this.updateDatabase(data, files.get(j));
 		}
 		catch(SQLException e) {
@@ -217,14 +219,14 @@ public class Update extends Service implements Runnable {
 		
 		notifyReceivers(); //notify controllers that the data changed
 		
-	    }
-	    
-	    try {
-		conn.commit(savePoint); //commit transaction
-		db.getDataDao().endThreadConnection(conn);
-	    }
-	    catch(SQLException e) {
-		Log.e(Update.class.getName(), e.getLocalizedMessage());
+	    //}
+		try {
+		    conn.commit(savePoint); //commit transaction
+		    db.getDataDao().endThreadConnection(conn);
+		}
+		catch(SQLException e) {
+		    Log.e(Update.class.getName(), e.getLocalizedMessage());
+		}
 	    }
 	}
     

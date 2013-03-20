@@ -73,6 +73,7 @@ public class Vodocty extends Application {
 	    this.displayFavorites = false;
 	    this.changeDispFavorites = true;
 	}
+	
 	this.favorites = favorites;
     }
     
