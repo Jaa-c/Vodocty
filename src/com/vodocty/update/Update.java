@@ -19,6 +19,8 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
@@ -40,8 +42,10 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import tools.Tools;
 
 /**
  * Handles the regular data update.
@@ -127,6 +131,8 @@ public class Update extends Service implements Runnable {
 	    RUNNING = true;
 	    doUpdate();
 
+	    cleanDatabase();
+	    
 	    PowerManager powerManager = (PowerManager) this.getSystemService(Activity.POWER_SERVICE);
 	    if(!powerManager.isScreenOn()) {
 		db.close(); //TODO
@@ -152,6 +158,30 @@ public class Update extends Service implements Runnable {
     }
     
     
+    private void cleanDatabase() {
+	
+	Dao<Data, Integer> dataDao;
+	try {
+	    dataDao = db.getDataDao();
+	} catch (SQLException ex) {
+	    Log.d(this.getClass().getName(), ex.getLocalizedMessage());
+	    return;
+	}
+
+	final long twoWeeks = Calendar.getInstance().getTimeInMillis() - (Tools.DAY_SECONDS * 14 * 1000);
+	int del = -1;	
+	try {   
+	    DeleteBuilder<Data, Integer> dq = dataDao.deleteBuilder();
+	    dq.where().le(Data.COLUMN_DATE, new Date(twoWeeks)); //not working !
+	    del = dq.delete();
+	} catch (SQLException ex) {
+	    Log.d(this.getClass().getName(), ex.getLocalizedMessage());
+	}
+	
+	Log.i(this.getClass().getName(), "Cleand " + del + " old entries from database, older than " + twoWeeks);
+    
+    }
+    
     private void doUpdate()  {
 	
 	Resources res = getResources();
@@ -176,16 +206,8 @@ public class Update extends Service implements Runnable {
 		return;
 	    }
 	    
-	    DatabaseConnection conn = null; // start transaction:
+	    DatabaseConnection conn = null;
 	    Savepoint savePoint = null; 
-	    try {
-		conn = db.getDataDao().startThreadConnection();
-		//savePoint = conn.setSavePoint(null);
-	    }
-	    catch(SQLException e) {
-		Log.e(this.getClass().getName(), e.getLocalizedMessage());
-	    }
-	    
 	    
 	    //get all new files and parse them
 	    for(int j = files.size()-1; j >= 0; j--) {
@@ -210,7 +232,8 @@ public class Update extends Service implements Runnable {
 		Log.i(Update.class.getName(), "used file: " + files.get(j) + ", files remaining: " + j);
 		try {
 		    conn = db.getDataDao().startThreadConnection();
-		    savePoint = conn.setSavePoint(null);
+		    savePoint = conn.setSavePoint(null);//commit all as one transaction -> improved performace
+		    
 		    this.updateDatabase(data, files.get(j));
 		}
 		catch(SQLException e) {
@@ -219,7 +242,6 @@ public class Update extends Service implements Runnable {
 		
 		notifyReceivers(); //notify controllers that the data changed
 		
-	    //}
 		try {
 		    conn.commit(savePoint); //commit transaction
 		    db.getDataDao().endThreadConnection(conn);
@@ -268,7 +290,6 @@ public class Update extends Service implements Runnable {
 		    r.setId(river.getId());
 		}
 	    }
-
 	    
 	    for(LG lg : r.getLg().values()) {
 		try {

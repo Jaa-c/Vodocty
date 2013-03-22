@@ -48,7 +48,7 @@ public class FavoritesController extends AbstractMessageReceiver {
         list.setOnItemClickListener(listClickHandler);
 	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
-	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
 	favButton.setOnClickListener(favButtonListener);
     
     }
@@ -73,6 +73,8 @@ public class FavoritesController extends AbstractMessageReceiver {
     @Override
     public void updateData() {
 	model.invalidate();
+	adapter.setData(model.getFavoriteLGs());
+	adapter.notifyDataSetChanged();
     }
     
     private View.OnClickListener favButtonListener = new View.OnClickListener() {

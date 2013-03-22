@@ -88,8 +88,8 @@ public class BasicChart {
 	
 	double diff = (series.getMaxY() - series.getMinY()) * 0.1f;
 	
-	renderer.setXAxisMin(series.getMaxX() - 2 * Tools.DAY_SECONDS); //zobrazuju 2 dny
-	renderer.setXAxisMax(series.getMaxX() + 0.2f * Tools.DAY_SECONDS);
+	renderer.setXAxisMin(series.getMaxX() - 2.5f * Tools.DAY_SECONDS * 1000); //zobrazuju 2,5 dne
+	renderer.setXAxisMax(series.getMaxX() + 0.2f * Tools.DAY_SECONDS * 1000);
 	//renderer.setYAxisMin(series.getMinY());
 	renderer.setYAxisMax(series.getMaxY() + 2 * diff); //posunu o trochu niz
 	

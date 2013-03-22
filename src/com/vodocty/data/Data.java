@@ -7,8 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-@DatabaseTable(tableName = "data")
-public class Data {  
+@DatabaseTable(tableName = Data.TABLE_NAME)
+public class Data { 
+    
+    public static final String TABLE_NAME = "data";
+    
+    public static final String COLUMN_DATE = "date";
     
     @DatabaseField(generatedId = true)
     private int id;
@@ -19,7 +23,7 @@ public class Data {
 	    canBeNull = false)
     private LG lg;
     
-    @DatabaseField(index = true, canBeNull = false)
+    @DatabaseField(index = true, canBeNull = false, columnName = COLUMN_DATE)
     private Date date;
     
     @DatabaseField(defaultValue="-1")

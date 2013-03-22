@@ -9,7 +9,7 @@ import java.util.Calendar;
  */
 public class Tools {
     
-    public static final int DAY_SECONDS = 81300000;
+    public static final int DAY_SECONDS = 86400;
     
     public static boolean isToday(Calendar date) {
 	Calendar c = Calendar.getInstance();

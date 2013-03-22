@@ -47,7 +47,7 @@ public class RiversController extends AbstractMessageReceiver {
 	list.setOnChildClickListener(childListClickHandler);
 	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
-	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
 	favButton.setOnClickListener(favButtonListener);
 	
     

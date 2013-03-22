@@ -54,9 +54,7 @@ public class MainActivity extends Activity {
 	    controller = new RiversController(this, model);
 	    context.setDisplayFavorites(false);
 	}
-	
-	bindService();
-	
+		
     }
 
     @Override
@@ -64,48 +62,41 @@ public class MainActivity extends Activity {
 	super.onResume();
 	
 	this.checkFavoritesView();
-	
+	bindService();
     }
 
     @Override
     protected void onPause() {
 	super.onPause();
-	unbindService(sConn);
-	
+	unbindService(controller.getServiceConnection());
     }
     
-    private ServiceConnection sConn;
     
     private void bindService() {
-	if(sConn == null) {
-	    sConn = controller.getServiceConnection();
-	}
 	Intent i = new Intent(this, Update.class);
-	bindService(i, sConn, Context.BIND_AUTO_CREATE);
+	bindService(i, controller.getServiceConnection(), Context.BIND_AUTO_CREATE);
     }
     
     
     public void checkFavoritesView() {
-	if(context.isChangeDispFavorites()) {
 	
+	if(context.isChangeDispFavorites()) {
+	    unbindService(controller.getServiceConnection());
+	    
 	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);
 		FavoritesModel model = new FavoritesModel(db);
 		controller = new FavoritesController(this, model);
-		bindService();
 	    }
 	    else {
 		setContentView(R.layout.rivers);
 		RiversModel model = new RiversModel(db);
 		controller = new RiversController(this, model);
-		bindService();
 	    }
 	    
 	    context.setChangeDispFavorites(false);
-	    bindService();
-	    Log.d(this.getClass().getName(), "new controller instances");
-	    
 	}
+	
     }
    
 

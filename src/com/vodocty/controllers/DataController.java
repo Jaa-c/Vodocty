@@ -46,10 +46,10 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
 	if(data.getLg().isFavorite()) {
-	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
 	else {
-	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
 	}
 	favButton.setOnClickListener(favButtonListener);
 	
@@ -133,7 +133,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	    if(lg.isFavorite()) {
 		//dialog
 		if(model.unsetFavorite(lg)) {
-		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
+		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
 		}
 		else {
 		    Toast.makeText(activity, "Chyba, nepodarilo se odebrat z oblibenych", Toast.LENGTH_LONG);
@@ -141,7 +141,7 @@ public class DataController extends AsyncTask<Void, Void, Pair<XYMultipleSeriesD
 	    }
 	    else {
 		if(model.setFavorite(lg)) {
-		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_color));
+		    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 		}
 		else {
 		    Toast.makeText(activity, "Chyba, nepodarilo se prodat do oblibenych", Toast.LENGTH_LONG);
