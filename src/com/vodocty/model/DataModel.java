@@ -57,11 +57,11 @@ public class DataModel {
 	return data;
     }
 
-    public TimeSeries getVolumeSeries(String title) {
-	return getVolumeSeries(title, true);
+    public TimeSeries getVolumeSeries() {
+	return getVolumeSeries(true);
     }
     
-    public TimeSeries getVolumeSeries(String title, boolean volume) {
+    public TimeSeries getVolumeSeries(boolean volume) {
 	if(lgId == -1) {
 	    return null;
 	}
@@ -79,7 +79,7 @@ public class DataModel {
 	    return null;
 	}
 	
-	TimeSeries series = new TimeSeries(title);
+	TimeSeries series = new TimeSeries("");
 	for(Data curr : d) {	    
 	    if(volume) {
 		series.add(curr.getDate(), curr.getVolume());
