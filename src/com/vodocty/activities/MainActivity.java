@@ -74,7 +74,8 @@ public class MainActivity extends Activity {
     
     private void bindService() {
 	Intent i = new Intent(this, Update.class);
-	bindService(i, controller.getServiceConnection(), Context.BIND_AUTO_CREATE);
+	boolean b = bindService(i, controller.getServiceConnection(), Context.BIND_AUTO_CREATE);
+	Log.d(this.getClass().getName(), "binding service: " + b);
     }
     
     
@@ -93,7 +94,7 @@ public class MainActivity extends Activity {
 		RiversModel model = new RiversModel(db);
 		controller = new RiversController(this, model);
 	    }
-	    
+	    bindService();
 	    context.setChangeDispFavorites(false);
 	}
 	
