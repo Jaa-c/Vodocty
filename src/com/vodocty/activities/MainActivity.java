@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
     public void checkFavoritesView() {
 	
 	if(context.isChangeDispFavorites()) {
-	    unbindService(controller.getServiceConnection());
+	    //unbindService(controller.getServiceConnection());
 	    
 	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);
