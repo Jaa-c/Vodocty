@@ -1,6 +1,7 @@
 package com.vodocty.controllers;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -21,16 +22,16 @@ public class DataController extends AbstractMessageReceiver {
     private DataModel model;
     private DataView view;
     
-    private Data data;
+    //private Data data;
     
     public DataController(Activity activity, DataModel model) {
-	
 	this.activity = activity;
 	this.model = model;
-	this.data = model.getLastData();
 	
 	view = new DataView(activity, model);
-	view.setContent(data);
+	
+	//this.data = model.getLastData();
+	//view.setContent(data);
 	
 	view.execute();
 	view.setFavButtonListener(favButtonListener);
@@ -39,7 +40,7 @@ public class DataController extends AbstractMessageReceiver {
     
     private OnClickListener favButtonListener = new OnClickListener() {
 	public void onClick(View arg0) {
-	    LG lg = data.getLg();
+	    LG lg = model.getLastData().getLg();
 	    if(lg.isFavorite()) {
 		//dialog
 		if(model.unsetFavorite(lg)) {

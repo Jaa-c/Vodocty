@@ -3,6 +3,7 @@ package com.vodocty.view;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +32,8 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     private Activity activity;
     private DataModel model;
     
+    private Data data;
+    
     private Button favButton;
     private TextView heading;
     private TextView date;
@@ -42,6 +45,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     private BasicChart chart;
     
     public DataView(Activity a, DataModel m) {
+	Log.i(this.getClass().getName(), "DataView constructor");
 	activity = a;
 	model = m;
 	
@@ -53,10 +57,12 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	volume = (TextView) activity.findViewById(R.id.data_page_volume);
 	loading = (TextView) activity.findViewById(R.id.data_page_loading);
 	
+	favButton.setVisibility(View.INVISIBLE);
+	
 	chart = null;
 	
 	loading.setText("Loading graph...");
-    
+	Log.i(this.getClass().getName(), "DataView constructor end");
     }
     
     @Override
@@ -73,12 +79,20 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
      */
     @Override
     protected Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer> doInBackground(Void... arg0) {
+	data = model.getLastData();
+	this.publishProgress();
 	
 	TimeSeries series = model.getVolumeSeries();
 	series.setTitle("průtok, m3/s");
 	chart.setXYSeries(series);
 	return chart.getChartData();
     }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+	this.setContent(data);
+    }
+    
 
     @Override
     protected void onPostExecute(Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer> pair) {
@@ -91,6 +105,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     
     public void setContent(Data data) {
+	favButton.setVisibility(View.VISIBLE);
 	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}

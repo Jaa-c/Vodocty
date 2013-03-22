@@ -3,16 +3,15 @@ package com.vodocty.controllers;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.TextView;
 import com.vodocty.activities.LGsActivtiy;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.activities.MainActivity;
 import com.vodocty.data.River;
 import com.vodocty.model.RiversModel;
+import com.vodocty.view.RiversView;
 import com.vodocty.view.adapters.RiversAdapter;
 
 /**
@@ -24,33 +23,26 @@ public class RiversController extends AbstractMessageReceiver {
     
     private Activity activity;
     private RiversModel model;
-    private RiversAdapter adapter; 
+    private RiversAdapter adapter;
+    private RiversView view;
     
-    private Button favButton;
     
     public RiversController(Activity activity, RiversModel model) {
 	
 	this.activity = activity;
 	this.model = model;
-	
-        ExpandableListView list = (ExpandableListView) activity.findViewById(R.id.river_listview);
-	
-	View header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
-	TextView head = (TextView) header.findViewById(R.id.header_row);
-	head.setText("Všechny řeky:");
-	list.addHeaderView(header, null, false);
-	
-	adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
-	
-	list.setAdapter(adapter);
-        //list.setOnItemClickListener(listClickHandler);
-	list.setOnChildClickListener(childListClickHandler);
-	
-	favButton = (Button) activity.findViewById(R.id.button_fav);
-	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_simple));
-	favButton.setOnClickListener(favButtonListener);
-	
+        this.adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
+	this.view = new RiversView(activity, adapter);
+	view.setFavButtonListener(favButtonListener);
+	view.setListClickListener(childListClickHandler);
     
+    }
+
+    @Override
+    public void updateData() {
+	model.invalidateData();
+	adapter.setData(model.getRivers());
+	adapter.notifyDataSetChanged();
     }
     
     /**
@@ -68,13 +60,6 @@ public class RiversController extends AbstractMessageReceiver {
 	    return true;
 	}
     };
-
-    @Override
-    public void updateData() {
-	model.invalidateData();
-	adapter.setData(model.getRivers());
-	adapter.notifyDataSetChanged();
-    }
     
     private View.OnClickListener favButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {

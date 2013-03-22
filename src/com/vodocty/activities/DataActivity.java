@@ -37,9 +37,7 @@ public class DataActivity extends Activity {
 	int lgId = getIntent().getIntExtra(Vodocty.EXTRA_LG_ID, -1);
 	model.setLGId(lgId);
 	
-	controller = new DataController(this, model);
-	//controller.execute();
-	       
+	controller = new DataController(this, model);	       
     }
 
     @Override
