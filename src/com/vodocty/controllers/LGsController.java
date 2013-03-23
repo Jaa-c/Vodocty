@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import com.vodocty.activities.DataActivity;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.activities.MainActivity;
 import com.vodocty.data.LG;
 import com.vodocty.model.LGsModel;
 import com.vodocty.view.LGsView;
@@ -32,7 +33,7 @@ public class LGsController extends AbstractMessageReceiver {
 	this.view = new LGsView(activity, adapter);
 	view.setContent(model.getRiver());
 	view.setListClickListener(listClickHandler);
-	
+	view.setFavButtonListener(favButtonListener);
 	
     }
     
@@ -55,5 +56,14 @@ public class LGsController extends AbstractMessageReceiver {
 	adapter.setData(model.getLGs());
 	adapter.notifyDataSetChanged();
     }
+    
+    private View.OnClickListener favButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
+	    vodocty.setDisplayFavorites(true);
+	    vodocty.setChangeDispFavorites(true);
+	    activity.finish(); //return back to main, i'll switch to view favs
+	}
+    };
 
 }

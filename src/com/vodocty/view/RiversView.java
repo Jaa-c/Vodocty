@@ -19,7 +19,6 @@ import com.vodocty.view.adapters.RiversAdapter;
 public class RiversView {
     
     private Activity activity;
-    
     private RiversAdapter adapter; 
     
     private Button favButton;
