@@ -7,12 +7,18 @@ import java.util.Date;
 @DatabaseTable(tableName = "lg")
 public class LG {
     
-    public static final String LAST_NOTIFICATION = "lastNotification";
-    
+    public static final String COLUMN_ID = "id";
     public static final String COLUMN_FAVORITE = "favourite";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_NOTIFY = "notify";
+    public static final String COLUMN_LAST_NOTIFICATION = "lastNotification";
+    public static final String COLUMN_NOTIFY_HEIGHT = "notifyHeight";
+    public static final String COLUMN_NOTIFY_VOLUME = "notifyVolume";
+    public static final String COLUMN_CURRENT_HEIGHT = "currentHeight";
+    public static final String COLUMN_CURRENT_VOLUME = "currentVolume";
+    public static final String COLUMN_CURRENT_FLOOD = "currentFlood";
     
-    @DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private int id;
     
     @DatabaseField(
@@ -33,29 +39,28 @@ public class LG {
     @DatabaseField(defaultValue="0", columnName=COLUMN_FAVORITE)
     private boolean favourite;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_NOTIFY)
     private boolean notify;
     
-    @DatabaseField(columnName=LAST_NOTIFICATION)
+    @DatabaseField(columnName=COLUMN_LAST_NOTIFICATION)
     private Date lastNotification;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_NOTIFY_HEIGHT)
     private float notifyHeight;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_VOLUME)
     private float notifyVolume;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_HEIGHT)
     private float currentHeight;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_VOLUME)
     private float currentVolume;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_FLOOD)
     private int currentFlood;
     
-    //private List<Data> data = new ArrayList<Data>();
-    private Data data; //tbh do I really need List??
+    private volatile Data data;
     
     LG() {}
     

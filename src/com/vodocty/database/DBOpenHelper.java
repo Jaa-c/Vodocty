@@ -67,7 +67,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	if(oldVersion < DATABASE_VERSION) {
 	    try {
 		Dao<LG, Integer> dao = getLgDao();
-		dao.executeRaw("ALTER TABLE `lg` ADD COLUMN " + LG.LAST_NOTIFICATION + " DATE;");
+		dao.executeRaw("ALTER TABLE `lg` ADD COLUMN " + LG.COLUMN_LAST_NOTIFICATION + " DATE;");
 		Log.d(this.getClass().getName(), "Table updated!");
 	    }
 	    catch(SQLException e) {

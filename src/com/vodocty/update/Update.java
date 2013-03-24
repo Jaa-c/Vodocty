@@ -19,11 +19,12 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.PreparedUpdate;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
@@ -274,6 +275,18 @@ public class Update extends Service implements Runnable {
 	riverQuery.where().eq("name", riverArg).and().eq("country", countryArg);
 	PreparedQuery<River> preparedQRiver = riverQuery.prepare();
 	
+	SelectArg currHeight = new SelectArg();
+	SelectArg currVolume = new SelectArg();
+	SelectArg currFlood = new SelectArg();
+	SelectArg lgId = new SelectArg();
+	UpdateBuilder<LG, Integer> lgUpdate = lgDao.updateBuilder();
+	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_HEIGHT, currHeight);
+	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_VOLUME, currVolume);
+	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_FLOOD, currFlood);
+	lgUpdate.where().eq(LG.COLUMN_ID, lgId);
+	PreparedUpdate<LG> preparedLgUpdate = lgUpdate.prepare();
+	
+	
 	for(River r : data.values()) {
 	    if(r.getLastUpdate() != updateTime) { //some old entry
 		continue;
@@ -299,11 +312,11 @@ public class Update extends Service implements Runnable {
 			LG l = lgDao.queryForFirst(preparedQLG);
 			if(l != null) {
 			    lg.setId(l.getId());//TODO : do it better
-			    lg.setFavorite(l.isFavorite());
-			    lg.setLastNotification(l.getLastNotification());
-			    lg.setNotifyHeight(l.getNotifyHeight());
-			    lg.setNotifyVolume(l.getNotifyVolume());
-			    lg.setNotify(l.isNotify());
+//			    lg.setFavorite(l.isFavorite());
+//			    lg.setLastNotification(l.getLastNotification());
+//			    lg.setNotifyHeight(l.getNotifyHeight());
+//			    lg.setNotifyVolume(l.getNotifyVolume());
+//			    lg.setNotify(l.isNotify());
 			}
 			lg.setRiver(r);
 		    }
@@ -313,7 +326,12 @@ public class Update extends Service implements Runnable {
 			Log.i("Added LG: ", lg.getName());
 		    }
 		    else {
-			lgDao.update(lg);
+			currHeight.setValue(lg.getCurrentHeight());
+			currVolume.setValue(lg.getCurrentVolume());
+			currFlood.setValue(lg.getCurrentFlood());
+			lgId.setValue(lg.getId());
+			lgDao.update(preparedLgUpdate);
+			//lgDao.update(lg);
 		    }
 		    if(lg.getData().getDate() != null) {
 			dataDao.create(lg.getData());
