@@ -1,15 +1,14 @@
 package com.vodocty.controllers;
 
-import android.app.Activity;
-import android.util.Log;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
-import com.vodocty.R;
-import com.vodocty.data.Data;
 import com.vodocty.data.LG;
 import com.vodocty.model.DataModel;
 import com.vodocty.view.DataView;
+import com.vodocty.view.dialogs.NotificationDialog;
 
 /**
  *
@@ -18,13 +17,13 @@ import com.vodocty.view.DataView;
  */
 public class DataController extends AbstractMessageReceiver {
     
-    private Activity activity;
+    private FragmentActivity activity;
     private DataModel model;
     private DataView view;
     
     //private Data data;
     
-    public DataController(Activity activity, DataModel model) {
+    public DataController(FragmentActivity activity, DataModel model) {
 	this.activity = activity;
 	this.model = model;
 	
@@ -35,6 +34,7 @@ public class DataController extends AbstractMessageReceiver {
 	
 	view.execute();
 	view.setFavButtonListener(favButtonListener);
+	view.setNotifButtonListener(notifButtonListener);
     }
 
     
@@ -59,6 +59,14 @@ public class DataController extends AbstractMessageReceiver {
 		}
 	    }
 	}
+    };
+    
+    private OnClickListener notifButtonListener = new OnClickListener() {
+	public void onClick(View arg0) {
+	    DialogFragment d = new NotificationDialog(activity);
+	    d.show(activity.getSupportFragmentManager(), NotificationDialog.ID);
+	}
+    
     };
 
     @Override

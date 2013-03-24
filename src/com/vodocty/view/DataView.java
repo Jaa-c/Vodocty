@@ -35,6 +35,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     private Data data;
     
     private Button favButton;
+    private Button notifButton;
     private TextView heading;
     private TextView date;
     private TextView flood;
@@ -50,6 +51,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	model = m;
 	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
+	notifButton = (Button) activity.findViewById(R.id.button_right);
         heading = (TextView) activity.findViewById(R.id.data_page_heading);
 	flood = (TextView) activity.findViewById(R.id.data_page_flood);
 	date = (TextView) activity.findViewById(R.id.data_page_date);
@@ -57,7 +59,9 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	volume = (TextView) activity.findViewById(R.id.data_page_volume);
 	loading = (TextView) activity.findViewById(R.id.data_page_loading);
 	
-	favButton.setVisibility(View.INVISIBLE);
+	//favButton.setVisibility(View.INVISIBLE);
+	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
+	notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_add));
 	
 	chart = null;
 	
@@ -105,12 +109,13 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     
     public void setContent(Data data) {
-	favButton.setVisibility(View.VISIBLE);
+	//favButton.setVisibility(View.VISIBLE);
 	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
-	else {
-	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
+	
+	if(data.getLg().isNotify()) {
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
 	
 	heading.setText(data.getLg().getRiver().getName() + " - " + 
@@ -152,6 +157,10 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     public void setFavButtonListener(OnClickListener listener)  {
 	favButton.setOnClickListener(listener);
+    }
+    
+    public void setNotifButtonListener(OnClickListener listener)  {
+	notifButton.setOnClickListener(listener);
     }
     
     public void setStarIcon(boolean addButton) {

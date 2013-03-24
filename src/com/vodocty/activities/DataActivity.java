@@ -1,13 +1,12 @@
 package com.vodocty.activities;
 
-import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.controllers.DataController;
-import com.vodocty.controllers.LGsController;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.DataModel;
 
@@ -16,7 +15,7 @@ import com.vodocty.model.DataModel;
  * @author Dan Princ
  * @since 21.2.2013
  */
-public class DataActivity extends Activity {
+public class DataActivity extends FragmentActivity {
     private DBOpenHelper db; //save in sth like global context
     private DataController controller;
     private DataModel model;

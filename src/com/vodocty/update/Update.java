@@ -51,7 +51,7 @@ import tools.Tools;
 /**
  * Handles the regular data update.
  * 
- * It's too big and does too many thinks. I don't like that.
+ * It's too big and does too many things. I don't like that.
  * 
  * @author Dan Princ
  * @since long time ago
