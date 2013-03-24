@@ -1,7 +1,9 @@
 package com.vodocty.view;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
@@ -14,6 +16,7 @@ import com.vodocty.R;
 import com.vodocty.data.Data;
 import com.vodocty.model.DataModel;
 import com.vodocty.view.charts.BasicChart;
+import com.vodocty.view.dialogs.NotificationDialog;
 import java.util.Calendar;
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -29,7 +32,7 @@ import tools.Tools;
  */
 public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer>> {
     
-    private Activity activity;
+    private FragmentActivity activity;
     private DataModel model;
     
     private Data data;
@@ -45,7 +48,9 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     private BasicChart chart;
     
-    public DataView(Activity a, DataModel m) {
+    private DialogFragment notiDialog;
+    
+    public DataView(FragmentActivity a, DataModel m) {
 	Log.i(this.getClass().getName(), "DataView constructor");
 	activity = a;
 	model = m;
@@ -67,6 +72,12 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	
 	loading.setText("Loading graph...");
 	Log.i(this.getClass().getName(), "DataView constructor end");
+    }
+    public void initDialog(DialogInterface.OnClickListener ok, 
+	    DialogInterface.OnClickListener cancel, DialogInterface.OnClickListener delete) {
+	
+	notiDialog = new NotificationDialog(activity, ok, cancel, delete);
+    
     }
     
     @Override
@@ -171,7 +182,12 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
     }
-    
-    
 
+    public void showNotificationDialog() {
+	notiDialog.show(activity.getSupportFragmentManager(), NotificationDialog.ID);
+    }
+    public void cancelNotiDialog() {
+	notiDialog.getDialog().cancel();
+    }
+    
 }

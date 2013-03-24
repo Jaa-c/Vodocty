@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
@@ -22,9 +23,15 @@ public class NotificationDialog extends DialogFragment {
     public static final String ID = "NotificationDialog";
     
     private final Activity context;
+    private final OnClickListener ok, cancel, delete;
 
-    public NotificationDialog(Activity c) {
+    public NotificationDialog(Activity c, OnClickListener ok, 
+	    OnClickListener cancel, OnClickListener delete) {
 	this.context = c;
+	
+	this.ok = ok;
+	this.cancel = cancel;
+	this.delete = delete;
     }
     
     @Override
@@ -47,25 +54,9 @@ public class NotificationDialog extends DialogFragment {
 
 	builder.setTitle("Upozornění na stav");
 	
-	
-	builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		   @Override
-		   public void onClick(DialogInterface dialog, int id) {
-		       // sign in the user ...
-		   }
-	       });
-	builder.setNegativeButton("Smazat upozornění", new DialogInterface.OnClickListener() {
-		   public void onClick(DialogInterface dialog, int id) {
-		      NotificationDialog.this.getDialog().cancel();
-
-		   }
-	       }); 
-	builder.setNeutralButton("Zpět", new DialogInterface.OnClickListener() {
-		   public void onClick(DialogInterface dialog, int id) {
-		      NotificationDialog.this.getDialog().cancel();
-
-		   }
-	       });  
+	builder.setPositiveButton("OK", ok);
+	builder.setNegativeButton("Smazat upozornění", cancel); 
+	builder.setNeutralButton("Zpět", delete);  
 	
 	return builder.create();
     }

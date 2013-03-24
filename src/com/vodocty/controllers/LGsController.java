@@ -20,10 +20,10 @@ import com.vodocty.view.adapters.LGsAdapter;
  */
 public class LGsController extends AbstractMessageReceiver {
     
-    private Activity activity;
-    private LGsModel model;
-    private LGsAdapter adapter;
-    private LGsView view;
+    private final Activity activity;
+    private final LGsModel model;
+    private final LGsAdapter adapter;
+    private final LGsView view;
     
     public LGsController(Activity activity, LGsModel model) {
 	
@@ -37,7 +37,7 @@ public class LGsController extends AbstractMessageReceiver {
 	
     }
     
-    private AdapterView.OnItemClickListener listClickHandler = new AdapterView.OnItemClickListener() {
+    private final AdapterView.OnItemClickListener listClickHandler = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             
@@ -57,7 +57,7 @@ public class LGsController extends AbstractMessageReceiver {
 	adapter.notifyDataSetChanged();
     }
     
-    private View.OnClickListener favButtonListener = new View.OnClickListener() {
+    private final View.OnClickListener favButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
 	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
 	    vodocty.setDisplayFavorites(true);

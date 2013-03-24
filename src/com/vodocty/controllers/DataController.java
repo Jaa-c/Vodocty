@@ -1,6 +1,6 @@
 package com.vodocty.controllers;
 
-import android.support.v4.app.DialogFragment;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.vodocty.data.LG;
 import com.vodocty.model.DataModel;
 import com.vodocty.view.DataView;
-import com.vodocty.view.dialogs.NotificationDialog;
 
 /**
  *
@@ -17,20 +16,17 @@ import com.vodocty.view.dialogs.NotificationDialog;
  */
 public class DataController extends AbstractMessageReceiver {
     
-    private FragmentActivity activity;
-    private DataModel model;
-    private DataView view;
+    private final FragmentActivity activity;
+    private final DataModel model;
+    private final DataView view;
     
-    //private Data data;
     
     public DataController(FragmentActivity activity, DataModel model) {
 	this.activity = activity;
 	this.model = model;
 	
 	view = new DataView(activity, model);
-	
-	//this.data = model.getLastData();
-	//view.setContent(data);
+	view.initDialog(okNotiDialogListener, cancelNotiDialogListener, deleteNotiDialogListener);
 	
 	view.execute();
 	view.setFavButtonListener(favButtonListener);
@@ -38,7 +34,7 @@ public class DataController extends AbstractMessageReceiver {
     }
 
     
-    private OnClickListener favButtonListener = new OnClickListener() {
+    private final OnClickListener favButtonListener = new OnClickListener() {
 	public void onClick(View arg0) {
 	    LG lg = model.getLastData().getLg();
 	    if(lg.isFavorite()) {
@@ -61,12 +57,32 @@ public class DataController extends AbstractMessageReceiver {
 	}
     };
     
-    private OnClickListener notifButtonListener = new OnClickListener() {
+    private final OnClickListener notifButtonListener = new OnClickListener() {
 	public void onClick(View arg0) {
-	    DialogFragment d = new NotificationDialog(activity);
-	    d.show(activity.getSupportFragmentManager(), NotificationDialog.ID);
+	    view.showNotificationDialog();
 	}
     
+    };
+    
+    private final DialogInterface.OnClickListener cancelNotiDialogListener = new DialogInterface.OnClickListener() {
+	public void onClick(DialogInterface arg0, int arg1) {
+	
+	}
+
+    };
+    
+    private final DialogInterface.OnClickListener okNotiDialogListener = new DialogInterface.OnClickListener() {
+	public void onClick(DialogInterface arg0, int arg1) {
+	
+	}
+
+    };
+    
+    private final DialogInterface.OnClickListener deleteNotiDialogListener = new DialogInterface.OnClickListener() {
+	public void onClick(DialogInterface arg0, int arg1) {
+	
+	}
+
     };
 
     @Override

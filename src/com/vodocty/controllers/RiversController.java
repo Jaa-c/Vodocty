@@ -21,10 +21,10 @@ import com.vodocty.view.adapters.RiversAdapter;
  */
 public class RiversController extends AbstractMessageReceiver {
     
-    private Activity activity;
-    private RiversModel model;
-    private RiversAdapter adapter;
-    private RiversView view;
+    private final Activity activity;
+    private final RiversModel model;
+    private final RiversAdapter adapter;
+    private final RiversView view;
     
     
     public RiversController(Activity activity, RiversModel model) {
@@ -48,7 +48,7 @@ public class RiversController extends AbstractMessageReceiver {
     /**
      * anonymní listener na všechny položky v seznamu
      */
-    private OnChildClickListener childListClickHandler = new OnChildClickListener() {
+    private final OnChildClickListener childListClickHandler = new OnChildClickListener() {
 	
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 	    Intent intent = new Intent(activity, LGsActivtiy.class);
@@ -61,7 +61,7 @@ public class RiversController extends AbstractMessageReceiver {
 	}
     };
     
-    private View.OnClickListener favButtonListener = new View.OnClickListener() {
+    private final View.OnClickListener favButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
 	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
 	    vodocty.setDisplayFavorites(true);
