@@ -34,6 +34,7 @@ public class LGsView {
 	favButton = (Button) activity.findViewById(R.id.button_fav);
 	
 	header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
+	
 	head = (TextView) header.findViewById(R.id.header_row);
 	
 	list.addHeaderView(header, null, false);

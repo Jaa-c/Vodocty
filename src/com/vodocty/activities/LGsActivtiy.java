@@ -39,7 +39,7 @@ public class LGsActivtiy extends Activity {
 	
 	controller = new LGsController(this, model);
 	
-	bindService();
+	//bindService();
 	       
     }
 
