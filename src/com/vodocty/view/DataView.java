@@ -48,7 +48,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     private BasicChart chart;
     
-    private DialogFragment notiDialog;
+    private NotificationDialog notiDialog;
     
     public DataView(FragmentActivity a, DataModel m) {
 	Log.i(this.getClass().getName(), "DataView constructor");
@@ -73,10 +73,9 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	loading.setText("Loading graph...");
 	Log.i(this.getClass().getName(), "DataView constructor end");
     }
-    public void initDialog(DialogInterface.OnClickListener ok, 
-	    DialogInterface.OnClickListener cancel, DialogInterface.OnClickListener delete) {
+    public void initDialog(DialogInterface.OnClickListener ok) {
 	
-	notiDialog = new NotificationDialog(activity, ok, cancel, delete);
+	notiDialog = new NotificationDialog(activity, ok);
     
     }
     
@@ -106,6 +105,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     @Override
     protected void onProgressUpdate(Void... values) {
 	this.setContent(data);
+	notiDialog.setData(data.getLg());
     }
     
 
@@ -186,8 +186,20 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     public void showNotificationDialog() {
 	notiDialog.show(activity.getSupportFragmentManager(), NotificationDialog.ID);
     }
+    
     public void cancelNotiDialog() {
 	notiDialog.getDialog().cancel();
     }
     
+    public String getDialogVolume() {
+	return notiDialog.getVolume();
+    }
+    
+    public String getDialogHeight() {
+	return notiDialog.getHeight();
+    }
+    
+    public boolean isNotificationEnabled() {
+	return notiDialog.isNotificationEnabled();
+    }
 }

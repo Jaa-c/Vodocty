@@ -2,35 +2,39 @@
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
     
     <TextView
         android:id="@+id/info"
 	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:padding="10dp" />
+	android:layout_height="wrap_content" />
+    
+    <CheckBox android:id="@+id/dialog_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	android:textSize="20dp" />
+
     
     <LinearLayout 
 	android:id="@+id/dataLayout"
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
 	android:layout_below="@id/info"
-	android:orientation="horizontal"
-	android:padding="10dp" >
+	android:orientation="horizontal" >
 
+	<EditText
+	    android:id="@+id/edittext_height"
+	    android:inputType="numberDecimal"
+	    android:layout_width="100dp"
+	    android:layout_height="wrap_content"
+	    android:layout_marginRight="5dp"/>
 	<TextView
 	    android:id="@+id/label_height"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:textColor="@color/white"
-	    android:textSize="20dp"
-	/>
-	<EditText
-	    android:id="@+id/height"
-	    android:inputType="numberDecimal"
-	    android:layout_width="120dp"
-	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="5dp"/>
+	    android:textSize="20dp" />
     </LinearLayout>
     
     <LinearLayout
@@ -38,22 +42,20 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
 	android:layout_below="@id/dataLayout"
-	android:orientation="horizontal"
-	android:padding="10dp" >
+	android:orientation="horizontal" >
 	
+	<EditText
+	    android:id="@+id/edittext_volume"
+	    android:inputType="numberDecimal"
+	    android:layout_width="100dp"
+	    android:layout_height="wrap_content"
+	    android:layout_marginRight="5dp"/>
 	<TextView
 	    android:id="@+id/label_volume"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:textColor="@color/white"
-	    android:textSize="20dp"
-	/>
-	<EditText
-	    android:id="@+id/volume"
-	    android:inputType="numberDecimal"
-	    android:layout_width="120dp"
-	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="5dp"/>
+	    android:textSize="20dp" />
     </LinearLayout>
     
 	

@@ -48,7 +48,7 @@ public class LG {
     @DatabaseField(defaultValue="0", columnName=COLUMN_NOTIFY_HEIGHT)
     private float notifyHeight;
     
-    @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_VOLUME)
+    @DatabaseField(defaultValue="0", columnName=COLUMN_NOTIFY_VOLUME)
     private float notifyVolume;
     
     @DatabaseField(defaultValue="0", columnName=COLUMN_CURRENT_HEIGHT)

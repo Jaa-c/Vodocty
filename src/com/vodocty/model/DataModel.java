@@ -99,7 +99,7 @@ public class DataModel {
 	try {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
-	    savePoint = conn.setSavePoint(null);
+	    savePoint = conn.setSavePoint(null); //TODO use update from ormlite!!
 	    GenericRawResults<String[]> cursor =settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
 		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + 1" +
 		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
@@ -132,7 +132,7 @@ public class DataModel {
 	try {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
-	    savePoint = conn.setSavePoint(null);
+	    savePoint = conn.setSavePoint(null); //TODO use update from ormlite!!
 	    GenericRawResults<String[]> cursor = settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
 		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " - 1" +
 		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
@@ -158,7 +158,7 @@ public class DataModel {
     
     }
     
-    private boolean updateLG(LG lg) {
+    public boolean updateLG(LG lg) {
 	try {
 	    Dao<LG, Integer> lgDao = db.getLgDao();
 	    return lgDao.update(lg) == 1;
