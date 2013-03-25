@@ -3,6 +3,7 @@ package com.vodocty.activities;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
@@ -36,7 +37,10 @@ public class DataActivity extends FragmentActivity {
 	int lgId = getIntent().getIntExtra(Vodocty.EXTRA_LG_ID, -1);
 	model.setLGId(lgId);
 	
-	controller = new DataController(this, model);	       
+	controller = new DataController(this, model);	 
+	
+	
+	Log.d("activity", "oncreate");
     }
 
     @Override
@@ -48,7 +52,10 @@ public class DataActivity extends FragmentActivity {
     @Override
     protected void onPause() {
 	super.onPause();
+	Log.d("activity", "onPause");
 	
     }
+    
+
 
 }

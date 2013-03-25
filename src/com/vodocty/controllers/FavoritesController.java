@@ -51,7 +51,7 @@ public class FavoritesController extends AbstractMessageReceiver {
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             
 	    Intent intent = new Intent(activity, DataActivity.class);
-            //predame seznam, ktery chceme zobrazit
+	    
             LG lg = (LG) adapter.getItem(position-1);
 	    intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
 	    activity.startActivity(intent);

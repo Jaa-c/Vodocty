@@ -24,15 +24,18 @@ public class DataModel {
     
     private DBOpenHelper db;
     private Vodocty context;
+    
     private Data data;
+    private TimeSeries series;
     
     private int lgId;
     
     public DataModel(Vodocty c) {
 	this.context = c;
 	this.db = c.getDatabase();
-	data = null;
-	lgId = -1;
+	this.data = null;
+	this.series = null;
+	this.lgId = -1;
     }
 
     public void setLGId(int lgId) {
@@ -41,6 +44,7 @@ public class DataModel {
     
     public void invalidateData() {
 	data = null;
+	series = null;
     }
     
     public Data getLastData() {
@@ -51,6 +55,8 @@ public class DataModel {
 	if(data != null) {
 	    return data;
 	}
+	
+	Log.d("model", "loading LAST from db.");
 	
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
@@ -73,7 +79,14 @@ public class DataModel {
 	if(lgId == -1) {
 	    return null;
 	}
-	//potreba nejak cachovat data!!!! TODO
+	
+	if(series != null) {
+	    return series; //lame caching, todo better
+	}
+	
+	
+	Log.d("model", "loading all from db.");
+	
 	List<Data > d = null;
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
@@ -87,7 +100,7 @@ public class DataModel {
 	    return null;
 	}
 	
-	TimeSeries series = new TimeSeries("");
+	series = new TimeSeries("");
 	for(Data curr : d) {	    
 	    if(volume) {
 		series.add(curr.getDate(), curr.getVolume());
