@@ -39,9 +39,17 @@ public class DataModel {
 	this.lgId = lgId;
     }
     
+    public void invalidateData() {
+	data = null;
+    }
+    
     public Data getLastData() {
 	if(lgId == -1) {
 	    return null;
+	}
+	
+	if(data != null) {
+	    return data;
 	}
 	
 	try {
@@ -92,16 +100,21 @@ public class DataModel {
 	return series;
     }
     
-    public boolean setFavorite(LG lg) {
+    public boolean switchFavorite() {
+	if(data == null) {
+	    return false;
+	}
 	Dao<Settings, Integer> settDao;
 	DatabaseConnection conn;
 	Savepoint savePoint;
+	LG lg = data.getLg();
+	int value = lg.isFavorite() ? -1 :  1;
 	try {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
 	    savePoint = conn.setSavePoint(null); //TODO use update from ormlite!!
 	    GenericRawResults<String[]> cursor =settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
-		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + 1" +
+		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + " + value +
 		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
 	    cursor.close();
 	}
@@ -109,8 +122,8 @@ public class DataModel {
 	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
 	    return false;
 	} 
-	lg.setFavorite(true);
-	context.adToFavorites(1);
+	lg.setFavorite(!lg.isFavorite());
+	context.adToFavorites(value);
 	if(updateLG(lg)) {
 	    try {
 		conn.commit(savePoint);
@@ -122,40 +135,6 @@ public class DataModel {
 	    return true;
 	}
 	return false;    
-    }
-    
-    
-    public boolean unsetFavorite(LG lg) {
-	Dao<Settings, Integer> settDao;
-	DatabaseConnection conn;
-	Savepoint savePoint;
-	try {
-	    settDao = db.getSettingsDao();
-	    conn = settDao.startThreadConnection();
-	    savePoint = conn.setSavePoint(null); //TODO use update from ormlite!!
-	    GenericRawResults<String[]> cursor = settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
-		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " - 1" +
-		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
-	    cursor.close();
-	}
-	catch(SQLException e) {
-	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
-	    return false;
-	} 
-	lg.setFavorite(false);
-	context.adToFavorites(-1);
-	if(updateLG(lg)) {
-	    try {
-		conn.commit(savePoint);
-		settDao.endThreadConnection(conn);
-	    }
-	    catch(SQLException e) {
-		Log.e(this.getClass().getName(), e.getLocalizedMessage());
-	    }
-	    return true;
-	}
-	return false;
-    
     }
     
     public boolean updateLG(LG lg) {

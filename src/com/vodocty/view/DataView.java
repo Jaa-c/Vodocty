@@ -73,13 +73,13 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	loading.setText("Loading graph...");
     }
     public void initDialog(DialogInterface.OnClickListener ok) {
-	
 	notiDialog = new NotificationDialog(activity, ok);
-    
     }
     
     public void notifyDataChanged() {
 	data = model.getLastData();
+	checkStarIcon();
+	checkNotifButton();
     }
     
     @Override
@@ -108,7 +108,6 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     @Override
     protected void onProgressUpdate(Void... values) {
 	this.setContent(data);
-	//notiDialog.setData(data.getLg());
     }
     
 
@@ -123,7 +122,6 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     
     public void setContent(Data data) {
-	//favButton.setVisibility(View.VISIBLE);
 	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
@@ -167,8 +165,6 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	volume.setText(Html.fromHtml(data.getVolume() + "m<small><sup>3</sup></small>/s"));
     }
     
-    
-    
     public void setFavButtonListener(OnClickListener listener)  {
 	favButton.setOnClickListener(listener);
     }
@@ -177,13 +173,23 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	notifButton.setOnClickListener(listener);
     }
     
-    public void setStarIcon(boolean addButton) {
-	if(addButton) {
-	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
-	}
-	else {
+    public void checkStarIcon() {
+	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
+	else {
+	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
+	}
+    }
+    
+    public void checkNotifButton() {
+	if(data.getLg().isNotify()) {
+	    notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_remove));
+	}
+	else {
+	    notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_add));
+	}
+    
     }
 
     public void showNotificationDialog() {

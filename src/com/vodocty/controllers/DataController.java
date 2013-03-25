@@ -36,24 +36,8 @@ public class DataController extends AbstractMessageReceiver {
     
     private final View.OnClickListener favButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
-	    LG lg = model.getLastData().getLg();
-	    if(lg.isFavorite()) {
-		//dialog
-		if(model.unsetFavorite(lg)) {
-		    view.setStarIcon(true);
-		}
-		else {
-		    Toast.makeText(activity, "Chyba, nepodarilo se odebrat z oblibenych", Toast.LENGTH_LONG);
-		}
-	    }
-	    else {
-		if(model.setFavorite(lg)) {
-		    view.setStarIcon(false);
-		}
-		else {
-		    Toast.makeText(activity, "Chyba, nepodarilo se prodat do oblibenych", Toast.LENGTH_LONG);
-		}
-	    }
+	    model.switchFavorite();
+	    view.notifyDataChanged();
 	}
     };
     
@@ -86,21 +70,21 @@ public class DataController extends AbstractMessageReceiver {
 	    lg.setNotify(view.isNotificationEnabled());
 	    lg.setNotifyHeight(height);
 	    lg.setNotifyVolume(volume);
+	    
 	    if(!model.updateLG(lg)) {
 		Toast.makeText(activity, "Nepodařilo se uložit upozornění", Toast.LENGTH_LONG);
 	    }
 	    else {
 		view.notifyDataChanged();
-	    }
-	    
+	    }	    
 	}
 
     };
     
     @Override
     public void updateData() {
-	
-	
+	model.invalidateData();
+	view.notifyDataChanged();	
     }
     
     

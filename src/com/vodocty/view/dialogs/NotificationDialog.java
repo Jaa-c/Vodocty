@@ -42,7 +42,6 @@ public class NotificationDialog extends DialogFragment {
     
     public void setData(LG lg) {
 	this.lg = lg;
-	Log.d("dialog", lg + "");
     }
     
     @Override
