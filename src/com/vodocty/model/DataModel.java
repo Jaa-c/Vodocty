@@ -160,6 +160,9 @@ public class DataModel {
     
     public boolean updateLG(LG lg) {
 	try {
+	    if(lg.getId() == this.lgId) {
+		this.data.setLg(lg);
+	    }
 	    Dao<LG, Integer> lgDao = db.getLgDao();
 	    return lgDao.update(lg) == 1;
 	}

@@ -20,6 +20,7 @@ public class Data {
     @DatabaseField(foreign = true,
 	    foreignAutoRefresh=true,
 	    maxForeignAutoRefreshLevel=2,
+	    index=true,
 	    canBeNull = false)
     private LG lg;
     

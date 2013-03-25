@@ -51,7 +51,6 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     private NotificationDialog notiDialog;
     
     public DataView(FragmentActivity a, DataModel m) {
-	Log.i(this.getClass().getName(), "DataView constructor");
 	activity = a;
 	model = m;
 	
@@ -69,14 +68,18 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_add));
 	
 	chart = null;
+	data = null;
 	
 	loading.setText("Loading graph...");
-	Log.i(this.getClass().getName(), "DataView constructor end");
     }
     public void initDialog(DialogInterface.OnClickListener ok) {
 	
 	notiDialog = new NotificationDialog(activity, ok);
     
+    }
+    
+    public void notifyDataChanged() {
+	data = model.getLastData();
     }
     
     @Override
@@ -105,7 +108,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     @Override
     protected void onProgressUpdate(Void... values) {
 	this.setContent(data);
-	notiDialog.setData(data.getLg());
+	//notiDialog.setData(data.getLg());
     }
     
 
@@ -126,7 +129,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	}
 	
 	if(data.getLg().isNotify()) {
-	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
+	    notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_remove));
 	}
 	
 	heading.setText(data.getLg().getRiver().getName() + " - " + 
@@ -184,6 +187,10 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     }
 
     public void showNotificationDialog() {
+	if(data == null) {
+	    return;
+	}
+	notiDialog.setData(data.getLg());
 	notiDialog.show(activity.getSupportFragmentManager(), NotificationDialog.ID);
     }
     

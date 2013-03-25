@@ -66,13 +66,16 @@ public class DataController extends AbstractMessageReceiver {
     
     private final DialogInterface.OnClickListener okNotiDialogListener = new DialogInterface.OnClickListener() {
 	public void onClick(DialogInterface dialog, int which) {
+	    //TODO: nejlepe to udelat asynchrone v jinym vlakne
 	    LG lg = model.getLastData().getLg();
 	    
 	    if(!view.isNotificationEnabled() && !lg.isNotify()) {
 		return;
 	    }
-	    float height = Float.parseFloat(view.getDialogHeight() + "0");
-	    float volume = Float.parseFloat(view.getDialogVolume() + "0");
+	    float height = view.getDialogHeight().length() > 0 
+		    ? Float.parseFloat(view.getDialogHeight()) : 0;
+	    float volume = view.getDialogVolume().length() > 0 
+		    ? Float.parseFloat(view.getDialogVolume()) : 0;
 	    
 	    if(view.isNotificationEnabled() && lg.isNotify() && 
 		    lg.getNotifyHeight() == height &&
@@ -85,6 +88,9 @@ public class DataController extends AbstractMessageReceiver {
 	    lg.setNotifyVolume(volume);
 	    if(!model.updateLG(lg)) {
 		Toast.makeText(activity, "Nepodařilo se uložit upozornění", Toast.LENGTH_LONG);
+	    }
+	    else {
+		view.notifyDataChanged();
 	    }
 	    
 	}

@@ -7,6 +7,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -41,10 +42,7 @@ public class NotificationDialog extends DialogFragment {
     
     public void setData(LG lg) {
 	this.lg = lg;
-	//initial values
-	checkBox.setChecked(lg.isNotify());
-	volumeEditText.setText(lg.getNotifyVolume() > 0 ? lg.getNotifyVolume()+ "" : "");
-	heightEditText.setText(lg.getNotifyHeight()> 0 ? lg.getNotifyHeight()+ "" : "");
+	Log.d("dialog", lg + "");
     }
     
     @Override
@@ -67,6 +65,10 @@ public class NotificationDialog extends DialogFragment {
 	volumeEditText = (EditText) view.findViewById(R.id.edittext_volume);
 	checkBox = (CheckBox) view.findViewById(R.id.dialog_checkbox);
 	checkBox.setText("Povolit upozornění");
+	
+	checkBox.setChecked(lg.isNotify());
+	volumeEditText.setText(lg.getNotifyVolume() > 0 ? lg.getNotifyVolume()+ "" : "");
+	heightEditText.setText(lg.getNotifyHeight()> 0 ? lg.getNotifyHeight()+ "" : "");
 	
 	builder.setView(view);
 
