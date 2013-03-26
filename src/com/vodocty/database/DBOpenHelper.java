@@ -25,7 +25,7 @@ import java.sql.SQLException;
 public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     
     private static final String DATABASE_NAME = "vodocty.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     
     private static Dao<River, Integer> riverDao = null;
     private static Dao<LG, Integer> lgDao = null;
@@ -52,7 +52,7 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
 	    TableUtils.createTable(connectionSource, LG.class);
 	    TableUtils.createTable(connectionSource, Data.class);
 	    TableUtils.createTable(connectionSource, Settings.class);
-	    
+	    	    
 	    initDatabase();
 	}
 	catch(SQLException e) {
@@ -65,9 +65,9 @@ public class DBOpenHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqld, ConnectionSource cs, int oldVersion, int newVersion) {
 	if(oldVersion < DATABASE_VERSION) {
-	    try {
-		Dao<LG, Integer> dao = getLgDao();
-		dao.executeRaw("ALTER TABLE `lg` ADD COLUMN " + LG.COLUMN_LAST_NOTIFICATION + " DATE;");
+	    try {		
+		Dao<Data, Integer> dao = getDataDao();
+		dao.executeRaw("CREATE INDEX lg_id_index ON data(lg_id);");
 		Log.d(this.getClass().getName(), "Table updated!");
 	    }
 	    catch(SQLException e) {

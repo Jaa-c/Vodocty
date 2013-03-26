@@ -56,6 +56,24 @@ public class DataActivity extends FragmentActivity {
 	
     }
     
+    @Override
+    protected void onStop() {
+        super.onStop();
+	Log.d("activity", "onStop");
+    }
+    
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+	Log.d("activity", "onDestroy");
+    }
+    
+//    @Override
+//    public void onBackPressed () {
+//	super.moveTaskToBack(true);
+//	//moveTaskToBack(true);
+//    }
 
 
 }

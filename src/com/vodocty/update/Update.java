@@ -331,6 +331,8 @@ public class Update extends Service implements Runnable {
 			currVolume.setValue(lg.getCurrentVolume());
 			currFlood.setValue(lg.getCurrentFlood());
 			lgId.setValue(lg.getId());
+			Log.d("update", preparedLgUpdate.getStatement());
+			Log.d("update", "^data: " + lg.getData());
 			lgDao.update(preparedLgUpdate);
 			//lgDao.update(lg);
 		    }
