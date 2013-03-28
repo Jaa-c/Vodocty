@@ -4,6 +4,7 @@ import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.vodocty.Vodocty;
 import com.vodocty.data.Data;
@@ -60,8 +61,8 @@ public class DataModel {
 	
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
-	    dataQb.where().in("lg_id", lgId);
-	    dataQb.orderBy("date", false);
+	    dataQb.where().in(Data.COLUMN_LG, lgId);
+	    dataQb.orderBy(Data.COLUMN_DATE, false);
 	    data = dataQb.queryForFirst();
 	} catch (SQLException ex) {
 	    Log.e(DataModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
@@ -90,8 +91,8 @@ public class DataModel {
 	List<Data > d = null;
 	try {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
-	    dataQb.where().in("lg_id", lgId);
-	    //dataQb.orderBy("date", false);
+	    dataQb.where().in(Data.COLUMN_LG, lgId);
+	    dataQb.orderBy(Data.COLUMN_DATE, false); //is it helpful? todo
 	    d = dataQb.query();
 	} catch (SQLException ex) {
 	    Log.e(DataModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
@@ -126,6 +127,10 @@ public class DataModel {
 	    settDao = db.getSettingsDao();
 	    conn = settDao.startThreadConnection();
 	    savePoint = conn.setSavePoint(null); //TODO use update from ormlite!!
+//	    UpdateBuilder<Settings, Integer> settUpdate = settDao.updateBuilder();
+//	    settUpdate.updateColumnValue(Settings.VALUE, Settings.VALUE + " + " + value); //does not work!!
+//	    settUpdate.where().in(Settings.KEY, Settings.SETTINGS_FAVORITES);
+//	    settUpdate.update();
 	    GenericRawResults<String[]> cursor =settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
 		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + " + value +
 		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");

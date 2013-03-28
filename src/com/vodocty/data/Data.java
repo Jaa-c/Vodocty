@@ -13,27 +13,33 @@ public class Data {
     public static final String TABLE_NAME = "data";
     
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_LG = "lg_id";
+    public static final String COLUMN_HEIGHT = "height";
+    public static final String COLUMN_VOLUME = "volume";
+    public static final String COLUMN_FLOOD = "flood";
     
-    @DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private int id;
     
     @DatabaseField(foreign = true,
 	    foreignAutoRefresh=true,
 	    maxForeignAutoRefreshLevel=2,
 	    index=true,
-	    canBeNull = false)
+	    canBeNull=false,
+	    columnName=COLUMN_LG)
     private LG lg;
     
     @DatabaseField(index = true, canBeNull = false, columnName = COLUMN_DATE)
     private Date date;
     
-    @DatabaseField(defaultValue="-1")
+    @DatabaseField(defaultValue="-1", columnName = COLUMN_HEIGHT)
     private int height;
     
-    @DatabaseField(defaultValue="-1")
+    @DatabaseField(defaultValue="-1", columnName = COLUMN_VOLUME)
     private float volume;
     
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0", columnName = COLUMN_FLOOD)
     private int flood;
     
     Data() {}

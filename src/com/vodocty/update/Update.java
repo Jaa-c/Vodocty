@@ -29,6 +29,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.activities.DataActivity;
 import com.vodocty.activities.MainActivity;
 import com.vodocty.data.Country;
 import com.vodocty.data.Data;
@@ -67,6 +68,7 @@ public class Update extends Service implements Runnable {
     public static final int MSG_UPDATE = 2;
     
     private static boolean RUNNING = false;
+    private static final long NOTIFICATION_MIN_TIME_DIFF_SEC = 12 * 60 * 60;
     
     private DBOpenHelper db;
     private NotificationManager notifM;
@@ -279,11 +281,13 @@ public class Update extends Service implements Runnable {
 	SelectArg currHeight = new SelectArg();
 	SelectArg currVolume = new SelectArg();
 	SelectArg currFlood = new SelectArg();
+	SelectArg lastNotification = new SelectArg();
 	SelectArg lgId = new SelectArg();
 	UpdateBuilder<LG, Integer> lgUpdate = lgDao.updateBuilder();
 	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_HEIGHT, currHeight);
 	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_VOLUME, currVolume);
 	lgUpdate.updateColumnValue(LG.COLUMN_CURRENT_FLOOD, currFlood);
+	lgUpdate.updateColumnValue(LG.COLUMN_LAST_NOTIFICATION, lastNotification);
 	lgUpdate.where().eq(LG.COLUMN_ID, lgId);
 	PreparedUpdate<LG> preparedLgUpdate = lgUpdate.prepare();
 	
@@ -313,11 +317,11 @@ public class Update extends Service implements Runnable {
 			LG l = lgDao.queryForFirst(preparedQLG);
 			if(l != null) {
 			    lg.setId(l.getId());//TODO : do it better
+			    lg.setNotify(l.isNotify());
 //			    lg.setFavorite(l.isFavorite());
 //			    lg.setLastNotification(l.getLastNotification());
 //			    lg.setNotifyHeight(l.getNotifyHeight());
 //			    lg.setNotifyVolume(l.getNotifyVolume());
-//			    lg.setNotify(l.isNotify());
 			}
 			lg.setRiver(r);
 		    }
@@ -327,14 +331,18 @@ public class Update extends Service implements Runnable {
 			Log.i("Added LG: ", lg.getName());
 		    }
 		    else {
+			if(lg.isNotify())  {
+			    checkNotification(lg);			
+			}
+			
+			lastNotification.setValue(lg.getLastNotification());
 			currHeight.setValue(lg.getCurrentHeight());
 			currVolume.setValue(lg.getCurrentVolume());
 			currFlood.setValue(lg.getCurrentFlood());
 			lgId.setValue(lg.getId());
-			Log.d("update", preparedLgUpdate.getStatement());
-			Log.d("update", "^data: " + lg.getData());
+//			Log.d("update", preparedLgUpdate.getStatement());
+//			Log.d("update", "^data: " + lg.getData());
 			lgDao.update(preparedLgUpdate);
-			//lgDao.update(lg);
 		    }
 		    if(lg.getData().getDate() != null) {
 			dataDao.create(lg.getData());
@@ -389,8 +397,30 @@ public class Update extends Service implements Runnable {
 	return (netInfo != null && netInfo.isConnectedOrConnecting());
     }
     
+    private void checkNotification(LG lg) {
+	if(lg.getLastNotification() != null)  {
+	    Log.d("checkNotification", "last: " + lg.getLastNotification().toGMTString());
+	}
+	
+	if(lg.getLastNotification() == null || 
+		(lg.getLastNotification().getTime() > 
+		(new Date().getTime() - NOTIFICATION_MIN_TIME_DIFF_SEC))) {
+	    return;
+	}
+	Log.d("checkNotification", "notif vol: " + lg.getNotifyVolume());
+	Log.d("checkNotification", "curren vol: " + lg.getCurrentVolume() );
+	if((lg.getNotifyHeight() > 0 && lg.getCurrentHeight() >= lg.getNotifyHeight()) ||
+	   (lg.getNotifyVolume() > 0 && lg.getCurrentVolume() >= lg.getNotifyVolume())) {
+	    lg.setLastNotification(new Date());
+	    createNotification(lg);
+	}
+	    
+    }
+    
     
     private void createNotification() {
+	
+	Log.d("createNotification", "it should notify ");
 	this.notifM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     
 	Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -406,6 +436,26 @@ public class Update extends Service implements Runnable {
 	notify.defaults |= Notification.DEFAULT_LIGHTS;
 	
 	this.notifM.notify(NOTI_ID, notify);
+    }
+    
+    private void createNotification(LG lg) {
+	Intent intent = new Intent(this, DataActivity.class);
+	intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
+	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+	
+	Notification notify = new Notification(R.drawable.ic_launcher,
+						    "Vodocty: upozornění na stav vodoču " + lg.getName(),
+						    System.currentTimeMillis());
+	String content = lg.getName() + " má aktuálně " + lg.getCurrentVolume() + "m3/s + " + 
+		lg.getCurrentHeight() + "cm!";
+	notify.setLatestEventInfo(this, "Vodocty", content , contentIntent);
+	
+	//Set default vibration
+	notify.defaults |= Notification.DEFAULT_ALL;
+	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
+	notify.defaults |= Notification.FLAG_SHOW_LIGHTS;
+	
+	this.notifM.notify(lg.getId(), notify);
     }
     
     /**
