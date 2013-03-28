@@ -318,10 +318,9 @@ public class Update extends Service implements Runnable {
 			if(l != null) {
 			    lg.setId(l.getId());//TODO : do it better
 			    lg.setNotify(l.isNotify());
-//			    lg.setFavorite(l.isFavorite());
-//			    lg.setLastNotification(l.getLastNotification());
-//			    lg.setNotifyHeight(l.getNotifyHeight());
-//			    lg.setNotifyVolume(l.getNotifyVolume());
+			    lg.setLastNotification(l.getLastNotification());
+			    lg.setNotifyHeight(l.getNotifyHeight());
+			    lg.setNotifyVolume(l.getNotifyVolume());
 			}
 			lg.setRiver(r);
 		    }
@@ -398,17 +397,12 @@ public class Update extends Service implements Runnable {
     }
     
     private void checkNotification(LG lg) {
-	if(lg.getLastNotification() != null)  {
-	    Log.d("checkNotification", "last: " + lg.getLastNotification().toGMTString());
-	}
-	
-	if(lg.getLastNotification() == null || 
+
+	if(lg.getLastNotification() != null && 
 		(lg.getLastNotification().getTime() > 
-		(new Date().getTime() - NOTIFICATION_MIN_TIME_DIFF_SEC))) {
+		(new Date().getTime() - (NOTIFICATION_MIN_TIME_DIFF_SEC*1000)))) {
 	    return;
 	}
-	Log.d("checkNotification", "notif vol: " + lg.getNotifyVolume());
-	Log.d("checkNotification", "curren vol: " + lg.getCurrentVolume() );
 	if((lg.getNotifyHeight() > 0 && lg.getCurrentHeight() >= lg.getNotifyHeight()) ||
 	   (lg.getNotifyVolume() > 0 && lg.getCurrentVolume() >= lg.getNotifyVolume())) {
 	    lg.setLastNotification(new Date());
@@ -420,7 +414,6 @@ public class Update extends Service implements Runnable {
     
     private void createNotification() {
 	
-	Log.d("createNotification", "it should notify ");
 	this.notifM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     
 	Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -432,7 +425,6 @@ public class Update extends Service implements Runnable {
 	
 	//Set default vibration
 	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
-	notify.defaults |= Notification.FLAG_ONGOING_EVENT;
 	notify.defaults |= Notification.DEFAULT_LIGHTS;
 	
 	this.notifM.notify(NOTI_ID, notify);
@@ -441,12 +433,13 @@ public class Update extends Service implements Runnable {
     private void createNotification(LG lg) {
 	Intent intent = new Intent(this, DataActivity.class);
 	intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
+	Log.d("extra is: ", " "  + lg.getId());
 	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
 	
 	Notification notify = new Notification(R.drawable.ic_launcher,
 						    "Vodocty: upozornění na stav vodoču " + lg.getName(),
 						    System.currentTimeMillis());
-	String content = lg.getName() + " má aktuálně " + lg.getCurrentVolume() + "m3/s + " + 
+	String content = lg.getName() + ": aktuálně " + lg.getCurrentVolume() + " m3/s a " + 
 		lg.getCurrentHeight() + "cm!";
 	notify.setLatestEventInfo(this, "Vodocty", content , contentIntent);
 	

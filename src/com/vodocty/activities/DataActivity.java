@@ -35,6 +35,7 @@ public class DataActivity extends FragmentActivity {
 	model = new DataModel((Vodocty) getApplicationContext());
 	
 	int lgId = getIntent().getIntExtra(Vodocty.EXTRA_LG_ID, -1);
+	Log.d("dataactivity", "lg:" +lgId);
 	model.setLGId(lgId);
 	
 	controller = new DataController(this, model);	 
