@@ -68,7 +68,10 @@ public class Update extends Service implements Runnable {
     public static final int MSG_UPDATE = 2;
     
     private static boolean RUNNING = false;
+    /** How often is notification shown for the same LG */
     private static final long NOTIFICATION_MIN_TIME_DIFF_SEC = 12 * 60 * 60;
+    /** Does not show notification if data is older than this time */
+    private static final long NOTIFICATION_HOW_OLD_SEC = 2 * 24 * 60 * 60;
     
     private DBOpenHelper db;
     private NotificationManager notifM;
@@ -339,8 +342,6 @@ public class Update extends Service implements Runnable {
 			currVolume.setValue(lg.getCurrentVolume());
 			currFlood.setValue(lg.getCurrentFlood());
 			lgId.setValue(lg.getId());
-//			Log.d("update", preparedLgUpdate.getStatement());
-//			Log.d("update", "^data: " + lg.getData());
 			lgDao.update(preparedLgUpdate);
 		    }
 		    if(lg.getData().getDate() != null) {
@@ -397,12 +398,15 @@ public class Update extends Service implements Runnable {
     }
     
     private void checkNotification(LG lg) {
-
-	if(lg.getLastNotification() != null && 
-		(lg.getLastNotification().getTime() > 
-		(new Date().getTime() - (NOTIFICATION_MIN_TIME_DIFF_SEC*1000)))) {
-	    return;
-	}
+//	if(lg.getLastNotification() != null 
+//		&& 
+//		lg.getLastNotification().getTime() > //notify only once per 12 hours
+//		new Date().getTime() - NOTIFICATION_MIN_TIME_DIFF_SEC * 1000
+//		&&
+//		lg.getData().getDate().getTime() < //do not notify if data older than 2 days
+//		new Date().getTime() - NOTIFICATION_HOW_OLD_SEC * 1000) {
+//	    return;
+//	}
 	if((lg.getNotifyHeight() > 0 && lg.getCurrentHeight() >= lg.getNotifyHeight()) ||
 	   (lg.getNotifyVolume() > 0 && lg.getCurrentVolume() >= lg.getNotifyVolume())) {
 	    lg.setLastNotification(new Date());
@@ -433,8 +437,7 @@ public class Update extends Service implements Runnable {
     private void createNotification(LG lg) {
 	Intent intent = new Intent(this, DataActivity.class);
 	intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
-	Log.d("extra is: ", " "  + lg.getId());
-	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+	PendingIntent contentIntent = PendingIntent.getActivity(this, lg.getId(), intent, PendingIntent.FLAG_ONE_SHOT);
 	
 	Notification notify = new Notification(R.drawable.ic_launcher,
 						    "Vodocty: upozornění na stav vodoču " + lg.getName(),
@@ -447,8 +450,9 @@ public class Update extends Service implements Runnable {
 	notify.defaults |= Notification.DEFAULT_ALL;
 	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
 	notify.defaults |= Notification.FLAG_SHOW_LIGHTS;
+	notify.defaults |= Notification.FLAG_AUTO_CANCEL;
 	
-	this.notifM.notify(lg.getId(), notify);
+	this.notifM.notify(lg.getId() * 10, notify);
     }
     
     /**
