@@ -4,12 +4,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
-@DatabaseTable(tableName = "lg")
+@DatabaseTable(tableName = LG.TABLE_NAME)
 public class LG {
+    
+    public static final String TABLE_NAME = "lg";
     
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_FAVORITE = "favourite";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_RIVER = "river_id";
     public static final String COLUMN_NOTIFY = "notify";
     public static final String COLUMN_LAST_NOTIFICATION = "lastNotification";
     public static final String COLUMN_NOTIFY_HEIGHT = "notifyHeight";
@@ -33,7 +36,8 @@ public class LG {
 	    foreignAutoRefresh=true,
 	    maxForeignAutoRefreshLevel=2,
 	    uniqueCombo=true,
-	    canBeNull=false)
+	    canBeNull=false,
+	    columnName=COLUMN_RIVER)
     private River river;
     
     @DatabaseField(defaultValue="0", columnName=COLUMN_FAVORITE)

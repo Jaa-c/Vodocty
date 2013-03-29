@@ -7,16 +7,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@DatabaseTable(tableName = "river")
+@DatabaseTable(tableName = River.TABLE_NAME)
 public class River {
     
-    @DatabaseField(generatedId = true)
+    public static final String TABLE_NAME = "river";
+    
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_COUNTRY = "country";
+    
+    @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private int id;
     
-    @DatabaseField(index=true, uniqueCombo=true, canBeNull=false)
+    @DatabaseField(
+	    index=true,
+	    uniqueCombo=true,
+	    canBeNull=false,
+	    columnName=COLUMN_NAME)
     private String name;
     
-    @DatabaseField(uniqueCombo=true, canBeNull=false)
+    @DatabaseField(
+	    uniqueCombo=true,
+	    canBeNull=false,
+	    columnName=COLUMN_COUNTRY)
     private Country country;
     
     private Map<String, LG> lg;

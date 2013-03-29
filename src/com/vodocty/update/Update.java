@@ -97,7 +97,7 @@ public class Update extends Service implements Runnable {
 	try {
 	    Dao<Settings, Integer> sdao = db.getSettingsDao();
 	    QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
-	    query.where().eq(Settings.KEY, Settings.SETTINGS_LAST_UPDATE);
+	    query.where().eq(Settings.COLUMN_KEY, Settings.SETTINGS_LAST_UPDATE);
 	    Settings s = query.queryForFirst();
 	    if(s == null) {
 		lastUpdate = new Settings(Settings.SETTINGS_LAST_UPDATE, "0");
@@ -272,13 +272,13 @@ public class Update extends Service implements Runnable {
 	SelectArg nameArg = new SelectArg();
 	SelectArg riverIdArg = new SelectArg();
 	QueryBuilder<LG, Integer> query = lgDao.queryBuilder();
-	query.where().eq("name", nameArg).and().eq("river_id", riverIdArg);
+	query.where().eq(LG.COLUMN_NAME, nameArg).and().eq(LG.COLUMN_RIVER, riverIdArg);
 	PreparedQuery<LG> preparedQLG = query.prepare();
 	
 	SelectArg riverArg = new SelectArg();
 	SelectArg countryArg = new SelectArg();
 	QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
-	riverQuery.where().eq("name", riverArg).and().eq("country", countryArg);
+	riverQuery.where().eq(River.TABLE_NAME, riverArg).and().eq(River.COLUMN_COUNTRY, countryArg);
 	PreparedQuery<River> preparedQRiver = riverQuery.prepare();
 	
 	SelectArg currHeight = new SelectArg();
@@ -430,6 +430,7 @@ public class Update extends Service implements Runnable {
 	//Set default vibration
 	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
 	notify.defaults |= Notification.DEFAULT_LIGHTS;
+	notify.defaults |= Notification.FLAG_ONGOING_EVENT;
 	
 	this.notifM.notify(NOTI_ID, notify);
     }
@@ -447,10 +448,9 @@ public class Update extends Service implements Runnable {
 	notify.setLatestEventInfo(this, "Vodocty", content , contentIntent);
 	
 	//Set default vibration
-	notify.defaults |= Notification.DEFAULT_ALL;
-	notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
-	notify.defaults |= Notification.FLAG_SHOW_LIGHTS;
 	notify.defaults |= Notification.FLAG_AUTO_CANCEL;
+	//notify.defaults |= Notification.FLAG_ONLY_ALERT_ONCE;
+	notify.defaults |= Notification.FLAG_SHOW_LIGHTS;
 	
 	this.notifM.notify(lg.getId() * 10, notify);
     }

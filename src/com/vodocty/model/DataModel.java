@@ -132,8 +132,8 @@ public class DataModel {
 //	    settUpdate.where().in(Settings.KEY, Settings.SETTINGS_FAVORITES);
 //	    settUpdate.update();
 	    GenericRawResults<String[]> cursor =settDao.queryRaw("UPDATE " + Settings.TABLE_NAME +
-		    " SET " + Settings.VALUE + " = " + Settings.VALUE + " + " + value +
-		    " WHERE " + Settings.KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
+		    " SET " + Settings.COLUMN_VALUE + " = " + Settings.COLUMN_VALUE + " + " + value +
+		    " WHERE " + Settings.COLUMN_KEY + " = \"" + Settings.SETTINGS_FAVORITES + "\"");
 	    cursor.close();
 	}
 	catch(SQLException e) {

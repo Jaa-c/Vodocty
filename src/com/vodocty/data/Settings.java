@@ -13,9 +13,8 @@ public class Settings {
     
     public static final String TABLE_NAME = "settings";
     
-    public static final String KEY = "key";
-    public static final String VALUE = "value";
-    
+    public static final String COLUMN_KEY = "key";
+    public static final String COLUMN_VALUE = "value";
     
     public static final String SETTINGS_LAST_UPDATE = "lastUpdate";
     public static final String SETTINGS_FAVORITES = "favorites";
@@ -23,10 +22,14 @@ public class Settings {
     @DatabaseField(generatedId = true)
     private int id;
     
-    @DatabaseField(index=true, unique=true, canBeNull=false, columnName=KEY)
+    @DatabaseField(
+	    index=true,
+	    unique=true,
+	    canBeNull=false,
+	    columnName=COLUMN_KEY)
     private String key;
     
-    @DatabaseField(canBeNull=false, columnName=VALUE)
+    @DatabaseField(canBeNull=false, columnName=COLUMN_VALUE)
     private String value;
     
     Settings() {}

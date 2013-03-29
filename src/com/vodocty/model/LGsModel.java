@@ -37,7 +37,7 @@ public class LGsModel {
 	else {
 	    try {
 		QueryBuilder<River,Integer> riv = this.db.getRiverDao().queryBuilder();
-		riv.where().in("id", riverId);
+		riv.where().in(River.COLUMN_ID, riverId);
 		return riv.queryForFirst();
 	    }
 	    catch(SQLException e) {
@@ -56,8 +56,8 @@ public class LGsModel {
 	
 	try {
 	    QueryBuilder<LG,Integer> lgQb = this.db.getLgDao().queryBuilder();
-	    lgQb.where().in("river_id", riverId);
-	    lgQb.orderBy("currentVolume", false); //which way?? or optional?
+	    lgQb.where().in(LG.COLUMN_RIVER, riverId);
+	    lgQb.orderBy(LG.COLUMN_CURRENT_VOLUME, false); //which way?? or optional?
 	    data = lgQb.query();
 	} catch (SQLException ex) {
 	    Log.e(LGsModel.class.getName(), ex.getLocalizedMessage());

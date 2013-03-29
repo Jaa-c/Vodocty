@@ -36,7 +36,7 @@ public class Vodocty extends Application {
 	    settingsDao = database.getSettingsDao();
 	    
 	    QueryBuilder<Settings, Integer> sQuery = settingsDao.queryBuilder();
-	    sQuery.where().in(Settings.KEY, Settings.SETTINGS_FAVORITES);
+	    sQuery.where().in(Settings.COLUMN_KEY, Settings.SETTINGS_FAVORITES);
 	    favorites = Integer.parseInt(sQuery.queryForFirst().getValue());
 	    assert(favorites >= 0);
 	}
