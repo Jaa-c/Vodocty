@@ -278,7 +278,7 @@ public class Update extends Service implements Runnable {
 	SelectArg riverArg = new SelectArg();
 	SelectArg countryArg = new SelectArg();
 	QueryBuilder<River, Integer> riverQuery = riverDao.queryBuilder();
-	riverQuery.where().eq(River.TABLE_NAME, riverArg).and().eq(River.COLUMN_COUNTRY, countryArg);
+	riverQuery.where().eq(River.COLUMN_NAME, riverArg).and().eq(River.COLUMN_COUNTRY, countryArg);
 	PreparedQuery<River> preparedQRiver = riverQuery.prepare();
 	
 	SelectArg currHeight = new SelectArg();
