@@ -2,7 +2,18 @@ package com.vodocty.data;
 
 
 public enum Country {
-    cze
+    
+    cze("Česká republika");
+    
+    private final String name;
+    
+    Country(String s) {
+	this.name = s;
+    }
+    
+    public String getName() {
+	return this.name;
+    }
 };
 
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.activities.DataActivity;
@@ -36,6 +37,7 @@ public class FavoritesController extends AbstractMessageReceiver {
 	
 	this.view = new  FavoritesView(activity, adapter);	
 	view.setFavButtonListener(favButtonListener);
+	view.setFlagButtonListener(flagButtonListener);
 	view.setListClickListener(listClickHandler);
     }
     
@@ -65,6 +67,14 @@ public class FavoritesController extends AbstractMessageReceiver {
 	    vodocty.setDisplayFavorites(false);
 	    vodocty.setChangeDispFavorites(true);
 	    ((MainActivity) activity).checkFavoritesView();
+	}
+    };
+    
+    private final View.OnClickListener flagButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
+	    Toast.makeText(activity, "Zatím jen ČR", Toast.LENGTH_LONG).show();
+	    
 	}
     };
 
