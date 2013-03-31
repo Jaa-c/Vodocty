@@ -39,6 +39,7 @@ public class FavoritesController extends AbstractMessageReceiver {
 	view.setFavButtonListener(favButtonListener);
 	view.setFlagButtonListener(flagButtonListener);
 	view.setListClickListener(listClickHandler);
+	view.setMenuButtonListener(menuButtonListener);
     }
     
     @Override
@@ -74,6 +75,14 @@ public class FavoritesController extends AbstractMessageReceiver {
 	public void onClick(View arg0) {
 	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
 	    Toast.makeText(activity, "Zatím jen ČR", Toast.LENGTH_LONG).show();
+	    
+	}
+    };
+    
+    private final View.OnClickListener menuButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
+	    Toast.makeText(activity, "Menu pyčo", Toast.LENGTH_LONG).show();
 	    
 	}
     };

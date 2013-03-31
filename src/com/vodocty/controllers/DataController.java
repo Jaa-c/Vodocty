@@ -31,6 +31,7 @@ public class DataController extends AbstractMessageReceiver {
 	view.execute();
 	view.setFavButtonListener(favButtonListener);
 	view.setNotifButtonListener(notifButtonListener);
+	view.setBackButtonListener(backButtonListener);
     }
 
     
@@ -44,6 +45,13 @@ public class DataController extends AbstractMessageReceiver {
     private final View.OnClickListener notifButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
 	    view.showNotificationDialog();
+	}
+    
+    };
+    
+    private final View.OnClickListener backButtonListener = new View.OnClickListener() {
+	public void onClick(View arg0) {
+	    activity.onBackPressed();
 	}
     
     };

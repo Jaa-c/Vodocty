@@ -21,6 +21,8 @@ public class LGsView {
     private Activity activity;
     private LGsAdapter adapter;
     
+    private CommonHeaderView headerView;
+    
     private ListView list;
     private TextView head;
     private View header;
@@ -29,6 +31,8 @@ public class LGsView {
     public LGsView(Activity activity, LGsAdapter adapter) {
 	this.activity = activity;
 	this.adapter = adapter;
+	
+	headerView = new CommonHeaderView(activity);
 	
 	list = (ListView) activity.findViewById(R.id.lg_listview);
 	favButton = (Button) activity.findViewById(R.id.button_fav);
@@ -54,6 +58,14 @@ public class LGsView {
             
     public void setFavButtonListener(OnClickListener listener) {
 	favButton.setOnClickListener(listener);
+    }
+         
+    public void setFlagButtonListener(OnClickListener listener) {
+	headerView.setFlagButtonListener(listener);
+    }
+    
+    public void setMenuButtonListener(OnClickListener listener) {
+	headerView.setMenuButtonListener(listener);
     }
     
 }

@@ -2,13 +2,12 @@ package com.vodocty.view;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +38,7 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     private Button favButton;
     private Button notifButton;
+    private Button backButton;
     private TextView heading;
     private TextView date;
     private TextView flood;
@@ -54,8 +54,11 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	activity = a;
 	model = m;
 	
+	final float scale = activity.getResources().getDisplayMetrics().density;
+	
 	favButton = (Button) activity.findViewById(R.id.button_fav);
 	notifButton = (Button) activity.findViewById(R.id.button_right);
+	backButton = (Button) activity.findViewById(R.id.button_left);
         heading = (TextView) activity.findViewById(R.id.data_page_heading);
 	flood = (TextView) activity.findViewById(R.id.data_page_flood);
 	date = (TextView) activity.findViewById(R.id.data_page_date);
@@ -66,6 +69,11 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	//favButton.setVisibility(View.INVISIBLE);
 	favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_add));
 	notifButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.alert_add));
+	backButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.back));
+	
+	LayoutParams params = backButton.getLayoutParams();
+	params.height=(int) (70 * scale + 0.5f);;
+	backButton.setLayoutParams(params);
 	
 	chart = null;
 	data = null;
@@ -171,6 +179,10 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     public void setNotifButtonListener(OnClickListener listener)  {
 	notifButton.setOnClickListener(listener);
+    }
+    
+    public void setBackButtonListener(OnClickListener listener)  {
+	backButton.setOnClickListener(listener);
     }
     
     public void checkStarIcon() {
