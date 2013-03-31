@@ -399,10 +399,10 @@ public class Update extends Service implements Runnable {
     
     private void checkNotification(LG lg) {
 	if(lg.getLastNotification() != null 
-		&& 
+		|| 
 		lg.getLastNotification().getTime() > //notify only once per 12 hours
 		new Date().getTime() - NOTIFICATION_MIN_TIME_DIFF_SEC * 1000
-		&&
+		||
 		lg.getData().getDate().getTime() < //do not notify if data older than 2 days
 		new Date().getTime() - NOTIFICATION_HOW_OLD_SEC * 1000) {
 	    return;
