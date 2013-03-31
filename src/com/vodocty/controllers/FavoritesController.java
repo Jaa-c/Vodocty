@@ -1,7 +1,9 @@
 package com.vodocty.controllers;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,8 +11,8 @@ import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.activities.DataActivity;
-import com.vodocty.activities.MainActivity;
 import com.vodocty.data.LG;
+import com.vodocty.fragments.DataFragment;
 import com.vodocty.model.FavoritesModel;
 import com.vodocty.view.FavoritesView;
 import com.vodocty.view.adapters.LGsAdapter;
@@ -22,16 +24,21 @@ import com.vodocty.view.adapters.LGsAdapter;
  */
 public class FavoritesController extends AbstractMessageReceiver {
     
-    private final Activity activity;
+    private final FragmentActivity activity;
+    private final Fragment fragment;
     private final FavoritesModel model;
     private final LGsAdapter adapter; 
     private final FavoritesView view;
     
     
-    public FavoritesController(Activity activity, FavoritesModel model) {
-	
-	this.activity = activity;
+    private final boolean mDualPane;
+    
+    
+    public FavoritesController(Fragment fragment, FavoritesModel model, boolean mDualPane) {
+	this.fragment = fragment;
+	this.activity = fragment.getActivity();
 	this.model = model;
+	this.mDualPane = mDualPane;
 	this.adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getFavoriteLGs());
 	adapter.setDisplayFavorites(true);
 	
@@ -51,12 +58,36 @@ public class FavoritesController extends AbstractMessageReceiver {
     private final AdapterView.OnItemClickListener listClickHandler = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View v, int position, long id) {
+	    if (mDualPane) {
+		// We can display everything in-place with fragments, so update
+		// the list to highlight the selected item and show the data.
+		//getListView().setItemChecked(index, true);
+
+		// Check what fragment is currently shown, replace if needed.
+		DataFragment details = (DataFragment)
+			fragment.getFragmentManager().findFragmentById(R.id.data_frame);
+
+		if (details == null) {
+		    // Make new fragment to show this selection.
+		    details = new DataFragment(activity);
+
+		    // Execute a transaction, replacing any existing fragment
+		    // with this one inside the frame.
+		    FragmentTransaction ft = fragment.getFragmentManager().beginTransaction();
+		    ft.replace(R.id.data_frame, details);
+		    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		    ft.commit();
+		}
+
+	    } else {
+		Intent intent = new Intent(activity, DataActivity.class);
+
+		LG lg = (LG) adapter.getItem(position-1);
+		intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
+		activity.startActivity(intent);
+	    }
             
-	    Intent intent = new Intent(activity, DataActivity.class);
 	    
-            LG lg = (LG) adapter.getItem(position-1);
-	    intent.putExtra(Vodocty.EXTRA_LG_ID, lg.getId());
-	    activity.startActivity(intent);
 
         }
     };
@@ -66,7 +97,7 @@ public class FavoritesController extends AbstractMessageReceiver {
 	    Vodocty vodocty = (Vodocty) activity.getApplicationContext();
 	    vodocty.setDisplayFavorites(false);
 	    vodocty.setChangeDispFavorites(true);
-	    ((MainActivity) activity).checkFavoritesView();
+	    //((MainActivity) activity).checkFavoritesView();
 	}
     };
     

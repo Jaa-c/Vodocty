@@ -40,8 +40,6 @@ public class DataActivity extends FragmentActivity {
 	
 	controller = new DataController(this, model);	 
 	
-	
-	Log.d("activity", "oncreate");
     }
 
     @Override
@@ -53,21 +51,18 @@ public class DataActivity extends FragmentActivity {
     @Override
     protected void onPause() {
 	super.onPause();
-	Log.d("activity", "onPause");
 	
     }
     
     @Override
     protected void onStop() {
         super.onStop();
-	Log.d("activity", "onStop");
     }
     
     
     @Override
     protected void onDestroy() {
         super.onDestroy();
-	Log.d("activity", "onDestroy");
     }
     
 //    @Override

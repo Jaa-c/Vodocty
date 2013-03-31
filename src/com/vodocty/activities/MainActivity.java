@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 	if(context.getFavorites() > 0) {
 	    setContentView(R.layout.lgs);
 	    FavoritesModel model = new FavoritesModel(db);
-	    controller = new FavoritesController(this, model);
+	    controller = null;//new FavoritesController(this, model);
 	    context.setDisplayFavorites(true);
 	}
 	else {
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);
 		FavoritesModel model = new FavoritesModel(db);
-		controller = new FavoritesController(this, model);
+		controller = null;//new FavoritesController(this, model);
 	    }
 	    else {
 		setContentView(R.layout.rivers);

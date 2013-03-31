@@ -2,7 +2,6 @@ package com.vodocty.view;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
@@ -70,6 +69,8 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 	chart = null;
 	data = null;
 	
+	Log.d("------->", this.activity + "");
+	Log.d("-------", this.loading + "");
 	loading.setText("Loading graph...");
     }
     public void initDialog(DialogInterface.OnClickListener ok) {
