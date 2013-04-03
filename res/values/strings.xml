@@ -8,5 +8,21 @@
     
     <string name="simple_content">This is a simple showcase of how easy it is to add the action bar to your activities. Take a look at the source code, it\'s surprisingly simple!</string>
     
+    <string name="about">
+	<![CDATA[
+	<h1>O apliakci</h1>
+	<p>Vytvořil: Daniel Princ</p>
+	<p>Veškerá uváděná data jsou bez záruky.</p>
+	<p>Pokud chcete nahlásit chybu nebo navrnout nějakou novou funkci, 
+	můžete vytvořit issue na 
+	<a href="https://github.com/Jaa-c/Vodocty/issues?state=open">této stránce</a>.
+	</p>
+	<h1>Zdroje dat</h1>
+	<p>Systém využívá veřejně dostupné informace z následujích webových stránek:</p>
+	<ul>
+	    <li> - Česká republika: <a href="http://hydro.chmi.cz/hpps/index.php">ČHMÚ</a></li>
+	</ul>
+	]]>
+    </string>
     
 </resources>

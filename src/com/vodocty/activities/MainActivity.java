@@ -5,10 +5,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.controllers.AbstractMessageReceiver;
@@ -98,6 +99,26 @@ public class MainActivity extends Activity {
 	    context.setChangeDispFavorites(false);
 	}
 	
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.options_menu, menu);
+	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	// Handle item selection
+	switch (item.getItemId()) {
+	    case R.id.menu_info:
+		Intent i = new Intent(this, InfoActivity.class);
+		startActivity(i);
+		return true;
+	    default:
+		return super.onOptionsItemSelected(item);
+	}
     }
    
 

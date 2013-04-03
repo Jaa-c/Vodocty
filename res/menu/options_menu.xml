@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/meenu_settings"
+	  android:title="Nastavení" />
+    <item android:id="@+id/menu_help"
+	  android:title="Nápověda" />
+    <item android:id="@+id/menu_info"
+	  android:title="O aplikaci" />
+</menu>
