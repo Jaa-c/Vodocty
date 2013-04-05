@@ -3,7 +3,7 @@ package com.vodocty.data;
 
 public enum Country {
     
-    cze("Česká republika");
+    cz("Česká republika"), at("Rakousko");
     
     private final String name;
     

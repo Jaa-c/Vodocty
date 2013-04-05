@@ -61,6 +61,7 @@ import tools.Tools;
 public class Update extends Service implements Runnable {
     
     private static final String GZ = ".xml.gz";
+    private static final String LAST = "last.txt";
     private static final int NOTI_ID = 1;
     
     public static final int MSG_REGISTER = 1;
@@ -194,14 +195,15 @@ public class Update extends Service implements Runnable {
 	Resources res = getResources();
 	
 	TypedArray urls = res.obtainTypedArray(R.array.urls);
-	String path = res.getString(R.string.path);
+	String path;
 	
 	Map<String, River> data = null;
 	//foreach feeds for all countries
-	for(int i = 0; i < urls.length(); i++) {
+	for(Country country : Country.values()) {
+	    path = res.getString(R.string.path) + country + "/";
 	    List<String> files;
 	    try {
-		files = this.loadInfo(urls.getString(i));
+		files = this.loadInfo(path + LAST);
 	    }
 	    catch(NullPointerException e) {
 		Log.e(Update.class.getName(), "download error: " + e.getLocalizedMessage());
@@ -221,11 +223,11 @@ public class Update extends Service implements Runnable {
 		InputStream xml = HttpReader.loadGz(path + files.get(j) + GZ);
 		
 		if(xml == null) {
-		    Log.e(Update.class.getName(), "feed offline: " + urls.getString(i));
+		    Log.e(Update.class.getName(), "feed offline: " + path);
 		    continue;
 		}
 		try {
-		    data = XMLParser.parse(xml, Country.cze, data, Integer.parseInt(files.get(j)));
+		    data = XMLParser.parse(xml, Country.cz, data, Integer.parseInt(files.get(j)));
 		} catch (Exception ex) {
 		    Log.e(Update.class.getName(), ex.getLocalizedMessage());
 		}

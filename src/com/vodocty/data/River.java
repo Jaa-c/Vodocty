@@ -27,6 +27,7 @@ public class River {
     private String name;
     
     @DatabaseField(
+	    index=true,
 	    uniqueCombo=true,
 	    canBeNull=false,
 	    columnName=COLUMN_COUNTRY)

@@ -90,15 +90,15 @@ public class BasicChart {
 	
 	renderer.setXAxisMin(series.getMaxX() - 2.5f * Tools.DAY_SECONDS * 1000); //zobrazuju 2,5 dne
 	renderer.setXAxisMax(series.getMaxX() + 0.2f * Tools.DAY_SECONDS * 1000);
-	//renderer.setYAxisMin(series.getMinY());
+	renderer.setYAxisMin(series.getMinY());
 	renderer.setYAxisMax(series.getMaxY() + 2 * diff); //posunu o trochu niz
 	
-	
-	renderer.setPanLimits(new double[] { 
-	    series.getMinX() - Tools.DAY_SECONDS, series.getMaxX() + Tools.DAY_SECONDS,
-	    series.getMinY() - diff, series.getMaxY() + diff
-	});
-	
+	//TODO
+//	renderer.setPanLimits(new double[] { 
+//	    series.getMinX() - Tools.DAY_SECONDS, series.getMaxX() + Tools.DAY_SECONDS,
+//	    series.getMinY() - diff, series.getMaxY() + diff
+//	});
+		
 	
 	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 	dataset.addSeries(series);

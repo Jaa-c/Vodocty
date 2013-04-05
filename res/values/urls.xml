@@ -3,9 +3,9 @@
     <!--string name="czeu">http://princ.name/temp/data.xml</string>
     <string name="czeu">http://10.0.2.2/vodocty/data/last</string>
     <string name="path">http://10.0.2.2/vodocty/data/</string-->
-    <string name="czeu">http://vodocty.princ.name/data/last</string>
+    <string name="cz">http://vodocty.princ.name/data/last</string>
     <string name="path">http://vodocty.princ.name/data/</string>
     <array name="urls">
-        <item>@string/czeu</item>
+        <item>@string/cz</item>
     </array>
 </resources>

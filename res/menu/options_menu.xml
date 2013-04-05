@@ -3,7 +3,7 @@
     <item android:id="@+id/meenu_settings"
 	  android:title="Nastavení" />
     <item android:id="@+id/menu_help"
-	  android:title="Nápověda" />
+	  android:title="Nápovědab" />
     <item android:id="@+id/menu_info"
 	  android:title="O aplikaci" />
 </menu>
