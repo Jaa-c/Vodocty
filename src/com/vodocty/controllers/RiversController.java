@@ -1,7 +1,7 @@
 package com.vodocty.controllers;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -26,7 +26,7 @@ public class RiversController extends AbstractHeaderController {
     private final RiversView view;
     
     
-    public RiversController(Activity activity, RiversModel model) {
+    public RiversController(FragmentActivity activity, RiversModel model) {
 	super(activity);
 	
 	this.model = model;

@@ -1,8 +1,12 @@
 package com.vodocty.controllers;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import com.vodocty.R;
+import com.vodocty.data.Country;
+import com.vodocty.view.adapters.FlagAdapter;
+import com.vodocty.view.dialogs.FlagDialog;
 
 /**
  *
@@ -11,18 +15,22 @@ import android.widget.Toast;
  */
 public abstract class AbstractHeaderController extends AbstractMessageReceiver {
     
-    protected final Activity activity;
+    protected final FragmentActivity activity;
+    protected FlagDialog flagDialog;
+    protected ArrayAdapter adapter;
     
-    protected AbstractHeaderController(Activity activity) {
+    protected AbstractHeaderController(FragmentActivity activity) {
 	super();
 	this.activity = activity;
+	adapter = new FlagAdapter(activity, R.layout.list_flag_row, Country.values());
+	flagDialog = new FlagDialog(activity, null, adapter);
     }
     
     protected final View.OnClickListener flagButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
 	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
-	    Toast.makeText(activity, "Zatím jen ČR", Toast.LENGTH_LONG).show();
-	    
+	    //Toast.makeText(activity, "Zatím jen ČR", Toast.LENGTH_LONG).show();
+	    flagDialog.show(activity.getSupportFragmentManager(), FlagDialog.ID);
 	}
     };
     

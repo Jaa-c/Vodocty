@@ -1,8 +1,7 @@
 package com.vodocty.controllers;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -26,7 +25,7 @@ public class FavoritesController extends AbstractHeaderController {
     private final LGsAdapter adapter; 
     private final FavoritesView view;
     
-    public FavoritesController(Activity activity, FavoritesModel model) {
+    public FavoritesController(FragmentActivity activity, FavoritesModel model) {
 	super(activity);
 	
 	this.model = model;

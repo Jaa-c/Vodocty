@@ -1,14 +1,13 @@
 package com.vodocty.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
 import com.vodocty.controllers.LGsController;
-import com.vodocty.controllers.RiversController;
 import com.vodocty.database.DBOpenHelper;
 import com.vodocty.model.LGsModel;
 import com.vodocty.update.Update;
@@ -18,7 +17,7 @@ import com.vodocty.update.Update;
  * @author Dan Princ
  * @since 20.2.2013
  */
-public class LGsActivtiy extends Activity {
+public class LGsActivtiy extends FragmentActivity {
     
     private DBOpenHelper db; //save in sth like global context
     private LGsController controller;

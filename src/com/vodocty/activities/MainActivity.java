@@ -1,12 +1,12 @@
 package com.vodocty.activities;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +21,7 @@ import com.vodocty.model.RiversModel;
 import com.vodocty.update.Update;
 import com.vodocty.update.UpdateReciever;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     
     private DBOpenHelper db; //save in sth like global context
     private AbstractMessageReceiver controller;
