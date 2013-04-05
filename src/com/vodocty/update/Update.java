@@ -76,7 +76,7 @@ public class Update extends Service implements Runnable {
     
     private DBOpenHelper db;
     private NotificationManager notifM;
-    private Settings lastUpdate;
+    //private Settings lastUpdate;
     
     /** Target we publish for clients to send messages to IncomingHandler. */
     private final Messenger mMessenger = new Messenger(new IncomingHandler());
@@ -94,26 +94,31 @@ public class Update extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 	this.createNotification();
-		
-	try {
-	    Dao<Settings, Integer> sdao = db.getSettingsDao();
-	    QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
-	    query.where().eq(Settings.COLUMN_KEY, Settings.SETTINGS_LAST_UPDATE);
-	    Settings s = query.queryForFirst();
-	    if(s == null) {
-		lastUpdate = new Settings(Settings.SETTINGS_LAST_UPDATE, "0");
-	    }
-	    else {
-		lastUpdate = s;
-	    }
-	}
-	catch(SQLException e) {
-	    //better do nothing
-	    lastUpdate = new Settings(Settings.SETTINGS_LAST_UPDATE, "" + (int) (Calendar.getInstance().getTimeInMillis() / 1000));
-	    Log.e(Update.class.getName(), e.getLocalizedMessage());
-	}
 	
-	Log.i(Update.class.getName(),"lastUpdate="+  lastUpdate.getValue());
+	for(Country country : Country.values()) {
+	    try {
+		Dao<Settings, Integer> sdao = db.getSettingsDao();
+		QueryBuilder<Settings, Integer> query = sdao.queryBuilder();
+		query.where().eq(Settings.COLUMN_KEY, Settings.SETTINGS_LAST_UPDATE + country);
+		Settings s = query.queryForFirst();
+		if(s == null) {
+//		    if(country == Country.cz)//temp
+//			country.setLastUpdate(1365120709);
+//		    else if (country == Country.at)
+//			country.setLastUpdate(1365187282);
+		    country.setLastUpdate(0);
+		}
+		else {
+		    country.setLastUpdate(Integer.parseInt(s.getValue()));
+		}
+	    }
+	    catch(SQLException e) {
+		//better do nothing
+		country.setLastUpdate((int) (Calendar.getInstance().getTimeInMillis() / 1000));
+		Log.e(Update.class.getName(), e.getLocalizedMessage());
+	    }
+	Log.i(Update.class.getName(), country + ": lastUpdate=" + country.getLastUpdate());
+	}
 	
 	
 	Thread updateThread = new Thread(this);
@@ -200,12 +205,12 @@ public class Update extends Service implements Runnable {
 	Map<String, River> data = null;
 	//foreach feeds for all countries
 	for(Country country : Country.values()) {
-	    if(country == Country.cz)
-		continue;
+	    //if(country == Country.cz)
+		//continue;
 	    path = res.getString(R.string.path) + country + "/";
 	    List<String> files;
 	    try {
-		files = this.loadInfo(path + LAST);
+		files = this.loadInfo(path + LAST, country.getLastUpdate());
 	    }
 	    catch(NullPointerException e) {
 		Log.e(Update.class.getName(), "download error: " + e.getLocalizedMessage());
@@ -213,7 +218,7 @@ public class Update extends Service implements Runnable {
 	    }
 	    
 	    if(files == null || files.isEmpty()) {
-		Log.i(Update.class.getName(), "Nothing to do.");
+		Log.i(Update.class.getName(), country + ": nothing to do.");
 		continue;
 	    }
 	    
@@ -240,12 +245,12 @@ public class Update extends Service implements Runnable {
 		}
 		
 		//finally update the data in database
-		Log.i(Update.class.getName(), "used file: " + files.get(j) + ", files remaining: " + j);
+		Log.i(Update.class.getName(), country + ": used file: " + files.get(j) + ", files remaining: " + j);
 		try {
 		    conn = db.getDataDao().startThreadConnection();
 		    savePoint = conn.setSavePoint(null);//commit all as one transaction -> improved performace
 		    
-		    this.updateDatabase(data, files.get(j));
+		    this.updateDatabase(data, Integer.parseInt(files.get(j)), country);
 		}
 		catch(SQLException e) {
 		    Log.e(Update.class.getName(), e.getLocalizedMessage());
@@ -265,13 +270,12 @@ public class Update extends Service implements Runnable {
     
     }
     
-    private void updateDatabase(Map<String, River> data, String time) throws SQLException {
+    private void updateDatabase(Map<String, River> data, int time, Country country) throws SQLException {
 	//update the database:
 	Dao<Data, Integer> dataDao = db.getDataDao();
 	Dao<River, Integer> riverDao = db.getRiverDao();
 	Dao<LG, Integer> lgDao = db.getLgDao();
 
-	int updateTime = Integer.parseInt(time);
 	
 	SelectArg nameArg = new SelectArg();
 	SelectArg riverIdArg = new SelectArg();
@@ -300,7 +304,7 @@ public class Update extends Service implements Runnable {
 	
 	
 	for(River r : data.values()) {
-	    if(r.getLastUpdate() != updateTime) { //some old entry
+	    if(r.getLastUpdate() != time) { //some old entry
 		continue;
 	    }
 	    
@@ -360,18 +364,16 @@ public class Update extends Service implements Runnable {
 	    }
 	}
 	
+	country.setLastUpdate(time);
+	UpdateBuilder<Settings, Integer> settUpdate = db.getSettingsDao().updateBuilder();
+	settUpdate.updateColumnValue(Settings.COLUMN_VALUE, time); 
+	settUpdate.where().in(Settings.COLUMN_KEY, Settings.SETTINGS_LAST_UPDATE + country);
+	settUpdate.update();
 	
-	lastUpdate.setValue(time);
-	if(lastUpdate.getId() == 0) {
-	    lastUpdate.setId(db.getSettingsDao().extractId(lastUpdate));
-	}
-	else {
-	    db.getSettingsDao().update(lastUpdate);
-	}
     }
     
     
-    private List<String> loadInfo(String url) {
+    private List<String> loadInfo(String url, int lastUpdate) {
 	BufferedReader raw = new BufferedReader(new InputStreamReader(HttpReader.load(url)));
 	
 	String[] s;
@@ -382,9 +384,8 @@ public class Update extends Service implements Runnable {
 	}
 	
 	List<String> data = new ArrayList<String>();
-	int l = Integer.parseInt(lastUpdate.getValue());
 	for(int i = 0; i < s.length; i++) {
-	    if(Integer.parseInt(s[i]) > l) {
+	    if(Integer.parseInt(s[i]) > lastUpdate) {
 		data.add(s[i]);
 	    }
 	    else {
