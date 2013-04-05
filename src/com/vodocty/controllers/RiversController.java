@@ -33,9 +33,7 @@ public class RiversController extends AbstractHeaderController {
         this.adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
 	this.view = new RiversView(activity, adapter);
 	view.setFavButtonListener(favButtonListener);
-	view.setListClickListener(childListClickHandler);
-	view.setFlagButtonListener(flagButtonListener);
-    
+	view.setListClickListener(childListClickHandler);    
     }
 
     @Override

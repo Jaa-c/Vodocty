@@ -32,7 +32,6 @@ public class LGsController extends AbstractHeaderController {
 	view.setContent(model.getRiver());
 	view.setListClickListener(listClickHandler);
 	view.setFavButtonListener(favButtonListener);
-	view.setFlagButtonListener(flagButtonListener);
 	
     }
     

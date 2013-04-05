@@ -20,9 +20,7 @@ public class FavoritesView {
     
     private Activity activity;
     private LGsAdapter adapter; 
-    
-    private CommonHeaderView headerView;
-    
+        
     private Button favButton;
     private ListView list;
     private View header;
@@ -32,7 +30,6 @@ public class FavoritesView {
 	this.activity = activity;
 	this.adapter = adapter;
 	
-	headerView = new CommonHeaderView(activity);
 	
 	list = (ListView) activity.findViewById(R.id.lg_listview);
 	header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
@@ -51,15 +48,7 @@ public class FavoritesView {
     public void setFavButtonListener(OnClickListener listener) {
 	favButton.setOnClickListener(listener);
     }
-         
-    public void setFlagButtonListener(OnClickListener listener) {
-	headerView.setFlagButtonListener(listener);
-    }
-    
-    public void setMenuButtonListener(OnClickListener listener) {
-	headerView.setMenuButtonListener(listener);
-    }
-    
+             
     public void setListClickListener(OnItemClickListener listener) {
 	list.setOnItemClickListener(listener);
     }

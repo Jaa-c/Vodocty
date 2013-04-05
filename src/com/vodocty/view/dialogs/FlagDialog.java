@@ -3,17 +3,14 @@ package com.vodocty.view.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.vodocty.R;
-import com.vodocty.data.Country;
-import com.vodocty.data.LG;
 
 /**
  *
@@ -25,15 +22,15 @@ public class FlagDialog extends DialogFragment {
     public static final String ID = "FlagDialog";
     
     private final Activity context;
-    private final OnClickListener ok;
-    
     private ArrayAdapter adapter;
+    private OnItemClickListener listClickHandler;
     
-    public FlagDialog(Activity c, OnClickListener ok, ArrayAdapter adapter) {
+    public FlagDialog(Activity c, ArrayAdapter adapter, OnItemClickListener listClickHandler) {
 	this.context = c;
-	this.ok = ok;
 	this.adapter = adapter;
+	this.listClickHandler = listClickHandler;
     }
+    
     
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,12 +41,13 @@ public class FlagDialog extends DialogFragment {
 	View view = inflater.inflate(R.layout.dialog_flags, null);
 	ListView list = (ListView) view.findViewById(R.id.flag_listview);
 	list.setAdapter(adapter);
+	list.setOnItemClickListener(listClickHandler);
 	
 	builder.setView(view);
 
 	builder.setTitle("Vyberte stát");
 	
-	builder.setPositiveButton("OK", ok);
+	//builder.setPositiveButton("OK", ok);
 	builder.setNegativeButton("Zpět", null);
 	
 	return builder.create();

@@ -83,8 +83,6 @@ public class MainActivity extends FragmentActivity {
     public void checkFavoritesView() {
 	
 	if(context.isChangeDispFavorites()) {
-	    if(controller.getServiceConnection() != null)
-		unbindService(controller.getServiceConnection());
 	    
 	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);

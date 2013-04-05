@@ -20,9 +20,7 @@ public class RiversView {
     
     private Activity activity;
     private RiversAdapter adapter; 
-    
-    private CommonHeaderView headerView;
-    
+        
     private Button favButton;
     private ExpandableListView list;
     private View header;
@@ -31,9 +29,7 @@ public class RiversView {
     public RiversView(Activity activity, RiversAdapter adapter) {
 	this.activity = activity;
 	this.adapter = adapter;
-	
-	headerView = new CommonHeaderView(activity);
-	
+		
 	favButton = (Button) activity.findViewById(R.id.button_fav);
 	list = (ExpandableListView) activity.findViewById(R.id.river_listview);
 	header = (View) activity.getLayoutInflater().inflate(R.layout.list_header, null);
@@ -54,12 +50,4 @@ public class RiversView {
 	list.setOnChildClickListener(listener);
     }
          
-    public void setFlagButtonListener(OnClickListener listener) {
-	headerView.setFlagButtonListener(listener);
-    }
-    
-    public void setMenuButtonListener(OnClickListener listener) {
-	headerView.setMenuButtonListener(listener);
-    }
-
 }

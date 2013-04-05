@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import com.vodocty.R;
+import com.vodocty.Vodocty;
 
 /**
  *
@@ -22,11 +23,18 @@ public class CommonHeaderView {
     
 	
 	flagButton = (Button) activity.findViewById(R.id.button_left);
-	menuButton = (Button) activity.findViewById(R.id.button_right);
+	flagButtonChanged();
 	
-	flagButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.cz));
+	menuButton = (Button) activity.findViewById(R.id.button_right);
 	menuButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.menu));
     }
+    
+    public final void flagButtonChanged() {
+	Vodocty v = (Vodocty) activity.getApplicationContext();
+	int icon = activity.getResources().getIdentifier(v.getDisplayedCountry().name(), "drawable", activity.getPackageName());
+	flagButton.setBackgroundResource(icon);
+    }
+    
     
     public void setFlagButtonListener(View.OnClickListener listener) {
 	flagButton.setOnClickListener(listener);
