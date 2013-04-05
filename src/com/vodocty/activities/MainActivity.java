@@ -45,13 +45,13 @@ public class MainActivity extends Activity {
 	
 	if(context.getFavorites() > 0) {
 	    setContentView(R.layout.lgs);
-	    FavoritesModel model = new FavoritesModel(db);
+	    FavoritesModel model = new FavoritesModel(context);
 	    controller = new FavoritesController(this, model);
 	    context.setDisplayFavorites(true);
 	}
 	else {
 	    setContentView(R.layout.rivers);
-	    RiversModel model = new RiversModel(db);
+	    RiversModel model = new RiversModel(context);
 	    controller = new RiversController(this, model);
 	    context.setDisplayFavorites(false);
 	}
@@ -83,16 +83,17 @@ public class MainActivity extends Activity {
     public void checkFavoritesView() {
 	
 	if(context.isChangeDispFavorites()) {
-	    //unbindService(controller.getServiceConnection());
+	    if(controller.getServiceConnection() != null)
+		unbindService(controller.getServiceConnection());
 	    
 	    if(context.isDisplayFavorites()) {
 		setContentView(R.layout.lgs);
-		FavoritesModel model = new FavoritesModel(db);
+		FavoritesModel model = new FavoritesModel(context);
 		controller = new FavoritesController(this, model);
 	    }
 	    else {
 		setContentView(R.layout.rivers);
-		RiversModel model = new RiversModel(db);
+		RiversModel model = new RiversModel(context);
 		controller = new RiversController(this, model);
 	    }
 	    bindService();

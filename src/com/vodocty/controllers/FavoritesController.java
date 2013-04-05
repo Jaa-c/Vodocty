@@ -20,22 +20,20 @@ import com.vodocty.view.adapters.LGsAdapter;
  * @author Dan Princ
  * @since 11.3.2013
  */
-public class FavoritesController extends AbstractMessageReceiver {
+public class FavoritesController extends AbstractHeaderController {
     
-    private final Activity activity;
     private final FavoritesModel model;
     private final LGsAdapter adapter; 
     private final FavoritesView view;
     
-    
     public FavoritesController(Activity activity, FavoritesModel model) {
+	super(activity);
 	
-	this.activity = activity;
 	this.model = model;
 	this.adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getFavoriteLGs());
 	adapter.setDisplayFavorites(true);
 	
-	this.view = new  FavoritesView(activity, adapter);	
+	this.view = new FavoritesView(activity, adapter);	
 	view.setFavButtonListener(favButtonListener);
 	view.setFlagButtonListener(flagButtonListener);
 	view.setListClickListener(listClickHandler);
@@ -71,13 +69,6 @@ public class FavoritesController extends AbstractMessageReceiver {
 	}
     };
     
-    private final View.OnClickListener flagButtonListener = new View.OnClickListener() {
-	public void onClick(View arg0) {
-	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
-	    Toast.makeText(activity, "Zatím jen ČR", Toast.LENGTH_LONG).show();
-	    
-	}
-    };
     
     private final View.OnClickListener menuButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {

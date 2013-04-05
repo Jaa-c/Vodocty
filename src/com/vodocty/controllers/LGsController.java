@@ -18,22 +18,22 @@ import com.vodocty.view.adapters.LGsAdapter;
  * @author Dan Princ
  * @since 20.2.2013
  */
-public class LGsController extends AbstractMessageReceiver {
+public class LGsController extends AbstractHeaderController {
     
-    private final Activity activity;
     private final LGsModel model;
     private final LGsAdapter adapter;
     private final LGsView view;
     
     public LGsController(Activity activity, LGsModel model) {
+	super(activity);
 	
-	this.activity = activity;
 	this.model = model;
 	this.adapter = new LGsAdapter(activity, R.layout.list_lg_row, model.getLGs());
 	this.view = new LGsView(activity, adapter);
 	view.setContent(model.getRiver());
 	view.setListClickListener(listClickHandler);
 	view.setFavButtonListener(favButtonListener);
+	view.setFlagButtonListener(flagButtonListener);
 	
     }
     

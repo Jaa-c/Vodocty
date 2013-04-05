@@ -5,7 +5,7 @@
     <string name="path">http://10.0.2.2/vodocty/data/</string-->
     <string name="cz">http://vodocty.princ.name/data/last</string>
     <string name="path">http://vodocty.princ.name/data/</string>
-    <array name="urls">
+<!--    <array name="urls">
         <item>@string/cz</item>
-    </array>
+    </array>-->
 </resources>

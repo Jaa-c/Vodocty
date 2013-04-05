@@ -19,22 +19,22 @@ import com.vodocty.view.adapters.RiversAdapter;
  * @author Dan Princ
  * @since 17.2.2013
  */
-public class RiversController extends AbstractMessageReceiver {
+public class RiversController extends AbstractHeaderController {
     
-    private final Activity activity;
     private final RiversModel model;
     private final RiversAdapter adapter;
     private final RiversView view;
     
     
     public RiversController(Activity activity, RiversModel model) {
+	super(activity);
 	
-	this.activity = activity;
 	this.model = model;
         this.adapter = new RiversAdapter(activity, R.layout.list_river_row, model.getRivers());
 	this.view = new RiversView(activity, adapter);
 	view.setFavButtonListener(favButtonListener);
 	view.setListClickListener(childListClickHandler);
+	view.setFlagButtonListener(flagButtonListener);
     
     }
 

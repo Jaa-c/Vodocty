@@ -2,6 +2,7 @@ package com.vodocty.model;
 
 import android.util.Log;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.vodocty.Vodocty;
 import com.vodocty.data.Country;
 import com.vodocty.data.River;
 import com.vodocty.database.DBOpenHelper;
@@ -15,11 +16,13 @@ import java.util.List;
  */
 public class RiversModel {
     
-    DBOpenHelper db;
-    List<River> rivers;
+    private DBOpenHelper db;
+    private Vodocty context;
+    private List<River> rivers;
     
-    public RiversModel(DBOpenHelper db) {
-	this.db = db;
+    public RiversModel(Vodocty v) {
+	this.context = v;
+	this.db = v.getDatabase();
 	rivers = null;
 	
     }
@@ -31,7 +34,7 @@ public class RiversModel {
 	
 	try {
 	    QueryBuilder<River,Integer> lgQb = this.db.getRiverDao().queryBuilder();
-	    lgQb.where().in("country", Country.cz);
+	    lgQb.where().in("country", context.getDisplayedCountry());
 	    //lgQb.orderByRaw("name COLLATE UNICODE"); //which way?? or optional?
 	    lgQb.orderBy(River.COLUMN_NAME, true); //which way?? or optional?
 	    rivers = lgQb.query();

@@ -103,9 +103,10 @@ public class Update extends Service implements Runnable {
 		Settings s = query.queryForFirst();
 		if(s == null) {
 //		    if(country == Country.cz)//temp
-//			country.setLastUpdate(1365120709);
+//			country.setLastUpdate(1365187282);
 //		    else if (country == Country.at)
 //			country.setLastUpdate(1365187282);
+		    sdao.create(new Settings(Settings.SETTINGS_LAST_UPDATE + country, 0 + ""));
 		    country.setLastUpdate(0);
 		}
 		else {
@@ -117,7 +118,7 @@ public class Update extends Service implements Runnable {
 		country.setLastUpdate((int) (Calendar.getInstance().getTimeInMillis() / 1000));
 		Log.e(Update.class.getName(), e.getLocalizedMessage());
 	    }
-	Log.i(Update.class.getName(), country + ": lastUpdate=" + country.getLastUpdate());
+	    Log.i(Update.class.getName(), country + ": lastUpdate=" + country.getLastUpdate());
 	}
 	
 	
@@ -198,10 +199,7 @@ public class Update extends Service implements Runnable {
     private void doUpdate()  {
 	
 	Resources res = getResources();
-	
-	TypedArray urls = res.obtainTypedArray(R.array.urls);
 	String path;
-	
 	Map<String, River> data = null;
 	//foreach feeds for all countries
 	for(Country country : Country.values()) {

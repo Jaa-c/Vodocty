@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.vodocty.data.Data;
+import com.vodocty.data.Country;
 import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
 import java.sql.SQLException;
@@ -24,6 +24,8 @@ public class Vodocty extends Application {
     private int favorites;
     private boolean displayFavorites;
     private boolean changeDispFavorites;
+    
+    private Country displayedCountry;
 
     @Override
     public void onCreate() {
@@ -46,6 +48,8 @@ public class Vodocty extends Application {
 	}
 	
 	Log.d("fav", "favorites: " + favorites);
+	
+	displayedCountry = Country.cz; //TODO: refactor into settingsg
 	
     }
 
@@ -96,6 +100,15 @@ public class Vodocty extends Application {
     public void setChangeDispFavorites(boolean changeDispFavorites) {
 	this.changeDispFavorites = changeDispFavorites;
     }
+
+    public Country getDisplayedCountry() {
+	return displayedCountry;
+    }
+
+    public void setDisplayedCountry(Country displayedCountry) {
+	this.displayedCountry = displayedCountry;
+    }
+    
     
     
 }

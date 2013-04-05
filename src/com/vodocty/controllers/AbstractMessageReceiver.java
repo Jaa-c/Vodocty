@@ -68,9 +68,17 @@ public abstract class AbstractMessageReceiver {
 	}
 
 	@Override
-	 public void onServiceDisconnected(ComponentName arg0) {
-	     m = null;
-	 }
+	public void onServiceDisconnected(ComponentName arg0) {
+	    try {
+		 Message msg = Message.obtain(null, Update.MSG_UNREGISTER);
+		 msg.replyTo = mMessenger;
+		 m.send(msg);
+	     }
+	     catch(RemoteException e) {
+		 Log.e(AbstractMessageReceiver.class.getName(), e.getLocalizedMessage());
+	    }
+	    m = null;
+	}
 
     }
 
