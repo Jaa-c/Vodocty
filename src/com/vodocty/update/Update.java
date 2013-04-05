@@ -200,6 +200,8 @@ public class Update extends Service implements Runnable {
 	Map<String, River> data = null;
 	//foreach feeds for all countries
 	for(Country country : Country.values()) {
+	    if(country == Country.cz)
+		continue;
 	    path = res.getString(R.string.path) + country + "/";
 	    List<String> files;
 	    try {
@@ -212,7 +214,7 @@ public class Update extends Service implements Runnable {
 	    
 	    if(files == null || files.isEmpty()) {
 		Log.i(Update.class.getName(), "Nothing to do.");
-		return;
+		continue;
 	    }
 	    
 	    DatabaseConnection conn = null;

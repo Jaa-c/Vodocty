@@ -63,7 +63,9 @@ public class DataModel {
 	    QueryBuilder<Data, Integer> dataQb = this.db.getDataDao().queryBuilder();
 	    dataQb.where().in(Data.COLUMN_LG, lgId);
 	    dataQb.orderBy(Data.COLUMN_DATE, false);
+	    Log.d("model", dataQb.prepareStatementString());
 	    data = dataQb.queryForFirst();
+	    Log.d("model", data + "");
 	} catch (SQLException ex) {
 	    Log.e(DataModel.class.getName(), "SQLException: " + ex.getLocalizedMessage());
 	    return null;

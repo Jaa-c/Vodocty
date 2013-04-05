@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.data.Data;
 import com.vodocty.model.DataModel;
@@ -121,6 +123,11 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
 
     @Override
     protected void onPostExecute(Pair<XYMultipleSeriesDataset, XYMultipleSeriesRenderer> pair) {
+	if(data == null) { //should never happen
+	    loading.setText("Error, no data avaiable!\n Sorry!");
+	    return;
+	}
+	
 	loading.setVisibility(View.GONE);
 	
 	GraphicalView mChartView = ChartFactory.getTimeChartView(activity, pair.first, pair.second, "dd.M.\nHH:mm");
@@ -130,6 +137,9 @@ public class DataView extends AsyncTask<Void, Void, Pair<XYMultipleSeriesDataset
     
     
     public void setContent(Data data) {
+	if(data == null) { //should never happen
+	    return;
+	}
 	if(data.getLg().isFavorite()) {
 	    favButton.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.star_remove));
 	}
