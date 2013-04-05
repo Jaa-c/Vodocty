@@ -2,6 +2,7 @@ package com.vodocty.model;
 
 import android.util.Log;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.vodocty.data.Country;
 import com.vodocty.data.River;
 import com.vodocty.database.DBOpenHelper;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class RiversModel {
 	
 	try {
 	    QueryBuilder<River,Integer> lgQb = this.db.getRiverDao().queryBuilder();
-	    lgQb.where().in("country", "cze");
+	    lgQb.where().in("country", Country.cz);
 	    //lgQb.orderByRaw("name COLLATE UNICODE"); //which way?? or optional?
 	    lgQb.orderBy(River.COLUMN_NAME, true); //which way?? or optional?
 	    rivers = lgQb.query();

@@ -227,7 +227,7 @@ public class Update extends Service implements Runnable {
 		    continue;
 		}
 		try {
-		    data = XMLParser.parse(xml, Country.cz, data, Integer.parseInt(files.get(j)));
+		    data = XMLParser.parse(xml, country, data, Integer.parseInt(files.get(j)));
 		} catch (Exception ex) {
 		    Log.e(Update.class.getName(), ex.getLocalizedMessage());
 		}
