@@ -43,6 +43,7 @@ public class LGsAdapter extends ArrayAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+	
 	View row = convertView;
 	LGData content;
 		
@@ -97,7 +98,11 @@ public class LGsAdapter extends ArrayAdapter {
     public Object getItem(int position) {
 	return data.get(position);
     }
-    
+
+    @Override
+    public int getCount() {
+	return data.size();
+    }
     
     
     public void setDisplayFavorites(boolean fav) {

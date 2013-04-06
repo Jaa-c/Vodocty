@@ -97,6 +97,9 @@ public class MainActivity extends FragmentActivity {
 	    bindService();
 	    context.setChangeDispFavorites(false);
 	}
+	else {
+	    controller.updateData();
+	}
 	
     }
     

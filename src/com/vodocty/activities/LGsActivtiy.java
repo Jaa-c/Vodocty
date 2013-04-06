@@ -46,6 +46,7 @@ public class LGsActivtiy extends FragmentActivity {
     protected void onResume() {
 	super.onResume();
 	bindService();
+	controller.updateData();
 	
     }
 

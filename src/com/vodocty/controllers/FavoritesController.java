@@ -2,6 +2,7 @@ package com.vodocty.controllers;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class FavoritesController extends AbstractHeaderController {
     public void updateData() {
 	model.invalidate();
 	adapter.setData(model.getFavoriteLGs());
+	Log.d("fav ctrl", "size" + model.getFavoriteLGs().size());
 	adapter.notifyDataSetChanged();
     }
     

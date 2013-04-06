@@ -21,14 +21,14 @@ public abstract class AbstractHeaderController extends AbstractMessageReceiver {
     
     protected final FragmentActivity activity;
     protected FlagDialog flagDialog;
-    protected ArrayAdapter adapter;
+    protected ArrayAdapter flagAdapter;
     protected CommonHeaderView headerView;
     
     protected AbstractHeaderController(FragmentActivity activity) {
 	super();
 	this.activity = activity;
-	adapter = new FlagAdapter(activity, R.layout.list_flag_row, Country.values());
-	flagDialog = new FlagDialog(activity, adapter, listClickHandler);
+	flagAdapter = new FlagAdapter(activity, R.layout.list_flag_row, Country.values());
+	flagDialog = new FlagDialog(activity, flagAdapter, listClickHandler);
 	
 	headerView = new CommonHeaderView(activity);
 	headerView.setFlagButtonListener(flagButtonListener);
@@ -52,6 +52,11 @@ public abstract class AbstractHeaderController extends AbstractMessageReceiver {
 	    if(vodocty.getDisplayedCountry() != chosen) {
 		vodocty.setDisplayedCountry(chosen);
 		headerView.flagButtonChanged();
+		updateData();
+		
+		if(AbstractHeaderController.this instanceof LGsController) { //this is evil
+		    activity.finish();
+		}
 	    }
 	    flagDialog.getDialog().cancel();
         }

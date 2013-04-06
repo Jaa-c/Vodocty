@@ -38,6 +38,7 @@ public class RiversController extends AbstractHeaderController {
 
     @Override
     public void updateData() {
+	headerView.flagButtonChanged();
 	model.invalidateData();
 	adapter.setData(model.getRivers());
 	adapter.notifyDataSetChanged();
