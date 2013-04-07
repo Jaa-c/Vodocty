@@ -1,5 +1,6 @@
 package com.vodocty.controllers;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -7,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import com.vodocty.R;
 import com.vodocty.Vodocty;
+import com.vodocty.activities.SettingsActivity;
 import com.vodocty.data.Country;
 import com.vodocty.view.CommonHeaderView;
 import com.vodocty.view.adapters.FlagAdapter;
@@ -67,8 +69,9 @@ public abstract class AbstractHeaderController extends AbstractMessageReceiver {
     private final View.OnClickListener menuButtonListener = new View.OnClickListener() {
 	public void onClick(View arg0) {
 	    //Vodocty vodocty = (Vodocty) activity.getApplicationContext();
-	    Toast.makeText(activity, "Menu pyčo", Toast.LENGTH_LONG).show();
-	    
+	    //Toast.makeText(activity, "Menu pyčo", Toast.LENGTH_LONG).show();
+	    Intent i = new Intent(activity, SettingsActivity.class);
+	    activity.startActivity(i);
 	}
     };
     

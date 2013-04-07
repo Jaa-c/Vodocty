@@ -1,9 +1,12 @@
 package com.vodocty;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.vodocty.activities.SettingsActivity;
 import com.vodocty.data.Country;
 import com.vodocty.data.Settings;
 import com.vodocty.database.DBOpenHelper;
@@ -47,12 +50,18 @@ public class Vodocty extends Application {
 	    Log.e(this.getClass().getName(), e.getLocalizedMessage());
 	}
 	
-	Log.d("fav", "favorites: " + favorites);
 	
-	displayedCountry = Country.cz; //TODO: refactor into settingsg
+	SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+	String syncConnPref = sharedPref.getString(SettingsActivity.COUNTRY_DEFAULT, "fail");
+	
+	displayedCountry = Country.valueOf(syncConnPref); //todo osetrit fail
+	
+	Log.d("vodocty", "country: " + syncConnPref);
+	Log.d("vodocty", "favorites: " + favorites);
 	
     }
 
+    
     @Override
     public void onTerminate() {
 	super.onTerminate();

@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory 
+        android:title="Nastavení států"
+        android:key="pref_key_countries">
+	
+         <com.vodocty.view.preferences.CountryListPreference
+	    android:id="@+id/pref_countries_default_list"
+	    android:key="pref_default_country"
+	    android:title="Výchozí stát při spuštění"
+	    android:dialogTitle="Výchozí stát při spuštění aplikace"  />
+	 
+    </PreferenceCategory>
+    
+</PreferenceScreen>

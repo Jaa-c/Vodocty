@@ -147,10 +147,10 @@ public class Update extends Service implements Runnable {
 
 	    cleanDatabase();
 	    
-	    PowerManager powerManager = (PowerManager) this.getSystemService(Activity.POWER_SERVICE);
-	    if(!powerManager.isScreenOn()) {
-		db.close(); //TODO
-	    }
+//	    PowerManager powerManager = (PowerManager) this.getSystemService(Activity.POWER_SERVICE);
+//	    if(!powerManager.isScreenOn()) {
+//		db.close(); //TODO
+//	    }
 	}
 	else {
 	    Log.i(Update.class.getName(), "Not connected to the internet or update already running. Update cancelled.");
