@@ -22,6 +22,8 @@ public class Vodocty extends Application {
     public static final String EXTRA_LG_ID = "lgId";
     public static final String EXTRA_RIVER_ID = "riverId";
     
+    private static final String PREF_LAST_UPDATE = "lastUpdate";
+    
     private DBOpenHelper database;
     
     private int favorites;
@@ -54,7 +56,12 @@ public class Vodocty extends Application {
 	SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 	String syncConnPref = sharedPref.getString(SettingsActivity.COUNTRY_DEFAULT, "fail");
 	
-	displayedCountry = Country.valueOf(syncConnPref); //todo osetrit fail
+	if(syncConnPref.equals("fail")) {//todo osetrit fail
+	    displayedCountry = Country.cz;
+	}
+	else {
+	    displayedCountry = Country.valueOf(syncConnPref); 
+	}
 	
 	Log.d("vodocty", "country: " + syncConnPref);
 	Log.d("vodocty", "favorites: " + favorites);
