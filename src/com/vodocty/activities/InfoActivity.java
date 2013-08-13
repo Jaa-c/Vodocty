@@ -13,18 +13,13 @@ import com.vodocty.R;
  */
 public class InfoActivity extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.info_page);
-	TextView content = (TextView) findViewById(R.id.info_text);
-	content.setText(Html.fromHtml(getString(R.string.about)));
-	
-	
-    }
-    
-    
-    
-    
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.info_page);
+		TextView content = (TextView) findViewById(R.id.info_text);
+		content.setText(Html.fromHtml(getString(R.string.about)));
 
+
+	}
 }

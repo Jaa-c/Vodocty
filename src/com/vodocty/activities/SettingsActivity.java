@@ -17,45 +17,38 @@ import com.vodocty.data.Country;
  * @since 6.4.2013
  */
 public class SettingsActivity extends PreferenceActivity
-                              implements OnSharedPreferenceChangeListener {
-    
-    public static final String COUNTRY_DEFAULT = "pref_default_country";
+		implements OnSharedPreferenceChangeListener {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	
-	addPreferencesFromResource(R.xml.preferences_settings);
-	
-	SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-	String syncConnPref = sharedPref.getString(SettingsActivity.COUNTRY_DEFAULT, "fail");
-	
-	Log.d("fav", "country: " + syncConnPref);
+	public static final String COUNTRY_DEFAULT = "pref_default_country";
 
-	
-    }
-    
-    
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
-	
-	
-	
-    }
-    
-    @Override
-    protected void onResume() {
-	super.onResume();
-	getPreferenceScreen().getSharedPreferences()
-		.registerOnSharedPreferenceChangeListener(this);
-    }
+		addPreferencesFromResource(R.xml.preferences_settings);
 
-    @Override
-    protected void onPause() {
-	super.onPause();
-	getPreferenceScreen().getSharedPreferences()
-		.unregisterOnSharedPreferenceChangeListener(this);
-    }
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		String syncConnPref = sharedPref.getString(SettingsActivity.COUNTRY_DEFAULT, "fail");
+
+		Log.d("fav", "country: " + syncConnPref);
 
 
+	}
+
+	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getPreferenceScreen().getSharedPreferences()
+				.registerOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		getPreferenceScreen().getSharedPreferences()
+				.unregisterOnSharedPreferenceChangeListener(this);
+	}
 }

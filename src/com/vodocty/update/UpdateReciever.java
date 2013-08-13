@@ -10,12 +10,10 @@ import android.content.Intent;
  * @since 24.2.2013
  */
 public class UpdateReciever extends BroadcastReceiver {
-    
 
-    @Override
-    public void onReceive(Context context, Intent i) {
-	Intent intent = new Intent(context, Update.class);
-	context.startService(intent);
-    }
-    
+	@Override
+	public void onReceive(Context context, Intent i) {
+		Intent intent = new Intent(context, Update.class);
+		context.startService(intent);
+	}
 }

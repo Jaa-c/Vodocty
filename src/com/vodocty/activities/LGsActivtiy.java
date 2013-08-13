@@ -18,57 +18,53 @@ import com.vodocty.update.Update;
  * @since 20.2.2013
  */
 public class LGsActivtiy extends FragmentActivity {
-    
-    private DBOpenHelper db; //save in sth like global context
-    private LGsController controller;
-    private LGsModel model;
-    
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.lgs);
-	
-	db = ((Vodocty) getApplicationContext()).getDatabase();
-	model = new LGsModel(db);
-	
-	int riverId = getIntent().getIntExtra(Vodocty.EXTRA_RIVER_ID, -1);
-	model.setRiverId(riverId);
-	
-	controller = new LGsController(this, model);
-	
-	//bindService();
-	       
-    }
 
-    @Override
-    protected void onResume() {
-	super.onResume();
-	bindService();
-	controller.updateData();
-	
-    }
+	private DBOpenHelper db; //save in sth like global context
+	private LGsController controller;
+	private LGsModel model;
 
-    @Override
-    protected void onPause() {
-	super.onPause();
-	unbindService(sConn);
-	//db.close();
-    }
-    
-    
-    private ServiceConnection sConn;
-    
-    private void bindService() {
-	if(sConn == null) {
-	    sConn = controller.getServiceConnection();
+	/**
+	 * Called when the activity is first created.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.lgs);
+
+		db = ((Vodocty) getApplicationContext()).getDatabase();
+		model = new LGsModel(db);
+
+		int riverId = getIntent().getIntExtra(Vodocty.EXTRA_RIVER_ID, -1);
+		model.setRiverId(riverId);
+
+		controller = new LGsController(this, model);
+
+		//bindService();
+
 	}
-	
-	Intent i = new Intent(this, Update.class);
-	bindService(i, sConn, Context.BIND_AUTO_CREATE);
-    }
-    
-    
-}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		bindService();
+		controller.updateData();
+
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unbindService(sConn);
+		//db.close();
+	}
+	private ServiceConnection sConn;
+
+	private void bindService() {
+		if (sConn == null) {
+			sConn = controller.getServiceConnection();
+		}
+
+		Intent i = new Intent(this, Update.class);
+		bindService(i, sConn, Context.BIND_AUTO_CREATE);
+	}
+}

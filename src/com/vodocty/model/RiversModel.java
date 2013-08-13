@@ -15,39 +15,38 @@ import java.util.List;
  * @since 19.2.2013
  */
 public class RiversModel {
-    
-    private DBOpenHelper db;
-    private Vodocty context;
-    private List<River> rivers;
-    
-    public RiversModel(Vodocty v) {
-	this.context = v;
-	this.db = v.getDatabase();
-	rivers = null;
-	
-    }
-    
-    public List<River> getRivers() {
-	if(rivers != null) {
-	    return rivers;
-	}
-	
-	try {
-	    QueryBuilder<River,Integer> lgQb = this.db.getRiverDao().queryBuilder();
-	    lgQb.where().in("country", context.getDisplayedCountry());
-	    //lgQb.orderByRaw("name COLLATE UNICODE"); //which way?? or optional?
-	    lgQb.orderBy(River.COLUMN_NAME, true); //which way?? or optional?
-	    rivers = lgQb.query();
-	} catch (SQLException ex) {
-	    Log.e(RiversModel.class.getName(), ex.getLocalizedMessage());
-	    return null;
-	}
-	
-	return rivers;
-    }
-    
-    public void invalidateData() {
-	rivers = null;
-    }
 
+	private DBOpenHelper db;
+	private Vodocty context;
+	private List<River> rivers;
+
+	public RiversModel(Vodocty v) {
+		this.context = v;
+		this.db = v.getDatabase();
+		rivers = null;
+
+	}
+
+	public List<River> getRivers() {
+		if (rivers != null) {
+			return rivers;
+		}
+
+		try {
+			QueryBuilder<River, Integer> lgQb = this.db.getRiverDao().queryBuilder();
+			lgQb.where().in("country", context.getDisplayedCountry());
+			//lgQb.orderByRaw("name COLLATE UNICODE"); //which way?? or optional?
+			lgQb.orderBy(River.COLUMN_NAME, true); //which way?? or optional?
+			rivers = lgQb.query();
+		} catch (SQLException ex) {
+			Log.e(RiversModel.class.getName(), ex.getLocalizedMessage());
+			return null;
+		}
+
+		return rivers;
+	}
+
+	public void invalidateData() {
+		rivers = null;
+	}
 }

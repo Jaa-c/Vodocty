@@ -16,23 +16,20 @@ import com.vodocty.data.Country;
  * @author Dan Princ
  * @since 7.4.2013
  */
-public class CountryListPreference  extends ListPreference {
+public class CountryListPreference extends ListPreference {
 
-    private Vodocty vodocty;
+	private Vodocty vodocty;
 
-    public CountryListPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-	//vodocty = (Vodocty) context.getApplicationContext();
-        setEntries(Country.getStringNames());
-        setEntryValues(Country.getStringValues());
-	
-    }
+	public CountryListPreference(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		//vodocty = (Vodocty) context.getApplicationContext();
+		setEntries(Country.getStringNames());
+		setEntryValues(Country.getStringValues());
 
-    public CountryListPreference(Context context) {
-        super(context);
-	//vodocty = (Vodocty) context.getApplicationContext();
-    }
-    
-    
+	}
 
+	public CountryListPreference(Context context) {
+		super(context);
+		//vodocty = (Vodocty) context.getApplicationContext();
+	}
 }
