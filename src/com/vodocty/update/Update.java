@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import tools.Tools;
+import com.vodocty.tools.Tools;
 
 /**
  * Handles the regular data update.
@@ -216,16 +216,32 @@ public class Update extends Service implements Runnable {
 			DatabaseConnection conn = null;
 			Savepoint savePoint = null;
 
+			int currentTimestamp = (int) (System.currentTimeMillis() / 1000.f);
 			//get all new files and parse them
 			for (int j = files.size() - 1; j >= 0; j--) {
-				InputStream xml = HttpReader.loadGz(path + files.get(j) + GZ);
+				int fileTimestamp = Integer.parseInt(files.get(j));
+				int timeDiff = currentTimestamp - fileTimestamp;
+				if (timeDiff > Tools.DAY_SECONDS * 5) { //TODO: test this
+					j -= 8; //6 za den
+					Log.d(this.getClass().getName(), "skipped 8 files");
+				} else if (timeDiff > Tools.DAY_SECONDS * 2) {
+					j -= 4; //12 za den
+					Log.d(this.getClass().getName(), "skipped 4 files");
+				} else if (timeDiff > Tools.DAY_SECONDS) {
+					j -= 2; //24 za den
+					Log.d(this.getClass().getName(), "skipped 2 files");
+				}
+
+				InputStream xml = HttpReader.loadGz(path + fileTimestamp + GZ);
 
 				if (xml == null) {
 					Log.e(Update.class.getName(), "feed offline: " + path);
 					continue;
 				}
 				try {
-					data = XMLParser.parse(xml, country, data, Integer.parseInt(files.get(j)));
+					SAXXMLParser parser = new SAXXMLParser(country, data, fileTimestamp);
+					data = parser.parse(xml);
+					//data = DOMXMLParser.parse(xml, country, data, fileTimestamp);
 				} catch (Exception ex) {
 					Log.e(Update.class.getName(), ex.getLocalizedMessage());
 				} finally {
@@ -235,12 +251,12 @@ public class Update extends Service implements Runnable {
 				}
 
 				//finally update the data in database
-				Log.i(Update.class.getName(), country + ": used file: " + files.get(j) + ", files remaining: " + j);
+				Log.i(Update.class.getName(), country + ": used file: " + fileTimestamp + ", files remaining: " + j);
 				try {
 					conn = db.getDataDao().startThreadConnection();
 					savePoint = conn.setSavePoint(null);//commit all as one transaction -> improved performace
 
-					this.updateDatabase(data, Integer.parseInt(files.get(j)), country);
+					this.updateDatabase(data, fileTimestamp, country);
 				} catch (SQLException e) {
 					Log.e(Update.class.getName(), e.getLocalizedMessage());
 				}
@@ -308,6 +324,18 @@ public class Update extends Service implements Runnable {
 			}
 
 			for (LG lg : r.getLg().values()) {
+				//TODO: test this
+//				Log.d(this.getClass().getName(), lg + "");
+//				Log.d(this.getClass().getName(), lg.getData() + "");
+				
+				if (lg.getData().getDate() == null) {
+					continue;
+				} 
+				if (!lg.isFavorite() && 
+						(System.currentTimeMillis() - lg.getData().getDate().getTime()) > 7 * Tools.DAY_SECONDS * 1000) {
+					continue;
+				}
+
 				try {
 					if (lg.getId() == -1) {
 						nameArg.setValue(lg.getName());
@@ -338,9 +366,9 @@ public class Update extends Service implements Runnable {
 						lgId.setValue(lg.getId());
 						lgDao.update(preparedLgUpdate);
 					}
-					if (lg.getData().getDate() != null) {
-						dataDao.create(lg.getData());
-					}
+					
+					dataDao.create(lg.getData());
+					
 				} catch (SQLException ex) {
 					Log.e(Update.class.getName(), ex.getLocalizedMessage());
 					Log.d(Update.class.getName(), lg.toString());

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  * @author Dan Princ
  * @since long time ago
  */
-public class XMLParser {
+public class DOMXMLParser {
 
 	public static Map<String, River> parse(InputStream in, Country c, Map<String, River> rivers, int updateTime) throws ParserConfigurationException, IOException, SAXException {
 

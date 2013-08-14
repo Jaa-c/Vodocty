@@ -34,6 +34,8 @@ public class Data {
 	private float volume;
 	@DatabaseField(defaultValue = "0", columnName = COLUMN_FLOOD)
 	private int flood;
+	
+	private String rawDate;
 
 	Data() {
 	}
@@ -55,15 +57,24 @@ public class Data {
 	}
 
 	public Date getDate() {
+		//TODO: test this
+		if(date == null) { //parse date only if actually used 
+			try {
+				this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH).parse(rawDate);
+			} catch (ParseException ex) {
+			   this.date = null;
+		   }
+		}
 		return date;
 	}
 
 	public void setDate(String date) {
-		try {
-			this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH).parse(date);
-		} catch (ParseException ex) {
-			this.date = null;
-		}
+		rawDate = date;
+//		try {
+//			this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.ENGLISH).parse(date);
+//		} catch (ParseException ex) {
+//			this.date = null;
+//		}
 	}
 
 	public int getHeight() {
@@ -92,6 +103,6 @@ public class Data {
 
 	@Override
 	public String toString() {
-		return "Data{" + "id=" + id + ", date=" + date + ", height=" + height + ", volume=" + volume + ", flood=" + flood + '}';
+		return "Data{" + "id=" + id + ", date=" + rawDate + ", height=" + height + ", volume=" + volume + ", flood=" + flood + '}';
 	}
 }

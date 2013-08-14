@@ -24,7 +24,7 @@ import org.achartengine.GraphicalView;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import tools.Tools;
+import com.vodocty.tools.Tools;
 
 /**
  *
