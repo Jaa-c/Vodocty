@@ -101,10 +101,6 @@ public class Update extends Service implements Runnable {
 				query.where().eq(Settings.COLUMN_KEY, Settings.SETTINGS_LAST_UPDATE + country);
 				Settings s = query.queryForFirst();
 				if (s == null) {
-//		    if(country == Country.cz)//temp
-//			country.setLastUpdate(1365187282);
-//		    else if (country == Country.at)
-//			country.setLastUpdate(1365187282);
 					sdao.create(new Settings(Settings.SETTINGS_LAST_UPDATE + country, 0 + ""));
 					country.setLastUpdate(0);
 				} else {
@@ -137,6 +133,7 @@ public class Update extends Service implements Runnable {
 	}
 
 	public void run() {
+		long startTime = System.currentTimeMillis();
 		if (isOnline() && !RUNNING) {
 			RUNNING = true;
 			doUpdate();
@@ -152,8 +149,12 @@ public class Update extends Service implements Runnable {
 		}
 		RUNNING = false;
 		this.notifM.cancel(NOTI_ID);
-
-		Log.i(Update.class.getName(), "Update thread finished!");
+		
+		//log only
+		int takenTime = (int) ((System.currentTimeMillis() - startTime) / 1000.f);
+		int min = (int) (takenTime / 60.f);
+		int sec = takenTime % min;
+		Log.i(Update.class.getName(), "Update thread finished in " + min + " min " + sec +" sec");
 	}
 
 	public void notifyReceivers() {

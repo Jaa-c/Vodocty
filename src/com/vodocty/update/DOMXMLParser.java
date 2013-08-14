@@ -71,7 +71,12 @@ public class DOMXMLParser {
 
 				NodeList current = lg.getChildNodes();
 				data = new Data(currentLG);
-				data.setDate(current.item(1).getTextContent());
+				
+				try {
+					data.setDate(Integer.parseInt(current.item(1).getTextContent()));
+				} catch (NumberFormatException e) {
+					data.setDate(current.item(1).getTextContent()); //transition from old data, to be removed
+				}
 
 				try {
 					data.setHeight(Integer.parseInt(current.item(3).getTextContent()));

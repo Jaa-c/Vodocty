@@ -67,7 +67,8 @@ public class Data {
 		}
 		return date;
 	}
-
+	
+	@Deprecated
 	public void setDate(String date) {
 		rawDate = date;
 //		try {
@@ -75,6 +76,11 @@ public class Data {
 //		} catch (ParseException ex) {
 //			this.date = null;
 //		}
+	}
+	
+	
+	public void setDate(int timestamp) {
+		date = new Date(timestamp * 1000);
 	}
 
 	public int getHeight() {
